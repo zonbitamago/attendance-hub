@@ -1,316 +1,279 @@
-# Tasks: 出欠確認プロトタイプ
+# Tasks: 出欠確認プロトタイプ（データモデル刷新版）
 
-**Input**: Design documents from `/specs/001-attendance-prototype/`
-**Prerequisites**: plan.md, spec.md, data-model.md, quickstart.md
+**Status**: ✅ Phase 1-5 完了（2025-11-06）
 
-**Tests**: このプロトタイプでは基本的なユニットテストのみ実装（TDD 簡略化、憲法原則 VIII のプロトタイプ例外）。各ユーザーストーリーの実装後にコアロジックのテストを追加。
+**Last Updated**: 2025-11-06
 
-**Organization**: タスクはユーザーストーリーごとにグループ化され、各ストーリーを独立して実装・テスト可能。
+## 完了した作業
 
-## Format: `[ID] [P?] [Story] Description`
+### Phase 1: データモデル・型定義の刷新 ✅
 
-- **[P]**: 並列実行可能（異なるファイル、依存関係なし）
-- **[Story]**: タスクが属するユーザーストーリー（US1, US2, US3, US4）
-- 説明には正確なファイルパスを含む
+**完了日**: 2025-11-06
 
-## Path Conventions
+- [x] EventDate 型の定義（id, date, title, location, createdAt）
+- [x] Group 型の更新（name, order, color フィールドに簡略化）
+- [x] Member 型の定義（id, groupId, name, createdAt）
+- [x] Attendance 型の更新（eventDateId, memberId に変更）
+- [x] GroupSummary 型の定義（グループ別集計用）
+- [x] Zod バリデーションスキーマの全面更新
+  - EventDateSchema, EventDateInputSchema
+  - GroupSchema, GroupInputSchema（order, color 対応）
+  - MemberSchema, MemberInputSchema
+  - AttendanceSchema, AttendanceInputSchema（新しい関係性）
 
-プロジェクトルートからの相対パス：
+**成果物**:
+- `types/index.ts` - 新しいデータモデル定義
+- `lib/validation.ts` - 更新されたバリデーションスキーマ
+- `lib/storage.ts` - 4エンティティ対応のストレージ関数
 
-- `app/` - Next.js App Router ページ
-- `components/` - 再利用可能な React コンポーネント
-- `lib/` - ビジネスロジック・ユーティリティ
-- `types/` - TypeScript 型定義
-- `__tests__/` - テストファイル
+### Phase 2: サービス層の再実装 ✅
 
----
+**完了日**: 2025-11-06
 
-## Phase 1: Setup (共有インフラストラクチャ)
+- [x] `lib/event-service.ts` - イベント日付の CRUD 操作
+  - createEventDate, getAllEventDates, getEventDateById
+  - updateEventDate, deleteEventDate
+  - 日付昇順ソート
+- [x] `lib/group-service.ts` - グループ管理の刷新
+  - order フィールドによる表示順制御
+  - color フィールド（オプション）対応
+  - order 昇順ソート
+- [x] `lib/member-service.ts` - メンバー管理（新規作成）
+  - createMember, getAllMembers, getMembersByGroupId
+  - getMemberById, updateMember, deleteMember
+- [x] `lib/attendance-service.ts` - 出欠管理の刷新
+  - EventDate × Member の関係性に対応
+  - getAttendancesByEventDateId, getAttendancesByMemberId
+  - calculateEventSummary（グループ別集計）
 
-**目的**: プロジェクトの初期化と基本構造の構築
+**成果物**: 新しいデータモデルに対応した完全なサービス層
 
-- [ ] T001 Next.js 15 プロジェクトを初期化（create-next-app with TypeScript, Tailwind CSS, App Router）
-- [ ] T002 [P] package.json に依存関係を追加（zod, date-fns, jest, @testing-library/react）
-- [ ] T003 [P] tsconfig.json を strict mode 有効化で設定
-- [ ] T004 [P] tailwind.config.js をモバイルファースト設定で構成
-- [ ] T005 [P] jest.config.js と jest.setup.js を設定
-- [ ] T006 [P] ESLint + Prettier 設定（.eslintrc.json, .prettierrc）
-- [ ] T007 プロジェクト構造を作成（app/, components/, lib/, types/, **tests**/ディレクトリ）
-- [ ] T008 [P] app/globals.css に Tailwind CSS ディレクティブとベーススタイルを追加
-- [ ] T009 [P] app/layout.tsx にルートレイアウトを作成（日本語フォント、メタデータ）
+### Phase 3: 管理画面の実装 ✅
 
-**Checkpoint**: セットアップ完了 - 開発サーバーが起動し、基本的な Next.js アプリが表示される
+**完了日**: 2025-11-06
 
----
+- [x] `/admin` - 管理画面ランディングページ
+  - グループ管理・イベント日付管理へのナビゲーション
+- [x] `/admin/groups` - グループ管理画面
+  - グループの作成・編集・削除
+  - order フィールドによる並び替え
+  - color フィールド（カラーコード）設定
+- [x] `/admin/events` - イベント日付管理画面
+  - イベント日付の作成・編集・削除
+  - 日付、タイトル、場所の管理
 
-## Phase 2: Foundational (ブロッキング必須要件)
+**成果物**: 完全な管理UI（グループとイベント日付を管理）
 
-**目的**: すべてのユーザーストーリーが依存するコアインフラストラクチャ
+### Phase 4: メイン画面の再実装 ✅
 
-**⚠️ CRITICAL**: このフェーズが完了するまで、ユーザーストーリーの作業は開始できない
+**完了日**: 2025-11-06
 
-- [ ] T010 [P] TypeScript 型定義を作成（Group, Attendance, AttendanceStatus, Summary）in types/index.ts
-- [ ] T011 [P] Zod バリデーションスキーマを実装（GroupSchema, AttendanceSchema, CreateGroupInputSchema, CreateAttendanceInputSchema）in lib/validation.ts
-- [ ] T012 [P] localStorage 操作関数を実装（loadGroups, saveGroups, loadAttendances, saveAttendances, safeLoadData, safeSetItem）in lib/storage.ts
-- [ ] T013 [P] 日付フォーマットユーティリティを実装（date-fns で日本語ロケール対応）in lib/date-utils.ts
-- [ ] T014 [P] エラーハンドリングユーティリティを実装（try-catch ラッパー、エラーメッセージ生成）in lib/error-utils.ts
+- [x] `/` - トップページ（イベント一覧）
+  - イベント日付を日付昇順で表示
+  - 管理画面へのリンク
+- [x] `/events/[id]` - イベント詳細ページ
+  - イベント情報表示
+  - グループ別出欠状況の集計表示
+  - 出欠登録ページへのリンク
+- [x] `/events/[id]/register` - 出欠登録ページ
+  - グループ選択
+  - メンバー選択または新規登録
+  - 出欠ステータス選択（◯/△/✗）
+  - 登録後にイベント詳細へリダイレクト
 
-**Checkpoint**: 基盤準備完了 - ユーザーストーリー実装を並列開始可能
+**成果物**: イベント中心のUI（densuke.biz スタイル）
 
----
+### Phase 5: テストの更新 ✅
 
-## Phase 3: User Story 1 - グループを作成して出欠を登録する (Priority: P1) 🎯 MVP
+**完了日**: 2025-11-06
 
-**Goal**: ユーザーがグループを作成し、名前と出欠状況（◯/△/✗）を登録できる。ローカルストレージにデータを永続化。
+- [x] `__tests__/lib/storage.test.ts` - 4エンティティ対応
+  - EventDate, Group, Member, Attendance のテスト
+  - データ分離のテスト
+- [x] `__tests__/lib/group-service.test.ts` - order/color 対応
+  - order によるソートのテスト
+  - color バリデーションのテスト
+- [x] `__tests__/lib/attendance-service.test.ts` - 新しいデータモデル対応
+  - EventDate × Member 関係のテスト
+  - calculateEventSummary のテスト
 
-**Independent Test**:
+**テスト結果**: 44 tests passed ✅
 
-1. グループを作成し、グループ一覧に表示されることを確認
-2. グループを選択し、名前と出欠状況を登録
-3. ページをリロードしてもデータが保持されることを確認
-
-### Implementation for User Story 1
-
-- [ ] T015 [P] [US1] グループサービスを実装（createGroup, getAllGroups, getGroupById）in lib/group-service.ts
-- [ ] T016 [P] [US1] 出欠登録サービスを実装（createAttendance, getAttendancesByGroupId）in lib/attendance-service.ts
-- [ ] T017 [P] [US1] グループ一覧コンポーネントを作成（GroupList）in components/group-list.tsx
-- [ ] T018 [P] [US1] グループフォームコンポーネントを作成（GroupForm with validation）in components/group-form.tsx
-- [ ] T019 [P] [US1] 出欠登録フォームコンポーネントを作成（AttendanceForm with status selection）in components/attendance-form.tsx
-- [ ] T020 [US1] トップページを実装（グループ一覧表示、新規作成ボタン）in app/page.tsx
-- [ ] T021 [US1] グループ作成ページを実装（GroupForm 使用）in app/groups/new/page.tsx
-- [ ] T022 [US1] グループ詳細ページを実装（グループ情報表示、出欠登録フォーム表示）in app/groups/[id]/page.tsx
-- [ ] T023 [US1] 出欠登録ページを実装（AttendanceForm 使用、登録後にグループ詳細へリダイレクト）in app/groups/[id]/register/page.tsx
-- [ ] T024 [US1] 入力バリデーションとエラーメッセージ表示を実装（全フォームに日本語エラーメッセージ）
-- [ ] T025 [US1] ローディング状態とトランジションを追加（React Suspense, useTransition）
-- [ ] T026 [US1] モバイルレスポンシブスタイルを調整（320px〜1920px 対応）
-
-### Tests for User Story 1
-
-- [ ] T027 [P] [US1] storage.ts のユニットテストを作成 in **tests**/lib/storage.test.ts
-- [ ] T028 [P] [US1] group-service.ts のユニットテストを作成 in **tests**/lib/group-service.test.ts
-- [ ] T029 [P] [US1] attendance-service.ts のユニットテストを作成（createAttendance, getAttendancesByGroupId）in **tests**/lib/attendance-service.test.ts
-
-**Checkpoint**: US1 完了 - グループ作成と出欠登録が完全に機能し、独立してテスト可能
-
----
-
-## Phase 4: User Story 2 - グループの集計結果を確認する (Priority: P2)
-
-**Goal**: グループごとの出欠状況（◯/△/✗ の人数）を集計し、一目で把握できる。
-
-**Independent Test**:
-
-1. 複数のユーザーが異なる出欠状況で登録
-2. グループ詳細ページで「◯: X 人」「△: Y 人」「✗: Z 人」「合計: N 人」が正しく表示されることを確認
-
-### Implementation for User Story 2
-
-- [ ] T030 [US2] 集計ロジックを実装（calculateSummary）in lib/attendance-service.ts
-- [ ] T031 [US2] 集計カードコンポーネントを作成（SummaryCard with 出欠状況別の人数表示）in components/summary-card.tsx
-- [ ] T032 [US2] グループ詳細ページに集計表示を追加（app/groups/[id]/page.tsx を更新）
-- [ ] T033 [US2] 集計結果のスタイリング（視覚的に分かりやすいカードデザイン、アイコン使用）
-- [ ] T034 [US2] リアルタイム更新対応（出欠登録後に集計を再計算）
-
-### Tests for User Story 2
-
-- [ ] T035 [P] [US2] calculateSummary のユニットテストを作成 in **tests**/lib/attendance-service.test.ts
-- [ ] T036 [P] [US2] SummaryCard コンポーネントのテストを作成 in **tests**/components/summary-card.test.tsx
-
-**Checkpoint**: US2 完了 - 集計機能が動作し、US1 と独立してテスト可能
+**ビルド結果**: 成功 ✅
 
 ---
 
-## Phase 5: User Story 3 - 登録内容を確認・編集する (Priority: P3)
+## データモデル概要
 
-**Goal**: ユーザーが自分の登録した出欠状況を確認し、変更または削除できる。
+### 新しいエンティティ構造
 
-**Independent Test**:
+```typescript
+EventDate (イベント日付)
+  ├── id: string (UUID)
+  ├── date: string (YYYY-MM-DD)
+  ├── title: string
+  ├── location?: string
+  └── createdAt: string (ISO 8601)
 
-1. 出欠登録の一覧を表示
-2. 出欠状況を「◯」から「△」に変更し、集計結果も更新されることを確認
-3. 登録を削除し、一覧と集計から除外されることを確認
+Group (グループ)
+  ├── id: string (UUID)
+  ├── name: string (例: "打", "Cla", "Sax")
+  ├── order: number (表示順序)
+  ├── color?: string (#RRGGBB)
+  └── createdAt: string (ISO 8601)
 
-### Implementation for User Story 3
+Member (メンバー)
+  ├── id: string (UUID)
+  ├── groupId: string (Group への外部キー)
+  ├── name: string
+  └── createdAt: string (ISO 8601)
 
-- [ ] T037 [US3] 出欠登録の編集・削除機能を実装（updateAttendance, deleteAttendance）in lib/attendance-service.ts
-- [ ] T038 [US3] 出欠一覧コンポーネントを作成（AttendanceList with 編集・削除ボタン）in components/attendance-list.tsx
-- [ ] T039 [US3] グループ詳細ページに出欠一覧を追加（編集・削除機能付き）
-- [ ] T040 [US3] 編集モーダルまたはインライン編集 UI を実装
-- [ ] T041 [US3] 削除確認ダイアログを実装（誤削除防止）
-- [ ] T042 [US3] 編集・削除後の集計結果自動更新を実装
+Attendance (出欠登録)
+  ├── id: string (UUID)
+  ├── eventDateId: string (EventDate への外部キー)
+  ├── memberId: string (Member への外部キー)
+  ├── status: "◯" | "△" | "✗"
+  └── createdAt: string (ISO 8601)
+```
 
-### Tests for User Story 3
+### データの流れ
 
-- [ ] T043 [P] [US3] updateAttendance と deleteAttendance のユニットテストを作成 in **tests**/lib/attendance-service.test.ts
-
-**Checkpoint**: US3 完了 - 編集・削除機能が動作し、US1, US2 と独立してテスト可能
-
----
-
-## Phase 6: User Story 4 - グループの出欠履歴を表示する (Priority: P3)
-
-**Goal**: グループの出欠履歴を時系列で表示し、参加者の動向を把握できる。
-
-**Independent Test**:
-
-1. 履歴ページを開く
-2. 「11/5 10:00 田中太郎 - ◯」のように登録順に表示されることを確認
-
-### Implementation for User Story 4
-
-- [ ] T044 [US4] 履歴取得ロジックを実装（getAttendanceHistoryByGroupId with 時系列ソート）in lib/attendance-service.ts
-- [ ] T045 [US4] 履歴表示コンポーネントを作成（HistoryList with 日時フォーマット）in components/history-list.tsx
-- [ ] T046 [US4] 履歴ページを実装 in app/groups/[id]/history/page.tsx
-- [ ] T047 [US4] グループ詳細ページに履歴へのリンクを追加
-- [ ] T048 [US4] 履歴の日付フォーマットを日本語で表示（date-fns 使用）
-
-### Tests for User Story 4
-
-- [ ] T049 [P] [US4] getAttendanceHistoryByGroupId のユニットテストを作成 in **tests**/lib/attendance-service.test.ts
-
-**Checkpoint**: US4 完了 - 全ユーザーストーリーが独立して機能
+1. 管理者がグループを作成（楽器パート等）
+2. 管理者がイベント日付を登録
+3. ユーザーがグループを選択
+4. ユーザーがメンバーを選択または新規登録
+5. ユーザーが出欠ステータスを登録
+6. イベント詳細ページでグループ別の集計を表示
 
 ---
 
-## Phase 7: Polish & Cross-Cutting Concerns
+## 実装済み機能
 
-**目的**: 複数のユーザーストーリーにまたがる改善
+### ✅ 管理機能
+- グループの作成・編集・削除・並び替え
+- イベント日付の作成・編集・削除
+- localStorage による永続化
 
-- [ ] T050 [P] エラーハンドリングの強化（localStorage 容量超過、データ破損の対応）
-- [ ] T051 [P] ローディング状態の改善（スケルトン UI、スピナー）
-- [ ] T052 [P] アクセシビリティ改善（ARIA 属性、キーボードナビゲーション、フォーカス管理）
-- [ ] T053 [P] パフォーマンス最適化（useMemo for 集計、React.memo でコンポーネント最適化）
-- [ ] T054 [P] モバイル UI/UX の最終調整（タッチターゲットサイズ、スワイプジェスチャー）
-- [ ] T055 [P] エラーメッセージの日本語表現を改善（丁寧語、分かりやすさ）
-- [ ] T056 コードのリファクタリング（重複削除、命名改善、コメント追加）
-- [ ] T057 全機能の統合テスト（quickstart.md の検証シナリオ実行）
-- [ ] T058 [P] README.md を更新（プロジェクト概要、セットアップ手順、デモスクリーンショット）
+### ✅ ユーザー機能
+- イベント一覧の閲覧（日付昇順）
+- イベント詳細の閲覧（グループ別集計）
+- 出欠登録（グループ→メンバー→ステータス）
+- 新規メンバーの登録
 
----
-
-## Dependencies & Execution Order
-
-### Phase Dependencies
-
-- **Setup (Phase 1)**: 依存なし - 即座に開始可能
-- **Foundational (Phase 2)**: Setup 完了に依存 - すべてのユーザーストーリーをブロック
-- **User Stories (Phase 3-6)**: Foundational 完了に依存
-  - ストーリー間は並列実行可能（スタッフがいる場合）
-  - または優先順位順に逐次実行（P1 → P2 → P3）
-- **Polish (Phase 7)**: 実装したいすべてのユーザーストーリーの完了に依存
-
-### User Story Dependencies
-
-- **User Story 1 (P1)**: Foundational 後に開始可能 - 他ストーリーへの依存なし
-- **User Story 2 (P2)**: Foundational 後に開始可能 - US1 と統合するが独立してテスト可能
-- **User Story 3 (P3)**: Foundational 後に開始可能 - US1, US2 と統合するが独立してテスト可能
-- **User Story 4 (P3)**: Foundational 後に開始可能 - US1 と統合するが独立してテスト可能
-
-### Within Each User Story
-
-- 実装タスク → テストタスク（テストはコア機能の実装後）
-- 型定義・サービス → コンポーネント → ページ
-- コア実装 → 統合 → スタイリング・最適化
-- ストーリー完了後に次の優先順位へ
-
-### Parallel Opportunities
-
-- Setup 内の[P]タスク（T002-T009）は並列実行可能
-- Foundational 内の[P]タスク（T010-T014）は並列実行可能
-- Foundational 完了後、全ユーザーストーリーを並列開始可能（チーム規模による）
-- 各ユーザーストーリー内の[P]タスクは並列実行可能
-- テストタスク（各ストーリー内）は並列実行可能
-- Polish フェーズの[P]タスク（T050-T055, T058）は並列実行可能
+### ✅ 集計機能
+- グループ別の参加人数集計
+- ◯/△/✗ それぞれの人数表示
+- リアルタイム更新
 
 ---
 
-## Parallel Example: User Story 1
+## 今後の拡張案（未実装）
 
-```bash
-# US1の実装タスクを並列実行:
-Task T015: "グループサービスを実装 in lib/group-service.ts"
-Task T016: "出欠登録サービスを実装 in lib/attendance-service.ts"
-Task T017: "グループ一覧コンポーネントを作成 in components/group-list.tsx"
-Task T018: "グループフォームコンポーネントを作成 in components/group-form.tsx"
-Task T019: "出欠登録フォームコンポーネントを作成 in components/attendance-form.tsx"
+### 優先度: 高
 
-# US1のテストを並列実行:
-Task T027: "storage.tsのユニットテスト in __tests__/lib/storage.test.ts"
-Task T028: "group-service.tsのユニットテスト in __tests__/lib/group-service.test.ts"
-Task T029: "attendance-service.tsのユニットテスト in __tests__/lib/attendance-service.test.ts"
+- [ ] 出欠登録の編集・削除機能
+  - ユーザーが自分の登録を変更・削除
+  - `updateAttendance`, `deleteAttendance` は実装済み
+  - UI の実装が必要
+
+- [ ] 詳細な出欠一覧表示
+  - イベントごとに誰が参加/不参加かを名前で表示
+  - グループ内での名前一覧
+
+### 優先度: 中
+
+- [ ] データのエクスポート機能
+  - CSV エクスポート
+  - イベント×メンバーのマトリックス表示
+
+- [ ] フィルタリング・検索機能
+  - イベントを日付範囲で絞り込み
+  - グループでフィルタリング
+  - メンバー名で検索
+
+### 優先度: 低
+
+- [ ] 通知機能
+  - イベント前日にリマインダー
+  - 出欠登録の締切設定
+
+- [ ] 認証機能
+  - ユーザーログイン
+  - 管理者権限の制御
+  - メンバーごとの登録制限
+
+---
+
+## ファイル構成
+
+```
+attendance-hub/
+├── app/
+│   ├── page.tsx                    # トップページ（イベント一覧）
+│   ├── admin/
+│   │   ├── page.tsx               # 管理画面トップ
+│   │   ├── groups/page.tsx        # グループ管理
+│   │   └── events/page.tsx        # イベント日付管理
+│   └── events/[id]/
+│       ├── page.tsx               # イベント詳細
+│       └── register/page.tsx      # 出欠登録
+├── components/
+│   ├── loading-spinner.tsx        # ローディング表示
+│   └── skeleton.tsx               # スケルトンUI
+├── lib/
+│   ├── event-service.ts           # イベント日付サービス
+│   ├── group-service.ts           # グループサービス
+│   ├── member-service.ts          # メンバーサービス
+│   ├── attendance-service.ts      # 出欠サービス
+│   ├── storage.ts                 # localStorage 操作
+│   ├── validation.ts              # Zod スキーマ
+│   ├── date-utils.ts              # 日付フォーマット
+│   └── error-utils.ts             # エラーハンドリング
+├── types/
+│   └── index.ts                   # TypeScript 型定義
+└── __tests__/
+    └── lib/
+        ├── storage.test.ts        # ストレージテスト
+        ├── group-service.test.ts  # グループサービステスト
+        └── attendance-service.test.ts # 出欠サービステスト
 ```
 
 ---
 
-## Parallel Example: User Story 2
+## 技術スタック
 
-```bash
-# US2の実装タスクを並列実行（US1完了後）:
-Task T031: "集計カードコンポーネントを作成 in components/summary-card.tsx"
-
-# US2のテストを並列実行:
-Task T035: "calculateSummaryのユニットテスト in __tests__/lib/attendance-service.test.ts"
-Task T036: "SummaryCardコンポーネントのテスト in __tests__/components/summary-card.test.tsx"
-```
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript 5.3
+- **Styling**: Tailwind CSS
+- **Validation**: Zod
+- **Date**: date-fns (日本語ロケール)
+- **Storage**: localStorage
+- **Testing**: Jest + @testing-library/react
 
 ---
 
-## Implementation Strategy
+## 開発コマンド
 
-### MVP First (User Story 1 Only)
+```bash
+# 開発サーバー起動
+npm run dev
 
-1. Phase 1 完了: Setup
-2. Phase 2 完了: Foundational（CRITICAL - 全ストーリーをブロック）
-3. Phase 3 完了: User Story 1
-4. **STOP and VALIDATE**: US1 を独立してテスト
-5. 準備できていればデプロイ/デモ
+# テスト実行
+npm test
 
-### Incremental Delivery
+# ビルド
+npm run build
 
-1. Setup + Foundational 完了 → 基盤準備完了
-2. User Story 1 追加 → 独立してテスト → デプロイ/デモ（MVP！）
-3. User Story 2 追加 → 独立してテスト → デプロイ/デモ
-4. User Story 3 追加 → 独立してテスト → デプロイ/デモ
-5. User Story 4 追加 → 独立してテスト → デプロイ/デモ
-6. 各ストーリーが前のストーリーを壊すことなく価値を追加
-
-### Parallel Team Strategy
-
-複数の開発者がいる場合:
-
-1. チームで Setup + Foundational を一緒に完了
-2. Foundational 完了後:
-   - 開発者 A: User Story 1
-   - 開発者 B: User Story 2
-   - 開発者 C: User Story 3
-   - 開発者 D: User Story 4
-3. ストーリーが独立して完了・統合
+# 本番サーバー起動
+npm start
+```
 
 ---
 
 ## Notes
 
-- [P]タスク = 異なるファイル、依存関係なし
-- [Story]ラベルはタスクを特定のユーザーストーリーに紐付け、トレーサビリティを確保
-- 各ユーザーストーリーは独立して完了・テスト可能
-- プロトタイプのため、TDD サイクルは簡略化（テストは実装後）
-- 各タスクまたは論理的なグループの後にコミット
-- 任意のチェックポイントで停止し、ストーリーを独立して検証可能
-- 避けるべき: 曖昧なタスク、同じファイルの競合、ストーリーの独立性を壊す相互依存
-
-## Task Summary
-
-- **Total Tasks**: 58
-- **Setup Tasks**: 9
-- **Foundational Tasks**: 5
-- **User Story 1 (P1 - MVP)**: 15 tasks (12 implementation + 3 tests)
-- **User Story 2 (P2)**: 7 tasks (5 implementation + 2 tests)
-- **User Story 3 (P3)**: 7 tasks (6 implementation + 1 test)
-- **User Story 4 (P3)**: 6 tasks (5 implementation + 1 test)
-- **Polish**: 9 tasks
-
-**Parallel Opportunities**: 31 tasks marked [P] can run in parallel within their phase
-
-**MVP Scope**: Phase 1 (Setup) + Phase 2 (Foundational) + Phase 3 (User Story 1) = 26 tasks
-
-**Ready for**: `/speckit.implement` コマンドによる実装開始
+- 本プロトタイプは densuke.biz のような出欠確認アプリの改善版
+- グループ別の参加人数が一目でわかる設計
+- 汎用的な「グループ」概念（楽器パート、部署、クラス等に対応）
+- 認証なし、全員が管理者として利用可能
+- ローカルストレージで完結（サーバー不要）
