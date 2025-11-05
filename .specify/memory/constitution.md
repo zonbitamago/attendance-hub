@@ -1,50 +1,337 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+同期影響レポート:
+- バージョン変更: 1.0.0 → 1.1.0
+- 変更理由: 新原則の追加（TDD）とテスト戦略の大幅な拡張 → MINORバージョンアップ
+- 追加された原則:
+  - VIII. テスト駆動開発（TDD） - t-wadaのTDD原則に基づく開発手法を必須化
+  - 既存のVIII（パフォーマンス基準）はIXに繰り下げ
+- 更新されたセクション:
+  - 技術スタック: Jest、React Testing Library、Playwright、GitHub Actionsを追加
+  - テスト戦略: TDDサイクル（Red-Green-Refactor）、カバレッジ目標を明記
+  - コンプライアンスレビュー: TDDサイクルとテストカバレッジの検証項目を追加
+- テンプレートステータス:
+  ✅ spec-template.md - 互換性あり（テスト要件が明確化）
+  ✅ plan-template.md - 憲法チェックでTDD原則を参照可能
+  ✅ tasks-template.md - テストタスクの優先度がより明確に
+- フォローアップTODO: なし
+-->
 
-## Core Principles
+# Attendance Hub 憲法
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## コア原則
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### I. セキュリティ第一開発
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**必須**: すべてのレイヤーでセキュリティを実装する:
+- アプリケーションの全アクセスに認証を必須とする（Supabase Auth）
+- すべてのデータベーステーブルに行レベルセキュリティ（RLS）ポリシーを必須とする
+- XSSやインジェクション攻撃を防ぐための入力検証とサニタイゼーション
+- すべての状態変更操作にCSRF保護を実装
+- 秘密情報とAPIキーは環境変数でのみ管理
+- 管理者権限をアプリケーションとデータベースの両レベルで強制
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**根拠**: このアプリケーションはグループメンバーシップと出欠データを扱う。不正アクセスやデータ漏洩はユーザーのプライバシーと信頼を損なう。
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. 無料枠最適化
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**必須**: 無料枠の制約内で設計する:
+- データベースストレージ: 500MB以下（Supabase無料枠）
+- 月間帯域幅: 100GB以下（Vercel無料枠）
+- 月間アクティブユーザー: 50,000人以下
+- 有料の依存関係やサービスは使用しない
+- リソース使用を最小化するためにクエリとアセットを最適化
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**根拠**: これは個人/小規模チームプロジェクトである。無料枠内に収めることで、継続的なコストなしに長期的な持続可能性を確保する。
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### III. 型安全性（非交渉可能）
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**必須**: 厳密な型安全性を維持する:
+- TypeScript strict modeを常時有効にする
+- 絶対に必要な場合を除き`any`型を使用しない（使用する場合は文書化して正当化）
+- すべてのAPIコントラクトとデータベーススキーマに対応するTypeScript型を持つ
+- 型エラーはブロッキング - 型エラーがあるコードはマージ不可
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+**根拠**: 型安全性はコンパイル時にエラーを検出し、保守性を向上させ、生きたドキュメントとして機能する。小規模チームでは、ランタイムエラーのクラス全体を防ぐことができる。
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### IV. レスポンシブ・モバイルファースト設計
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**必須**: すべてのデバイスサイズをサポートする:
+- Tailwind CSSを使用したモバイルファーストCSSアプローチ
+- ビューポート幅でテスト: 320px（モバイル）、768px（タブレット）、1024px（デスクトップ）
+- タッチフレンドリーなインタラクティブ要素（最小44x44pxのタップターゲット）
+- サポートされるビューポートで水平スクロールなし
+
+**根拠**: ユーザーは外出先で出欠を確認・更新する必要がある。モバイルの使いやすさは採用の鍵となる。
+
+### V. サーバーレスアーキテクチャ
+
+**必須**: サーバーレスパターンに従う:
+- バックエンドロジックにはNext.js API Routesを使用
+- ステートレス関数 - メモリ内セッション状態を持たない
+- Supabaseを通じたデータベース接続プーリング
+- 可能な限り静的生成（SSG）をサーバーサイドレンダリング（SSR）より優先
+- 動的コンテンツはクライアントサイドデータフェッチング
+
+**根拠**: サーバーレスアーキテクチャは無料枠ホスティング（Vercel）と整合し、インフラ管理なしに自動的にスケールする。
+
+### VI. アクセシビリティ基準
+
+**推奨**: WCAG 2.1 AA準拠を目指す:
+- セマンティックHTML要素（`<button>`、`<nav>`、`<main>`など）
+- 十分な色コントラスト比（通常テキストで4.5:1）
+- すべてのインタラクティブ要素でキーボードナビゲーションをサポート
+- セマンティックHTMLが不十分な場合はARIAラベル
+- すべてのインタラクティブ要素でフォーカスインジケーターを表示
+
+**根拠**: アクセシビリティは道徳的義務であり、障害のあるユーザーだけでなくすべてのユーザーの使いやすさを向上させる。
+
+### VII. 日本語対応とローカライゼーション
+
+**必須**: 日本語ファーストの体験を提供する:
+- すべてのUIテキストを日本語で表示
+- 日本の慣習に従った日付/時刻フォーマット
+- 明確で丁寧な日本語でのエラーメッセージ
+- フォームでの全角文字のサポート
+- 将来のi18n対応のための準備（ハードコードされた文字列を避ける）
+
+**根拠**: 主要ユーザーは日本語話者である。ネイティブ言語のサポートは使いやすさとエラー理解に不可欠である。
+
+### VIII. テスト駆動開発（TDD）
+
+**必須**: t-wadaのTDD原則に従う:
+- **Red-Green-Refactor**サイクルを厳守
+  1. Red: まず失敗するテストを書く
+  2. Green: テストを通す最小限の実装
+  3. Refactor: 動作を保ちながらコードを改善
+- **テストファースト**: 実装コードより先にテストを書く
+- **小さなステップ**: 一度に一つのテストケースに集中
+- **テストの独立性**: 各テストは他のテストに依存しない
+- **テストコードの品質**: プロダクションコードと同等の品質を維持
+
+**テストツール**:
+- **フレームワーク**: Jest
+- **Reactコンポーネント**: React Testing Library
+- **E2Eテスト**: Playwright（必要な場合のみ）
+
+**テスト対象の優先度**:
+1. **ビジネスロジック**: グループ管理、出欠登録のロジック（必須）
+2. **Reactコンポーネント**: ユーザーインタラクション、条件分岐のあるUI（推奨）
+3. **APIルート**: 入力検証、認可、データ操作（必須）
+4. **ユーティリティ関数**: 日付フォーマット、データ変換など（必須）
+
+**テストを書かない対象**:
+- 単純なプレゼンテーションコンポーネント（ロジックなし）
+- Next.js/Reactのフレームワーク機能（既にテスト済み）
+- 外部ライブラリ（Supabase、Tailwindなど）
+
+**根拠**: t-wadaのTDDアプローチは、設計の改善、バグの早期発見、リファクタリングの安全性を提供する。テストは仕様であり、ドキュメントでもある。
+
+### IX. パフォーマンス基準
+
+**必須**: パフォーマンス目標を満たす:
+- 初期ページロード: 3G接続で3秒以内
+- Time to Interactive（TTI）: 5秒以内
+- Lighthouse Performanceスコア: 90以上
+- Next.js `Image`コンポーネントを使用した画像最適化
+- 非クリティカル機能のコード分割と遅延ロード
+
+**根拠**: 高速なロード時間はユーザーエクスペリエンスとリテンションを向上させる、特にモバイルネットワークで。パフォーマンスは機能である。
+
+## 技術スタック
+
+### 必須技術
+
+- **フロントエンドフレームワーク**: Next.js 14以上（App Router）
+- **言語**: TypeScript 5.0以上（strict mode）
+- **スタイリング**: Tailwind CSS 3.0以上
+- **データベース**: Supabase（PostgreSQL）
+- **認証**: Supabase Auth
+- **ホスティング**: Vercel
+- **バージョン管理**: Git + GitHub
+- **テストフレームワーク**: Jest + React Testing Library
+- **E2Eテスト**: Playwright（必要に応じて）
+- **CI/CD**: GitHub Actions
+
+### 禁止事項
+
+- Next.js API Routes以外のバックエンドフレームワークは使用しない
+- 有料サービスやAPIは使用しない
+- クライアントサイド状態管理ライブラリ（Redux、MobX）は複雑性が正当化されない限り使用しない
+- CSS-in-JSライブラリ（styled-components、Emotion）は使用しない - Tailwindのみ
+
+**根拠**: このスタックは実績があり、無料枠に優しく、TypeScript統合による優れた開発者体験を提供する。
+
+## アーキテクチャと設計
+
+### データアクセス
+
+- **必須**: すべてのデータベース操作にSupabaseクライアントを使用
+- **必須**: クエリを書く前にRLSポリシーを実装
+- **推奨**: Supabaseリアルタイムサブスクリプションは控えめに使用（帯域幅にカウント）
+- **必須**: データベースエラーをユーザーフレンドリーなメッセージで適切に処理
+
+### コンポーネント構造
+
+- **関数コンポーネントのみ** - クラスコンポーネントは使用しない
+- **Reactサーバーコンポーネント**を可能な限り使用（App Routerデフォルト）
+- **クライアントコンポーネント**（`'use client'`）は必要な場合のみ（インタラクティビティ、ブラウザAPI）
+- **コンポーネントファイル命名**: ケバブケース（例: `attendance-form.tsx`）
+- **関数命名**: キャメルケース（例: `handleSubmit`、`fetchAttendance`）
+
+### コード組織
+
+```
+attendance-hub/
+├── app/                    # Next.js App Routerのページとレイアウト
+│   ├── (auth)/            # 認証必須ルート
+│   ├── api/               # APIルート
+│   └── layout.tsx         # ルートレイアウト
+├── components/            # 再利用可能なReactコンポーネント
+├── lib/                   # ユーティリティ、ヘルパー、Supabaseクライアント
+├── types/                 # TypeScript型定義
+├── public/                # 静的アセット
+└── supabase/              # データベースマイグレーションと型
+```
+
+### 状態管理
+
+- **デフォルト**: Reactビルトインフック（`useState`、`useContext`）
+- **サーバー状態**: キャッシングが必要な場合はReact QueryまたはSWRを使ったSupabaseクエリ
+- **URL状態**: 共有可能な状態にはNext.jsルーティングとサーチパラメータ
+
+**根拠**: シンプルに始める。コンポーネントのprop drillingが保守不可能になった場合のみ複雑性（例: Zustand）を追加する。
+
+## セキュリティ要件
+
+### 認証フロー
+
+1. ユーザーはSupabase Auth経由で認証する必要がある（初期はメール/パスワード）
+2. セッショントークンはSupabaseが管理（httpOnly cookie）
+3. 保護されたルートはサーバーサイドでセッションをチェック（middlewareまたは`getServerSession`）
+4. ログアウトはセッションをクリアしてログインにリダイレクト
+
+### 行レベルセキュリティ（RLS）
+
+**すべてのテーブルにRLSポリシーが必須**:
+- `groups`テーブル: ユーザーは自分が属するグループのみ閲覧可能
+- `group_members`テーブル: ユーザーは自分のグループのメンバーシップのみ閲覧可能
+- `attendance`テーブル: ユーザーは自分のグループの出欠のみ閲覧/編集可能
+- `admins`テーブル: セキュア関数経由で読み取り専用; 直接ユーザーアクセス不可
+
+### 入力検証
+
+- **クライアントサイド**: UXのための即時フィードバック（React Hook Form + Zod）
+- **サーバーサイド**: APIルートで常に検証（クライアントを信頼しない）
+- **データベース**: 最終的な安全網としての制約とトリガー
+
+## パフォーマンス基準
+
+### 最適化技術
+
+- **画像**: WebPフォーマットでNext.js `Image`コンポーネントを使用
+- **フォント**: 最適化されたフォントロードのため`next/font`を使用
+- **バンドルサイズ**: `@next/bundle-analyzer`で監視
+- **データベースクエリ**: 頻繁にクエリされる列にインデックスを使用
+- **キャッシング**: エッジで静的コンテンツをキャッシュ（Vercel CDN）
+
+### 監視
+
+- **Lighthouse CI**: デプロイごとに実行
+- **Vercel Analytics**: 本番環境でCore Web Vitalsを追跡
+- **Supabaseダッシュボード**: クエリパフォーマンスとデータベースサイズを監視
+
+## 開発ワークフロー
+
+### コード品質
+
+- **リンティング**: Next.js推奨設定のESLint
+- **フォーマット**: 2スペースインデントのPrettier
+- **プリコミットフック**: コミット時にlintとformat（Husky + lint-staged）
+- **型チェック**: マージ前に`tsc --noEmit`が通ること
+
+### テスト戦略
+
+**TDD原則に基づく開発フロー**（原則VIII参照）:
+
+1. **テストを先に書く**
+   - 新機能やバグフィックスは必ずテストから開始
+   - まず失敗するテスト（Red）を確認
+   - テストが仕様となる
+
+2. **最小実装でGreenにする**
+   - テストを通す最小限のコードを書く
+   - 過剰な実装をしない（YAGNI: You Aren't Gonna Need It）
+
+3. **Refactorで改善**
+   - テストがGreenのまま、コードを整理
+   - 重複を除去、命名を改善、構造を最適化
+
+4. **自動テスト実行**
+   - コミット前: `npm test`（ローカル）
+   - プッシュ後: GitHub Actions（CI）で自動実行
+   - テストが失敗したコードはマージ不可
+
+**手動テスト**（自動化困難な部分）:
+- **デバイステスト**: モバイル、タブレット、デスクトップビューポートで検証
+- **ビジュアルテスト**: UIの見た目、レスポンシブデザイン
+- **ユーザビリティテスト**: 実際の使用感、エラーメッセージの分かりやすさ
+
+**テストカバレッジ目標**:
+- ビジネスロジック: 80%以上
+- APIルート: 80%以上
+- Reactコンポーネント: 60%以上（ロジック部分）
+- 全体: 70%以上
+
+### Gitワークフロー
+
+- **ブランチ命名**: `feature/説明`、`fix/説明`
+- **コミット**: 日本語または英語の明確で説明的なメッセージ
+- **プルリクエスト**: `main`へのマージ前にレビュー
+- **mainブランチ**: 常にデプロイ可能; Vercel自動デプロイをトリガー
+
+### デプロイメント
+
+- **環境**: 本番環境のみ（ステージング環境なし）
+- **データベースマイグレーション**: ローカルでテスト後、本番Supabaseに適用
+- **ロールバック**: GitとVercelデプロイメントロールバック経由でリバート
+- **秘密情報**: Vercel環境変数UI経由で管理
+
+## ガバナンス
+
+### 憲法の権限
+
+この憲法は他のすべての開発プラクティスに優先する。疑問がある場合は、これらの原則を参照すること。
+
+### 改訂
+
+改訂には以下が必要:
+1. 変更が必要な理由を文書化した明確な正当化
+2. バージョンアップを伴うこの文書の更新
+3. 既存コードに影響する破壊的変更がある場合のマイグレーション計画
+4. 依存テンプレート（spec、plan、tasks）の更新
+
+### バージョンアップルール
+
+- **MAJOR**（X.0.0）: コア原則の削除または根本的な変更
+- **MINOR**（1.X.0）: 新しい原則の追加またはガイダンスの大幅な拡張
+- **PATCH**（1.0.X）: 明確化、文言改善、誤字修正
+
+### コンプライアンスレビュー
+
+すべてのコードレビューで以下を検証する必要がある:
+- ✅ 型安全性の維持（正当化なしの`any`なし）
+- ✅ セキュリティパターンの遵守（RLS、入力検証）
+- ✅ 無料枠制約の尊重
+- ✅ TDDサイクルの実施（テストファーストで実装）
+- ✅ テストカバレッジの基準達成
+- ✅ モバイルレスポンシブのテスト済み
+- ✅ 日本語UIテキストの正確性
+
+### 複雑性の正当化
+
+原則に従えない場合（例: 無料枠制限を超える必要がある）、実装計画の「複雑性追跡」セクションに文書化する:
+- どの原則に違反しているか
+- なぜ必要なのか
+- どのようなシンプルな代替案が検討され、なぜ却下されたか
+
+**バージョン**: 1.1.0 | **批准日**: 2025-11-05 | **最終改訂**: 2025-11-05
