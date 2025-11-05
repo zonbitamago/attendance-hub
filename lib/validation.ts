@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import type {
-  AttendanceStatus,
   Group,
   Attendance,
   CreateGroupInput,

@@ -126,7 +126,7 @@ export function validateAndRepairStorage(): {
 
   // グループデータのチェック
   try {
-    const groups = loadGroups()
+    loadGroups()
     // 読み込めたら問題なし
   } catch (error) {
     console.warn('グループデータが破損しています。初期化します。')
@@ -136,7 +136,7 @@ export function validateAndRepairStorage(): {
 
   // 出欠登録データのチェック
   try {
-    const attendances = loadAttendances()
+    loadAttendances()
     // 読み込めたら問題なし
   } catch (error) {
     console.warn('出欠登録データが破損しています。初期化します。')
