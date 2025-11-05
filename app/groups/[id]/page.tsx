@@ -3,12 +3,13 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import type { Group, Attendance } from '@/types'
+import type { Group, Attendance, Summary } from '@/types'
 import { AttendanceStatusSymbol } from '@/types'
 import { getGroupById } from '@/lib/group-service'
-import { getAttendancesByGroupId } from '@/lib/attendance-service'
+import { getAttendancesByGroupId, calculateSummary } from '@/lib/attendance-service'
 import { formatDateTime } from '@/lib/date-utils'
 import { NotFoundError } from '@/lib/error-utils'
+import { SummaryCard } from '@/components/summary-card'
 
 export default function GroupDetailPage() {
   const params = useParams()
@@ -16,6 +17,7 @@ export default function GroupDetailPage() {
 
   const [group, setGroup] = useState<Group | null>(null)
   const [attendances, setAttendances] = useState<Attendance[]>([])
+  const [summary, setSummary] = useState<Summary | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
 
@@ -23,8 +25,10 @@ export default function GroupDetailPage() {
     try {
       const loadedGroup = getGroupById(groupId)
       const loadedAttendances = getAttendancesByGroupId(groupId)
+      const calculatedSummary = calculateSummary(groupId)
       setGroup(loadedGroup)
       setAttendances(loadedAttendances)
+      setSummary(calculatedSummary)
     } catch (err) {
       if (err instanceof NotFoundError) {
         setError('グループが見つかりませんでした')
@@ -111,6 +115,11 @@ export default function GroupDetailPage() {
           </Link>
         </div>
       </div>
+
+      {/* 集計結果 */}
+      {summary && summary.totalCount > 0 && (
+        <SummaryCard summary={summary} />
+      )}
 
       {/* 出欠一覧 */}
       <div className="bg-white rounded-lg shadow-md p-8">
