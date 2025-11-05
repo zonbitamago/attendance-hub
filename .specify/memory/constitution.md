@@ -1,18 +1,22 @@
 <!--
 同期影響レポート:
-- バージョン変更: 1.0.0 → 1.1.0
-- 変更理由: 新原則の追加（TDD）とテスト戦略の大幅な拡張 → MINORバージョンアップ
-- 追加された原則:
-  - VIII. テスト駆動開発（TDD） - t-wadaのTDD原則に基づく開発手法を必須化
-  - 既存のVIII（パフォーマンス基準）はIXに繰り下げ
-- 更新されたセクション:
-  - 技術スタック: Jest、React Testing Library、Playwright、GitHub Actionsを追加
-  - テスト戦略: TDDサイクル（Red-Green-Refactor）、カバレッジ目標を明記
-  - コンプライアンスレビュー: TDDサイクルとテストカバレッジの検証項目を追加
+- バージョン変更: 1.1.0 → 1.1.1
+- 変更理由: 技術スタックのバージョン明確化と構造改善 → PATCHバージョンアップ
+- 変更内容:
+  - 技術スタックを6つのカテゴリに再構成（ランタイム・言語、フロントエンド、バックエンド、テスト、開発ツール、ホスティング）
+  - 具体的なバージョン要件を追加:
+    - Node.js 20.x以上（LTS）を追加
+    - Next.js: 14以上 → 15以上
+    - React: 19以上を明記
+    - TypeScript: 5.0以上 → 5.3以上
+    - Tailwind CSS: 3.0以上 → 3.4以上
+    - Jest 29以上、React Testing Library 14以上、Playwright 1.40以上を明記
+    - ESLint 9以上、Prettier 3以上を追加
+  - コア原則VIIIのテストツールセクションにもバージョンを追加
 - テンプレートステータス:
-  ✅ spec-template.md - 互換性あり（テスト要件が明確化）
-  ✅ plan-template.md - 憲法チェックでTDD原則を参照可能
-  ✅ tasks-template.md - テストタスクの優先度がより明確に
+  ✅ spec-template.md - 互換性あり
+  ✅ plan-template.md - 憲法チェックで更新されたバージョン要件を参照可能
+  ✅ tasks-template.md - 互換性あり
 - フォローアップTODO: なし
 -->
 
@@ -109,9 +113,9 @@
 - **テストコードの品質**: プロダクションコードと同等の品質を維持
 
 **テストツール**:
-- **フレームワーク**: Jest
-- **Reactコンポーネント**: React Testing Library
-- **E2Eテスト**: Playwright（必要な場合のみ）
+- **単体・統合テスト**: Jest 29以上
+- **Reactコンポーネント**: React Testing Library 14以上
+- **E2Eテスト**: Playwright 1.40以上（必要な場合のみ）
 
 **テスト対象の優先度**:
 1. **ビジネスロジック**: グループ管理、出欠登録のロジック（必須）
@@ -141,16 +145,34 @@
 
 ### 必須技術
 
-- **フロントエンドフレームワーク**: Next.js 14以上（App Router）
-- **言語**: TypeScript 5.0以上（strict mode）
-- **スタイリング**: Tailwind CSS 3.0以上
+**ランタイム・言語**:
+- **Node.js**: 20.x以上（LTS）
+- **TypeScript**: 5.3以上（strict mode必須）
+
+**フロントエンド・フレームワーク**:
+- **Next.js**: 15以上（App Router使用）
+- **React**: 19以上（Next.js 15に同梱）
+- **Tailwind CSS**: 3.4以上
+
+**バックエンド・データベース**:
 - **データベース**: Supabase（PostgreSQL）
 - **認証**: Supabase Auth
-- **ホスティング**: Vercel
+- **APIルート**: Next.js API Routes
+
+**テスト**:
+- **単体・統合テスト**: Jest 29以上
+- **Reactコンポーネントテスト**: React Testing Library 14以上
+- **E2Eテスト**: Playwright 1.40以上（必要に応じて）
+
+**開発ツール**:
+- **リンター**: ESLint 9以上（Next.js推奨設定）
+- **フォーマッター**: Prettier 3以上
 - **バージョン管理**: Git + GitHub
-- **テストフレームワーク**: Jest + React Testing Library
-- **E2Eテスト**: Playwright（必要に応じて）
 - **CI/CD**: GitHub Actions
+
+**ホスティング・デプロイ**:
+- **ホスティング**: Vercel
+- **デプロイ**: Vercel Git統合（自動デプロイ）
 
 ### 禁止事項
 
@@ -334,4 +356,4 @@ attendance-hub/
 - なぜ必要なのか
 - どのようなシンプルな代替案が検討され、なぜ却下されたか
 
-**バージョン**: 1.1.0 | **批准日**: 2025-11-05 | **最終改訂**: 2025-11-05
+**バージョン**: 1.1.1 | **批准日**: 2025-11-05 | **最終改訂**: 2025-11-05
