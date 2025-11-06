@@ -161,7 +161,7 @@ export default function RegisterAttendancePage() {
                   id="group"
                   value={selectedGroupId}
                   onChange={(e) => setSelectedGroupId(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
                   required
                 >
                   <option value="">-- 選択してください --</option>
@@ -192,7 +192,7 @@ export default function RegisterAttendancePage() {
                           setSelectedMemberId(e.target.value);
                           if (e.target.value) setNewMemberName('');
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
                         disabled={!!newMemberName}
                       >
                         <option value="">-- 選択してください --</option>
@@ -217,7 +217,7 @@ export default function RegisterAttendancePage() {
                         setNewMemberName(e.target.value);
                         if (e.target.value) setSelectedMemberId('');
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
                       placeholder="名前を入力"
                       disabled={!!selectedMemberId}
                     />
