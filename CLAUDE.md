@@ -1,16 +1,14 @@
 # attendance-hub 開発ガイドライン
 
-全機能の実装計画から自動生成。最終更新: 2025-11-05
+全機能の実装計画から自動生成。最終更新: 2025-11-07
 
 ## アクティブな技術スタック
 
-- **TypeScript 5.3以上**（strict mode）
-- **Next.js 15**（App Router）
-- **React 19**
+- **TypeScript 5.9**（strict mode）
+- **Next.js 16**（App Router）
+- **React 19.2**
 - **Tailwind CSS 3.4**
 - **localStorage**（プロトタイプ用、将来的にSupabase PostgreSQLへ移行）
-
-*フィーチャー: 001-attendance-prototype*
 
 ## プロジェクト構造
 
@@ -18,21 +16,19 @@
 attendance-hub/
 ├── app/                    # Next.js App Router
 │   ├── layout.tsx         # ルートレイアウト
-│   ├── page.tsx           # トップページ（グループ一覧）
-│   ├── groups/
-│   │   ├── [id]/
-│   │   │   ├── page.tsx          # グループ詳細
-│   │   │   ├── register/page.tsx # 出欠登録
-│   │   │   └── history/page.tsx  # 履歴表示
-│   │   └── new/page.tsx  # グループ作成
+│   ├── page.tsx           # トップページ（イベント一覧）
+│   ├── admin/             # 管理画面
+│   │   ├── page.tsx              # 管理トップ
+│   │   ├── groups/page.tsx       # グループ管理
+│   │   └── events/page.tsx       # イベント管理
+│   ├── events/            # イベント関連
+│   │   └── [id]/
+│   │       ├── page.tsx          # イベント詳細
+│   │       └── register/page.tsx # 出欠登録
 │   └── globals.css        # Tailwind CSS
 ├── components/            # 再利用可能なコンポーネント
-│   ├── group-list.tsx
-│   ├── group-form.tsx
-│   ├── attendance-form.tsx
-│   ├── attendance-list.tsx
-│   ├── summary-card.tsx
-│   └── history-list.tsx
+│   ├── loading-spinner.tsx  # ローディング表示
+│   └── skeleton.tsx         # スケルトンUI
 ├── lib/                   # ビジネスロジック・ユーティリティ
 │   ├── storage.ts        # localStorage操作
 │   ├── group-service.ts  # グループ関連ロジック
@@ -42,18 +38,20 @@ attendance-hub/
 ├── types/                 # TypeScript型定義
 │   └── index.ts
 ├── __tests__/            # テスト
-│   ├── lib/
-│   │   ├── storage.test.ts
-│   │   ├── group-service.test.ts
-│   │   └── attendance-service.test.ts
-│   └── components/
-│       └── summary-card.test.tsx
+│   └── lib/
+│       ├── storage.test.ts
+│       ├── group-service.test.ts
+│       └── attendance-service.test.ts
 └── specs/                # 機能仕様・設計ドキュメント
-    └── 001-attendance-prototype/
+    ├── 001-attendance-prototype/
+    │   ├── spec.md
+    │   ├── plan.md
+    │   ├── data-model.md
+    │   └── quickstart.md
+    └── 002-input-text-visibility/
         ├── spec.md
         ├── plan.md
-        ├── data-model.md
-        └── quickstart.md
+        └── tasks.md
 ```
 
 ## 主要コマンド
@@ -111,9 +109,21 @@ npx tsc --noEmit
 
 ## 最近の変更
 
+- **2025-11-07**: Next.js 16とReact 19正式版へアップグレード
+  - Next.js 15 → 16.0.1
+  - React 19 → 19.2.0
+  - TypeScript 5.9.3
+- **2025-11-06**: 002-input-text-visibility フィーチャーを完了
+  - 入力欄のテキスト視認性を改善
+  - ダークモード対応のテキストカラー調整
+  - プレースホルダーとラベルの可読性向上
+- **2025-11-06**: 001-attendance-prototype データモデル刷新
+  - EventDate中心の設計に移行
+  - グループベースからイベントベースのUI実装
+  - 44テスト全てpass、ビルド成功
 - **2025-11-05**: 001-attendance-prototype フィーチャーを追加
-  - TypeScript 5.3以上（strict mode）
-  - Next.js 15 + React 19
+  - TypeScript strict mode
+  - Next.js 15 + React 19 + App Router
   - Tailwind CSS 3.4
   - localStorageによるデータ永続化
 
@@ -136,10 +146,3 @@ npx tsc --noEmit
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
-
-## Active Technologies
-- TypeScript 5.3以上（strict mode） + Next.js 15 (App Router)、React 19、Tailwind CSS 3.4 (002-input-text-visibility)
-- N/A（UIスタイリングのみ） (002-input-text-visibility)
-
-## Recent Changes
-- 002-input-text-visibility: Added TypeScript 5.3以上（strict mode） + Next.js 15 (App Router)、React 19、Tailwind CSS 3.4
