@@ -136,3 +136,10 @@ npx tsc --noEmit
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
+
+## Active Technologies
+- TypeScript 5.3以上（strict mode） + Next.js 15 (App Router)、React 19、Tailwind CSS 3.4 (002-input-text-visibility)
+- N/A（UIスタイリングのみ） (002-input-text-visibility)
+
+## Recent Changes
+- 002-input-text-visibility: Added TypeScript 5.3以上（strict mode） + Next.js 15 (App Router)、React 19、Tailwind CSS 3.4
