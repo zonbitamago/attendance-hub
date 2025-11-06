@@ -22,9 +22,9 @@
 
 **目的**: 開発環境の確認と準備
 
-- [ ] T001 開発サーバーが正常に起動することを確認（`npm run dev`）
-- [ ] T002 Tailwind CSSが正しく設定されていることを確認（tailwind.config.tsの`content`配列）
-- [ ] T003 ブラウザでライトモード/ダークモードの切り替え方法を確認
+- [X] T001 開発サーバーが正常に起動することを確認（`npm run dev`）
+- [X] T002 Tailwind CSSが正しく設定されていることを確認（tailwind.config.tsの`content`配列）
+- [X] T003 ブラウザでライトモード/ダークモードの切り替え方法を確認
 
 ---
 
@@ -34,9 +34,9 @@
 
 **⚠️ CRITICAL**: この段階が完了するまで、ユーザーストーリーの作業は開始できません
 
-- [ ] T004 research.mdの内容を確認し、適用するTailwindクラスを理解（`text-gray-900`、`placeholder:text-gray-400`）
-- [ ] T005 quickstart.mdの手動テスト手順を確認
-- [ ] T006 3つの対象ファイル（app/admin/groups/page.tsx、app/admin/events/page.tsx、app/events/[id]/register/page.tsx）を開き、修正箇所を確認
+- [X] T004 research.mdの内容を確認し、適用するTailwindクラスを理解（`text-gray-900`、`placeholder:text-gray-400`）
+- [X] T005 quickstart.mdの手動テスト手順を確認
+- [X] T006 3つの対象ファイル（app/admin/groups/page.tsx、app/admin/events/page.tsx、app/events/[id]/register/page.tsx）を開き、修正箇所を確認
 
 **Checkpoint**: 基盤準備完了 - ユーザーストーリーの実装を開始可能
 
@@ -50,17 +50,17 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] app/admin/groups/page.tsx の133行目のグループ名input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T008 [US1] app/admin/groups/page.tsx の148行目の表示順序input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T009 [US1] app/admin/groups/page.tsx の165行目のカラーコードinput要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T007 [US1] app/admin/groups/page.tsx の133行目のグループ名input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T008 [US1] app/admin/groups/page.tsx の148行目の表示順序input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T009 [US1] app/admin/groups/page.tsx の165行目のカラーコードinput要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [ ] T010 [US1] ライトモードでグループ管理画面（http://localhost:3000/admin/groups）を開き、3つの入力欄すべてで入力テキストが濃いグレーで明瞭に表示されることを手動確認
-- [ ] T011 [US1] app/admin/events/page.tsx の134行目の日付input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T012 [US1] app/admin/events/page.tsx の148行目のタイトルinput要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T013 [US1] app/admin/events/page.tsx の163行目の場所input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T011 [US1] app/admin/events/page.tsx の134行目の日付input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T012 [US1] app/admin/events/page.tsx の148行目のタイトルinput要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T013 [US1] app/admin/events/page.tsx の163行目の場所input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [ ] T014 [US1] ライトモードでイベント管理画面（http://localhost:3000/admin/events）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
-- [ ] T015 [US1] app/events/[id]/register/page.tsx の160行目のグループselect要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T016 [US1] app/events/[id]/register/page.tsx の188行目のメンバーselect要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T017 [US1] app/events/[id]/register/page.tsx の212行目の新メンバー名input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T015 [US1] app/events/[id]/register/page.tsx の160行目のグループselect要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T016 [US1] app/events/[id]/register/page.tsx の188行目のメンバーselect要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
+- [X] T017 [US1] app/events/[id]/register/page.tsx の212行目の新メンバー名input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [ ] T018 [US1] ライトモードで出欠登録画面（http://localhost:3000/events/[実際のイベントID]/register）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
 
 **Checkpoint**: この時点で、User Story 1は完全に機能し、ライトモードで独立してテスト可能
