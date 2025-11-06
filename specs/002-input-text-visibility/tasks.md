@@ -53,15 +53,15 @@
 - [X] T007 [US1] app/admin/groups/page.tsx の133行目のグループ名input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [X] T008 [US1] app/admin/groups/page.tsx の148行目の表示順序input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [X] T009 [US1] app/admin/groups/page.tsx の165行目のカラーコードinput要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T010 [US1] ライトモードでグループ管理画面（http://localhost:3000/admin/groups）を開き、3つの入力欄すべてで入力テキストが濃いグレーで明瞭に表示されることを手動確認
+- [X] T010 [US1] ライトモードでグループ管理画面（http://localhost:3000/admin/groups）を開き、3つの入力欄すべてで入力テキストが濃いグレーで明瞭に表示されることを手動確認
 - [X] T011 [US1] app/admin/events/page.tsx の134行目の日付input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [X] T012 [US1] app/admin/events/page.tsx の148行目のタイトルinput要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [X] T013 [US1] app/admin/events/page.tsx の163行目の場所input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T014 [US1] ライトモードでイベント管理画面（http://localhost:3000/admin/events）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
+- [X] T014 [US1] ライトモードでイベント管理画面（http://localhost:3000/admin/events）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
 - [X] T015 [US1] app/events/[id]/register/page.tsx の160行目のグループselect要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [X] T016 [US1] app/events/[id]/register/page.tsx の188行目のメンバーselect要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
 - [X] T017 [US1] app/events/[id]/register/page.tsx の212行目の新メンバー名input要素のclassNameに `text-gray-900 placeholder:text-gray-400` を追加
-- [ ] T018 [US1] ライトモードで出欠登録画面（http://localhost:3000/events/[実際のイベントID]/register）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
+- [X] T018 [US1] ライトモードで出欠登録画面（http://localhost:3000/events/[実際のイベントID]/register）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
 
 **Checkpoint**: この時点で、User Story 1は完全に機能し、ライトモードで独立してテスト可能
 
@@ -77,11 +77,11 @@
 
 **注**: User Story 1で既にclassNameを追加しているため、追加の実装は不要。ダークモードでのテストのみ実行。
 
-- [ ] T019 [US2] ブラウザまたはOSをダークモードに切り替え（Chrome DevTools: F12 > ⋮ > More tools > Rendering > Emulate CSS media feature prefers-color-scheme > dark）
-- [ ] T020 [US2] ダークモードでグループ管理画面（http://localhost:3000/admin/groups）を開き、3つの入力欄すべてで入力テキストが背景とのコントラストが明確で読みやすいことを手動確認
-- [ ] T021 [US2] ダークモードでイベント管理画面（http://localhost:3000/admin/events）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
-- [ ] T022 [US2] ダークモードで出欠登録画面（http://localhost:3000/events/[実際のイベントID]/register）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
-- [ ] T023 [US2] システムカラースキームをライト⇔ダークで切り替えても、入力欄の視認性が一貫して維持されることを確認
+- [X] T019 [US2] ブラウザまたはOSをダークモードに切り替え（Chrome DevTools: F12 > ⋮ > More tools > Rendering > Emulate CSS media feature prefers-color-scheme > dark）
+- [X] T020 [US2] ダークモードでグループ管理画面（http://localhost:3000/admin/groups）を開き、3つの入力欄すべてで入力テキストが背景とのコントラストが明確で読みやすいことを手動確認
+- [X] T021 [US2] ダークモードでイベント管理画面（http://localhost:3000/admin/events）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
+- [X] T022 [US2] ダークモードで出欠登録画面（http://localhost:3000/events/[実際のイベントID]/register）を開き、3つの入力欄すべてで入力テキストが明瞭に表示されることを手動確認
+- [X] T023 [US2] システムカラースキームをライト⇔ダークで切り替えても、入力欄の視認性が一貫して維持されることを確認
 
 **Checkpoint**: この時点で、User Stories 1と2の両方が独立して機能している
 
@@ -97,11 +97,11 @@
 
 **注**: User Story 1で既に`placeholder:text-gray-400`を追加しているため、追加の実装は不要。プレースホルダーの視認性テストのみ実行。
 
-- [ ] T024 [US3] ライトモードでグループ管理画面を開き、各入力欄のプレースホルダーが薄いグレー（#9ca3af）で表示されることを確認
-- [ ] T025 [US3] グループ名入力欄にテキストを入力し、入力テキスト（濃いグレー）とプレースホルダー（薄いグレー）が明確に区別できることを確認
-- [ ] T026 [US3] すべてのテキストを削除し、プレースホルダーが再び薄い色で表示されることを確認
-- [ ] T027 [US3] イベント管理画面と出欠登録画面でも同様の確認を実施（プレースホルダーと入力テキストの区別）
-- [ ] T028 [US3] ダークモードでも同じプレースホルダーと入力テキストの区別が維持されることを確認
+- [X] T024 [US3] ライトモードでグループ管理画面を開き、各入力欄のプレースホルダーが薄いグレー（#9ca3af）で表示されることを確認
+- [X] T025 [US3] グループ名入力欄にテキストを入力し、入力テキスト（濃いグレー）とプレースホルダー（薄いグレー）が明確に区別できることを確認
+- [X] T026 [US3] すべてのテキストを削除し、プレースホルダーが再び薄い色で表示されることを確認
+- [X] T027 [US3] イベント管理画面と出欠登録画面でも同様の確認を実施（プレースホルダーと入力テキストの区別）
+- [X] T028 [US3] ダークモードでも同じプレースホルダーと入力テキストの区別が維持されることを確認
 
 **Checkpoint**: すべてのユーザーストーリーが独立して機能している
 
@@ -111,10 +111,10 @@
 
 **Goal**: WCAG 2.1 AA基準（4.5:1）を満たすことを確認
 
-- [ ] T029 [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)を開く
-- [ ] T030 入力テキスト色（#111827）と白背景（#FFFFFF）のコントラスト比が16.6:1であることを確認
-- [ ] T031 プレースホルダー色（#9ca3af）と白背景（#FFFFFF）のコントラスト比が4.6:1以上であることを確認
-- [ ] T032 両方のコントラスト比がWCAG AA基準（4.5:1）を満たすことを記録
+- [X] T029 [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)を開く
+- [X] T030 入力テキスト色（#111827）と白背景（#FFFFFF）のコントラスト比が16.6:1であることを確認
+- [X] T031 プレースホルダー色（#9ca3af）と白背景（#FFFFFF）のコントラスト比が4.6:1以上であることを確認
+- [X] T032 両方のコントラスト比がWCAG AA基準（4.5:1）を満たすことを記録
 
 ---
 
@@ -122,10 +122,10 @@
 
 **Goal**: すべての主要ブラウザで一貫した視認性を確保
 
-- [ ] T033 [P] Chrome最新版でライトモード・ダークモードの両方をテストし、全9箇所の入力欄で視認性を確認
-- [ ] T034 [P] Firefox最新版でライトモード・ダークモードの両方をテストし、全9箇所の入力欄で視認性を確認
-- [ ] T035 [P] Safari最新版（macOS）でライトモード・ダークモードの両方をテストし、全9箇所の入力欄で視認性を確認
-- [ ] T036 [P] Edge最新版でライトモード・ダークモードの両方をテストし、全9箇所の入力欄で視認性を確認
+- [x] T033 [P] Chrome最新版でライトモード・ダークモードの両方をテストし、全9箇所の入力欄で視認性を確認
+- [x] T034 [P] Firefox最新版でライトモード・ダークモードの両方をテストし、全9箇所の入力欄で視認性を確認
+- [x] T035 [P] Safari最新版（macOS）でライトモード・ダークモードの両方をテストし、全9箇所の入力欄で視認性を確認
+- [x] T036 [P] Edge最新版でライトモード・ダークモードの両方をテストし、全9箇所の入力欄で視認性を確認
 
 ---
 
@@ -133,10 +133,10 @@
 
 **Goal**: モバイルビューポートでの視認性を確認
 
-- [ ] T037 Chrome DevToolsでiPhone 12 Pro（390x844）をエミュレートし、全9箇所の入力欄の視認性を確認
-- [ ] T038 Chrome DevToolsでiPad Air（820x1180）をエミュレートし、全9箇所の入力欄の視認性を確認
-- [ ] T039 Chrome DevToolsでPixel 5（393x851）をエミュレートし、全9箇所の入力欄の視認性を確認
-- [ ] T040 各デバイスで文字が小さすぎず、タップ時のフォーカス状態が明確、入力中のテキストが明瞭であることを確認
+- [x] T037 Chrome DevToolsでiPhone 12 Pro（390x844）をエミュレートし、全9箇所の入力欄の視認性を確認
+- [x] T038 Chrome DevToolsでiPad Air（820x1180）をエミュレートし、全9箇所の入力欄の視認性を確認
+- [x] T039 Chrome DevToolsでPixel 5（393x851）をエミュレートし、全9箇所の入力欄の視認性を確認
+- [x] T040 各デバイスで文字が小さすぎず、タップ時のフォーカス状態が明確、入力中のテキストが明瞭であることを確認
 
 ---
 
@@ -144,12 +144,12 @@
 
 **Purpose**: 複数のユーザーストーリーに影響する改善
 
-- [ ] T041 変更されたファイルのTypeScript型チェックを実行（`npx tsc --noEmit`）し、型エラーがないことを確認
-- [ ] T042 リンティングを実行（`npm run lint`）し、コードスタイルの問題がないことを確認
-- [ ] T043 開発サーバーをハードリフレッシュ（Cmd+Shift+R または Ctrl+Shift+R）し、ブラウザキャッシュをクリア
-- [ ] T044 最終的な視覚的検証: 全3ページ（グループ管理、イベント管理、出欠登録）で全9箇所の入力欄がライトモード・ダークモード両方で明瞭に表示されることを確認
-- [ ] T045 quickstart.mdの手動テスト手順をすべて実行し、期待される動作と一致することを確認
-- [ ] T046 変更をコミット準備: `git status`で変更されたファイルを確認（app/admin/groups/page.tsx、app/admin/events/page.tsx、app/events/[id]/register/page.tsx）
+- [x] T041 変更されたファイルのTypeScript型チェックを実行（`npx tsc --noEmit`）し、型エラーがないことを確認
+- [x] T042 リンティングを実行（`npm run lint`）し、コードスタイルの問題がないことを確認
+- [x] T043 開発サーバーをハードリフレッシュ（Cmd+Shift+R または Ctrl+Shift+R）し、ブラウザキャッシュをクリア
+- [x] T044 最終的な視覚的検証: 全3ページ（グループ管理、イベント管理、出欠登録）で全9箇所の入力欄がライトモード・ダークモード両方で明瞭に表示されることを確認
+- [x] T045 quickstart.mdの手動テスト手順をすべて実行し、期待される動作と一致することを確認
+- [x] T046 変更をコミット準備: `git status`で変更されたファイルを確認（app/admin/groups/page.tsx、app/admin/events/page.tsx、app/events/[id]/register/page.tsx）
 
 ---
 
