@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getAllEventDates, createEventDate, updateEventDate, deleteEventDate } from '@/lib/event-service';
+import { calculateEventTotalSummary } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
 import LoadingSpinner from '@/components/loading-spinner';
 import type { EventDate } from '@/types';
@@ -31,6 +32,15 @@ export default function AdminEventsPage() {
   useEffect(() => {
     loadData();
   }, []);
+
+  // メモ化: すべてのイベントの出欠集計を計算
+  const eventSummaries = useMemo(() => {
+    const summaries = new Map();
+    events.forEach((event) => {
+      summaries.set(event.id, calculateEventTotalSummary(event.id));
+    });
+    return summaries;
+  }, [events]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -203,34 +213,54 @@ export default function AdminEventsPage() {
             <p className="text-gray-500 text-sm">イベント日付が登録されていません</p>
           ) : (
             <div className="space-y-2">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="flex items-center gap-3 p-3 border border-gray-200 rounded-md hover:bg-gray-50"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium text-gray-900">{event.title}</div>
-                    <div className="text-sm text-gray-600">{formatLongDate(event.date)}</div>
-                    {event.location && (
-                      <div className="text-xs text-gray-500 mt-1">場所: {event.location}</div>
-                    )}
+              {events.map((event) => {
+                const summary = eventSummaries.get(event.id);
+                if (!summary) return null;
+
+                return (
+                  <div
+                    key={event.id}
+                    className="flex items-center gap-3 p-3 border border-gray-200 rounded-md hover:bg-gray-50"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-gray-900">{event.title}</div>
+                      <div className="text-sm text-gray-600">{formatLongDate(event.date)}</div>
+                      {event.location && (
+                        <div className="text-xs text-gray-500 mt-1">場所: {event.location}</div>
+                      )}
+                      {/* 出欠人数表示 */}
+                      <div className="flex flex-wrap gap-2 mt-2 text-xs">
+                        <span className="text-green-600 font-medium">
+                          ◯ {summary.totalAttending}人
+                        </span>
+                        <span className="text-yellow-600 font-medium">
+                          △ {summary.totalMaybe}人
+                        </span>
+                        <span className="text-red-600 font-medium">
+                          ✗ {summary.totalNotAttending}人
+                        </span>
+                        <span className="text-gray-500">
+                          （計{summary.totalResponded}人）
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <button
+                        onClick={() => handleEdit(event)}
+                        className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                      >
+                        編集
+                      </button>
+                      <button
+                        onClick={() => handleDelete(event.id)}
+                        className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
+                      >
+                        削除
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2 flex-shrink-0">
-                    <button
-                      onClick={() => handleEdit(event)}
-                      className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                    >
-                      編集
-                    </button>
-                    <button
-                      onClick={() => handleDelete(event.id)}
-                      className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
-                    >
-                      削除
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

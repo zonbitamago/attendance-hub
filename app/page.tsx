@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { getAllEventDates } from '@/lib/event-service';
+import { calculateEventTotalSummary } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
 import LoadingSpinner from '@/components/loading-spinner';
 import type { EventDate } from '@/types';
@@ -25,6 +26,15 @@ export default function Home() {
 
     loadEvents();
   }, []);
+
+  // メモ化: すべてのイベントの出欠集計を計算
+  const eventSummaries = useMemo(() => {
+    const summaries = new Map();
+    events.forEach((event) => {
+      summaries.set(event.id, calculateEventTotalSummary(event.id));
+    });
+    return summaries;
+  }, [events]);
 
   if (isLoading) {
     return (
@@ -74,38 +84,62 @@ export default function Home() {
             </div>
           ) : (
             <div className="space-y-2">
-              {events.map((event) => (
-                <Link
-                  key={event.id}
-                  href={`/events/${event.id}`}
-                  className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-gray-900 mb-1">{event.title}</h3>
-                      <p className="text-sm text-gray-600">{formatLongDate(event.date)}</p>
-                      {event.location && (
-                        <p className="text-xs text-gray-500 mt-1">場所: {event.location}</p>
-                      )}
+              {events.map((event) => {
+                const summary = eventSummaries.get(event.id);
+                if (!summary) return null;
+
+                return (
+                  <Link
+                    key={event.id}
+                    href={`/events/${event.id}`}
+                    className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-all"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-gray-900 mb-1">{event.title}</h3>
+                        <p className="text-sm text-gray-600">{formatLongDate(event.date)}</p>
+                        {event.location && (
+                          <p className="text-xs text-gray-500 mt-1">場所: {event.location}</p>
+                        )}
+                        {/* 出欠人数表示 */}
+                        <div
+                          className="flex flex-wrap gap-2 mt-2 text-xs"
+                          role="status"
+                          aria-label={`出欠状況: 参加 ${summary.totalAttending}人、未定 ${summary.totalMaybe}人、欠席 ${summary.totalNotAttending}人、合計 ${summary.totalResponded}人`}
+                        >
+                          <span className="text-green-600 font-medium" aria-label="参加">
+                            ◯ {summary.totalAttending}人
+                          </span>
+                          <span className="text-yellow-600 font-medium" aria-label="未定">
+                            △ {summary.totalMaybe}人
+                          </span>
+                          <span className="text-red-600 font-medium" aria-label="欠席">
+                            ✗ {summary.totalNotAttending}人
+                          </span>
+                          <span className="text-gray-500" aria-label="合計">
+                            （計{summary.totalResponded}人）
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <svg
+                          className="w-5 h-5 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </div>
                     </div>
-                    <div className="flex-shrink-0">
-                      <svg
-                        className="w-5 h-5 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>

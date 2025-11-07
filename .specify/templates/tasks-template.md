@@ -10,6 +10,16 @@ description: "Task list template for feature implementation"
 
 **Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
+**TDD Principles (t-wada)**: If the project constitution requires TDD, MUST follow these principles strictly:
+
+1. **Small Steps (小さなステップ)**: Focus on ONE test case at a time
+2. **Red-Green-Refactor**: For EACH test case:
+   - **[Red]**: Write ONE failing test
+   - **[Green]**: Write minimal code to pass that ONE test
+   - **[Refactor]**: Improve code while keeping tests passing
+3. **Test-First (テストファースト)**: Always write test before implementation
+4. **Test Independence**: Each test must not depend on other tests
+
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
 ## Format: `[ID] [P?] [Story] Description`
@@ -62,12 +72,29 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
+**If TDD is required, follow this pattern for EACH test case**:
+
+#### Test Case 1: [Description of specific test scenario]
+
+- [ ] T004 **[Red]** Write test: [specific behavior to test] (tests/path/to/test.test.ts)
+- [ ] T005 **[Green]** Define types/interfaces needed to pass T004 (src/types/...)
+- [ ] T006 **[Green]** Implement minimal code to pass T004 (src/path/to/code.ts)
+- [ ] T007 **[Green]** Run tests and verify T004 passes
+- [ ] T008 **[Refactor]** Clean up code if needed (tests still passing)
+
+#### Test Case 2: [Description of another specific test scenario]
+
+- [ ] T009 **[Red]** Write test: [specific behavior to test] (tests/path/to/test.test.ts)
+- [ ] T010 **[Green]** Extend implementation to pass T009
+- [ ] T011 **[Green]** Run tests and verify both T004 and T009 pass
+- [ ] T012 **[Refactor]** Improve code structure (tests still passing)
+
+**If TDD is NOT required**:
+
 - [ ] T004 Setup database schema and migrations framework
 - [ ] T005 [P] Implement authentication/authorization framework
 - [ ] T006 [P] Setup API routing and middleware structure
 - [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -79,21 +106,39 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+### User Story 1 Implementation
 
-> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+**If TDD is required, follow this pattern for EACH test case**:
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+#### Test Case 1: [Specific acceptance scenario from spec.md]
 
-### Implementation for User Story 1
+- [ ] T013 **[Red]** [US1] Write test: [specific behavior] (tests/path/test_[name].test.ts)
+- [ ] T014 **[Green]** [US1] Create minimal types/models to pass T013
+- [ ] T015 **[Green]** [US1] Implement minimal code to pass T013
+- [ ] T016 **[Green]** [US1] Run tests and verify T013 passes
+- [ ] T017 **[Refactor]** [US1] Clean up code (tests still passing)
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+#### Test Case 2: [Another specific acceptance scenario]
+
+- [ ] T018 **[Red]** [US1] Write test: [specific behavior] (tests/path/test_[name].test.ts)
+- [ ] T019 **[Green]** [US1] Extend implementation to pass T018
+- [ ] T020 **[Green]** [US1] Run tests and verify both T013 and T018 pass
+- [ ] T021 **[Refactor]** [US1] Improve code structure (tests still passing)
+
+[Continue this pattern for each test case from acceptance scenarios]
+
+#### UI and Polish
+
+- [ ] TXXX **[Refactor]** [US1] Apply styling with Tailwind CSS for mobile-first design
+- [ ] TXXX **[Refactor]** [US1] Add semantic HTML and accessibility features
+
+**If TDD is NOT required**:
+
+- [ ] T013 [P] [US1] Create [Entity1] model in src/models/[entity1].py
+- [ ] T014 [P] [US1] Create [Entity2] model in src/models/[entity2].py
+- [ ] T015 [US1] Implement [Service] in src/services/[service].py (depends on T013, T014)
+- [ ] T016 [US1] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T017 [US1] Add validation and error handling
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -105,17 +150,25 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
+### User Story 2 Implementation
 
-- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+**If TDD is required, follow Red-Green-Refactor for EACH test case**:
 
-### Implementation for User Story 2
+#### Test Case 1: [Specific acceptance scenario from spec.md]
 
-- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T021 [US2] Implement [Service] in src/services/[service].py
-- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+- [ ] TXXX **[Red]** [US2] Write test: [specific behavior] (tests/...)
+- [ ] TXXX **[Green]** [US2] Implement minimal code to pass test
+- [ ] TXXX **[Green]** [US2] Run tests and verify pass
+- [ ] TXXX **[Refactor]** [US2] Clean up code (tests still passing)
+
+[Continue this pattern for each test case from acceptance scenarios]
+
+**If TDD is NOT required**:
+
+- [ ] TXXX [P] [US2] Create [Entity] model in src/models/[entity].py
+- [ ] TXXX [US2] Implement [Service] in src/services/[service].py
+- [ ] TXXX [US2] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] TXXX [US2] Integrate with User Story 1 components (if needed)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -127,16 +180,24 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
+### User Story 3 Implementation
 
-- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
+**If TDD is required, follow Red-Green-Refactor for EACH test case**:
 
-### Implementation for User Story 3
+#### Test Case 1: [Specific acceptance scenario from spec.md]
 
-- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T027 [US3] Implement [Service] in src/services/[service].py
-- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] TXXX **[Red]** [US3] Write test: [specific behavior] (tests/...)
+- [ ] TXXX **[Green]** [US3] Implement minimal code to pass test
+- [ ] TXXX **[Green]** [US3] Run tests and verify pass
+- [ ] TXXX **[Refactor]** [US3] Clean up code (tests still passing)
+
+[Continue this pattern for each test case from acceptance scenarios]
+
+**If TDD is NOT required**:
+
+- [ ] TXXX [P] [US3] Create [Entity] model in src/models/[entity].py
+- [ ] TXXX [US3] Implement [Service] in src/services/[service].py
+- [ ] TXXX [US3] Implement [endpoint/feature] in src/[location]/[file].py
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -150,12 +211,43 @@ Examples of foundational tasks (adjust based on your project):
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] TXXX [P] Documentation updates in docs/
-- [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
-- [ ] TXXX Security hardening
-- [ ] TXXX Run quickstart.md validation
+### Code Quality Checks
+
+- [ ] TXXX Run full test suite and verify all tests pass (including new tests)
+- [ ] TXXX Run TypeScript type check (`npx tsc --noEmit`) and fix errors
+- [ ] TXXX Run ESLint and fix linting issues
+- [ ] TXXX Code cleanup: remove unused imports and commented code
+
+### Code Review (Constitution Compliance Check)
+
+If the project has a constitution (e.g., .specify/memory/constitution.md), perform these checks:
+
+- [ ] TXXX **[Code Review]** Type safety check: Verify no improper use of `any` type
+- [ ] TXXX **[Code Review]** TDD cycle check: Verify all new code was implemented test-first
+- [ ] TXXX **[Code Review]** Security patterns check: Verify input validation, XSS protection
+- [ ] TXXX **[Code Review]** Performance check: Verify proper use of optimization (e.g., useMemo, caching)
+- [ ] TXXX **[Code Review]** Accessibility check: Verify semantic HTML, ARIA labels
+- [ ] TXXX **[Code Review]** UI/UX check: Verify proper language/localization for target users
+- [ ] TXXX **[Code Review]** Responsive design check: Verify mobile-first implementation
+
+### Functional Testing
+
+- [ ] TXXX Performance testing: Verify performance goals are met
+- [ ] TXXX Accessibility testing: Verify keyboard navigation and screen reader compatibility
+- [ ] TXXX Mobile testing: Verify layouts at different viewport sizes (320px, 768px, 1024px)
+- [ ] TXXX Cross-browser testing: Verify in Chrome, Firefox, Safari
+- [ ] TXXX Edge case testing: Verify edge cases from spec.md work correctly
+
+### Documentation
+
+- [ ] TXXX [P] Update project documentation (e.g., README, CLAUDE.md) with latest changes
+- [ ] TXXX Run quickstart.md validation: Verify setup instructions work
+
+### Code Review Issue Resolution
+
+- [ ] TXXX **[Fix]** Fix issues identified in code review (if any)
+- [ ] TXXX **[Green]** Re-run all tests after fixes and verify they pass
+- [ ] TXXX **[Manual]** Manual testing after fixes to verify functionality
 
 ---
 
@@ -178,6 +270,16 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Within Each User Story
 
+**If TDD is required (t-wada principles)**:
+- **ONE test case at a time**: Never batch multiple test cases together
+- **Red-Green-Refactor cycle for EACH test**:
+  1. Red: Write ONE failing test
+  2. Green: Write minimal code to pass that ONE test
+  3. Refactor: Improve code while tests stay passing
+- **Small steps**: Each task must focus on ONE specific behavior
+- **Test independence**: Each test must run independently
+
+**If TDD is NOT required**:
 - Tests (if included) MUST be written and FAIL before implementation
 - Models before services
 - Services before endpoints
@@ -186,6 +288,12 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Parallel Opportunities
 
+**IMPORTANT**: If TDD is required, parallel execution is LIMITED by the Red-Green-Refactor cycle:
+- **Within a test case**: NEVER run Red-Green-Refactor steps in parallel (must be sequential)
+- **Across different test cases for same feature**: Should run SEQUENTIALLY (one test at a time)
+- **Across different user stories**: Can run in parallel by different team members
+
+**If TDD is NOT required**:
 - All Setup tasks marked [P] can run in parallel
 - All Foundational tasks marked [P] can run in parallel (within Phase 2)
 - Once Foundational phase completes, all user stories can start in parallel (if team capacity allows)
@@ -242,10 +350,19 @@ With multiple developers:
 
 ## Notes
 
-- [P] tasks = different files, no dependencies
+**General**:
+- [P] tasks = different files, no dependencies (only valid when TDD is NOT required)
 - [Story] label maps task to specific user story for traceability
 - Each user story should be independently completable and testable
-- Verify tests fail before implementing
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
+
+**TDD-Specific (if required by constitution)**:
+- **[Red]**, **[Green]**, **[Refactor]** labels are MANDATORY for all test-related tasks
+- **ONE test case at a time**: Never batch multiple test cases into one task
+- **Small steps**: Each Red-Green-Refactor cycle should be completable in <30 minutes
+- **Verify Red**: Always ensure test FAILS before writing implementation
+- **Verify Green**: Always run tests to confirm they PASS after implementation
+- **Independent tests**: Each test must run independently without relying on execution order
+- **NO parallel execution within same feature**: Tests for same feature MUST run sequentially

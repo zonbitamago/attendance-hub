@@ -1,4 +1,4 @@
-import type { Attendance, GroupSummary } from '@/types';
+import type { Attendance, GroupSummary, EventTotalSummary } from '@/types';
 import { loadAttendances, saveAttendances, loadGroups, loadMembers } from './storage';
 import { CreateAttendanceInputSchema, type AttendanceInput } from './validation';
 import { getCurrentTimestamp } from './date-utils';
@@ -123,4 +123,33 @@ export function calculateEventSummary(eventDateId: string): GroupSummary[] {
       };
     })
     .filter((summary) => summary.total > 0); // 出欠登録があるグループのみ表示
+}
+
+// イベント全体の人数集計を計算
+export function calculateEventTotalSummary(eventDateId: string): EventTotalSummary {
+  const attendances = getAttendancesByEventDateId(eventDateId);
+
+  // 重複カウント防止: memberIdのSetを作成して重複を排除
+  const uniqueMemberIds = new Set<string>();
+  const uniqueAttendances: Attendance[] = [];
+
+  for (const attendance of attendances) {
+    if (!uniqueMemberIds.has(attendance.memberId)) {
+      uniqueMemberIds.add(attendance.memberId);
+      uniqueAttendances.push(attendance);
+    }
+  }
+
+  // ステータス別に集計
+  const totalAttending = uniqueAttendances.filter((a) => a.status === '◯').length;
+  const totalMaybe = uniqueAttendances.filter((a) => a.status === '△').length;
+  const totalNotAttending = uniqueAttendances.filter((a) => a.status === '✗').length;
+  const totalResponded = uniqueAttendances.length;
+
+  return {
+    totalAttending,
+    totalMaybe,
+    totalNotAttending,
+    totalResponded,
+  };
 }
