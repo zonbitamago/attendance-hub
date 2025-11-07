@@ -214,8 +214,15 @@ export default function AdminEventsPage() {
           ) : (
             <div className="space-y-2">
               {events.map((event) => {
-                const summary = eventSummaries.get(event.id);
-                if (!summary) return null;
+                let summary = eventSummaries.get(event.id);
+                if (!summary) {
+                  summary = {
+                    totalAttending: 0,
+                    totalMaybe: 0,
+                    totalNotAttending: 0,
+                    totalResponded: 0,
+                  };
+                }
 
                 return (
                   <div

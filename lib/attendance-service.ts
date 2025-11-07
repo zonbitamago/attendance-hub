@@ -129,7 +129,9 @@ export function calculateEventSummary(eventDateId: string): GroupSummary[] {
 export function calculateEventTotalSummary(eventDateId: string): EventTotalSummary {
   const attendances = getAttendancesByEventDateId(eventDateId);
 
-  // 重複カウント防止: memberIdのSetを作成して重複を排除
+  // NOTE: 現在のデータモデルでは、eventDateIdごとにmemberIdは一意なので重複は発生しない。
+  // ただし、将来的にメンバーが複数グループに所属できるようになった場合に備えて、
+  // 重複排除ロジックを保持している。現在のパフォーマンスへの影響は軽微。
   const uniqueMemberIds = new Set<string>();
   const uniqueAttendances: Attendance[] = [];
 

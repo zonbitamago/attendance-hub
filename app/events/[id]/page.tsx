@@ -41,6 +41,8 @@ export default function EventDetailPage() {
   }, [eventId, router]);
 
   // メモ化: イベント全体の出欠集計を計算
+  // NOTE: eventIdだけでなくeventも依存配列に含める必要がある
+  // eventが読み込まれるまでcalculateEventTotalSummaryを実行すべきでないため
   const totalSummary = useMemo(() => {
     if (!event) return null;
     return calculateEventTotalSummary(eventId);
