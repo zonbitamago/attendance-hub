@@ -1,4 +1,4 @@
-import type { Attendance, GroupSummary } from '@/types';
+import type { Attendance, GroupSummary, EventTotalSummary } from '@/types';
 import { loadAttendances, saveAttendances, loadGroups, loadMembers } from './storage';
 import { CreateAttendanceInputSchema, type AttendanceInput } from './validation';
 import { getCurrentTimestamp } from './date-utils';
@@ -123,4 +123,35 @@ export function calculateEventSummary(eventDateId: string): GroupSummary[] {
       };
     })
     .filter((summary) => summary.total > 0); // 出欠登録があるグループのみ表示
+}
+
+// イベント全体の人数集計を計算
+export function calculateEventTotalSummary(eventDateId: string): EventTotalSummary {
+  const attendances = getAttendancesByEventDateId(eventDateId);
+
+  // NOTE: 現在のデータモデルでは、eventDateIdごとにmemberIdは一意なので重複は発生しない。
+  // ただし、将来的にメンバーが複数グループに所属できるようになった場合に備えて、
+  // 重複排除ロジックを保持している。現在のパフォーマンスへの影響は軽微。
+  const uniqueMemberIds = new Set<string>();
+  const uniqueAttendances: Attendance[] = [];
+
+  for (const attendance of attendances) {
+    if (!uniqueMemberIds.has(attendance.memberId)) {
+      uniqueMemberIds.add(attendance.memberId);
+      uniqueAttendances.push(attendance);
+    }
+  }
+
+  // ステータス別に集計
+  const totalAttending = uniqueAttendances.filter((a) => a.status === '◯').length;
+  const totalMaybe = uniqueAttendances.filter((a) => a.status === '△').length;
+  const totalNotAttending = uniqueAttendances.filter((a) => a.status === '✗').length;
+  const totalResponded = uniqueAttendances.length;
+
+  return {
+    totalAttending,
+    totalMaybe,
+    totalNotAttending,
+    totalResponded,
+  };
 }

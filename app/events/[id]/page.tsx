@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getEventDateById } from '@/lib/event-service';
-import { calculateEventSummary } from '@/lib/attendance-service';
+import { calculateEventSummary, calculateEventTotalSummary } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
 import LoadingSpinner from '@/components/loading-spinner';
 import type { EventDate, GroupSummary } from '@/types';
@@ -39,6 +39,14 @@ export default function EventDetailPage() {
   useEffect(() => {
     loadData();
   }, [eventId, router]);
+
+  // メモ化: イベント全体の出欠集計を計算
+  // NOTE: eventIdだけでなくeventも依存配列に含める必要がある
+  // eventが読み込まれるまでcalculateEventTotalSummaryを実行すべきでないため
+  const totalSummary = useMemo(() => {
+    if (!event) return null;
+    return calculateEventTotalSummary(eventId);
+  }, [event, eventId]);
 
   if (isLoading) {
     return (
@@ -83,6 +91,32 @@ export default function EventDetailPage() {
             + 出欠を登録する
           </Link>
         </div>
+
+        {/* イベント全体集計 */}
+        {totalSummary && (
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">全体出欠状況</h2>
+            <div className="flex flex-wrap gap-4 text-sm">
+              <div>
+                <span className="text-gray-600">参加: </span>
+                <span className="font-semibold text-green-600">{totalSummary.totalAttending}人</span>
+              </div>
+              <div>
+                <span className="text-gray-600">未定: </span>
+                <span className="font-semibold text-yellow-600">{totalSummary.totalMaybe}人</span>
+              </div>
+              <div>
+                <span className="text-gray-600">欠席: </span>
+                <span className="font-semibold text-red-600">{totalSummary.totalNotAttending}人</span>
+              </div>
+              <div>
+                <span className="text-gray-600">（</span>
+                <span className="font-semibold text-gray-900">計{totalSummary.totalResponded}人</span>
+                <span className="text-gray-600">）</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* グループ別集計 */}
         <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">

@@ -5,6 +5,7 @@ import {
   updateAttendance,
   deleteAttendance,
   calculateEventSummary,
+  calculateEventTotalSummary,
 } from '@/lib/attendance-service';
 import { loadAttendances, saveAttendances, loadGroups, loadMembers } from '@/lib/storage';
 import type { Attendance, Group, Member } from '@/types';
@@ -382,6 +383,117 @@ describe('Attendance Service', () => {
       // Only group1 should be returned (group2 has no attendances)
       expect(summaries).toHaveLength(1);
       expect(summaries[0].groupId).toBe('group1');
+    });
+  });
+
+  describe('calculateEventTotalSummary', () => {
+    describe('基本シナリオの集計', () => {
+      it('should calculate event total summary correctly with basic scenario', () => {
+        const mockAttendances: Attendance[] = [
+          {
+            id: '1',
+            eventDateId: 'event1',
+            memberId: 'member1',
+            status: '◯',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: '2',
+            eventDateId: 'event1',
+            memberId: 'member2',
+            status: '◯',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: '3',
+            eventDateId: 'event1',
+            memberId: 'member3',
+            status: '△',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: '4',
+            eventDateId: 'event1',
+            memberId: 'member4',
+            status: '△',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: '5',
+            eventDateId: 'event1',
+            memberId: 'member5',
+            status: '✗',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        mockLoadAttendances.mockReturnValue(mockAttendances);
+
+        const result = calculateEventTotalSummary('event1');
+
+        expect(result).toEqual({
+          totalAttending: 2,
+          totalMaybe: 2,
+          totalNotAttending: 1,
+          totalResponded: 5,
+        });
+      });
+    });
+
+    describe('出欠登録なしの場合', () => {
+      it('should return all zeros when no attendances exist', () => {
+        mockLoadAttendances.mockReturnValue([]);
+
+        const result = calculateEventTotalSummary('event1');
+
+        expect(result).toEqual({
+          totalAttending: 0,
+          totalMaybe: 0,
+          totalNotAttending: 0,
+          totalResponded: 0,
+        });
+      });
+    });
+
+    describe('メンバー重複カウント防止', () => {
+      it('should count each member only once even if they have multiple attendances', () => {
+        // 同じメンバーが複数の出欠登録を持つ場合（将来的に複数グループに所属する可能性）
+        const mockAttendances: Attendance[] = [
+          {
+            id: '1',
+            eventDateId: 'event1',
+            memberId: 'member1',
+            status: '◯',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: '2',
+            eventDateId: 'event1',
+            memberId: 'member1', // 同じメンバー
+            status: '◯',
+            createdAt: '2025-01-01T00:01:00.000Z',
+          },
+          {
+            id: '3',
+            eventDateId: 'event1',
+            memberId: 'member2',
+            status: '△',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        mockLoadAttendances.mockReturnValue(mockAttendances);
+
+        const result = calculateEventTotalSummary('event1');
+
+        // member1は2回登録されているが1回のみカウント
+        expect(result).toEqual({
+          totalAttending: 1,
+          totalMaybe: 1,
+          totalNotAttending: 0,
+          totalResponded: 2,
+        });
+      });
     });
   });
 });

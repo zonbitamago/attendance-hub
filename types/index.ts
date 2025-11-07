@@ -55,3 +55,6 @@ export interface EventSummary {
   totalResponded: number;
   groupSummaries: GroupSummary[];
 }
+
+// イベント全体の人数集計結果（グループ情報なし）
+export type EventTotalSummary = Omit<EventSummary, 'eventDateId' | 'groupSummaries'>;
