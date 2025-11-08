@@ -26,6 +26,12 @@ export function createMember(input: MemberInput): Member {
   return newMember;
 }
 
+// メンバーを保存（新規作成のエイリアス）
+// 一括登録機能で使用
+export function saveMember(input: MemberInput): Member {
+  return createMember(input);
+}
+
 // すべてのメンバーを取得
 export function getAllMembers(): Member[] {
   return loadMembers();

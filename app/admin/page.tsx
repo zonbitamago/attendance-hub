@@ -7,12 +7,18 @@ export default function AdminPage() {
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ナビゲーション */}
-        <div className="mb-6">
+        <div className="mb-6 space-y-2">
           <Link
             href="/"
             className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
           >
             ← トップページに戻る
+          </Link>
+          <Link
+            href="/my-register"
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium block"
+          >
+            → 一括出欠登録
           </Link>
         </div>
 

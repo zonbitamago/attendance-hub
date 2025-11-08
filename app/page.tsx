@@ -53,11 +53,17 @@ export default function Home() {
           <p className="text-sm sm:text-base text-gray-600">イベントの出欠確認を簡単に管理</p>
         </div>
 
-        {/* 管理画面リンク */}
-        <div className="mb-6">
+        {/* ナビゲーションリンク */}
+        <div className="mb-6 space-y-2">
+          <Link
+            href="/my-register"
+            className="block text-sm text-blue-600 hover:text-blue-700 font-medium"
+          >
+            → 一括出欠登録
+          </Link>
           <Link
             href="/admin"
-            className="inline-block text-sm text-blue-600 hover:text-blue-700 font-medium"
+            className="block text-sm text-blue-600 hover:text-blue-700 font-medium"
           >
             → 管理画面（グループ・イベント日付の管理）
           </Link>

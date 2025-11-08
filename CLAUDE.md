@@ -1,6 +1,6 @@
 # attendance-hub 開発ガイドライン
 
-全機能の実装計画から自動生成。最終更新: 2025-11-07
+全機能の実装計画から自動生成。最終更新: 2025-11-09
 
 ## アクティブな技術スタック
 
@@ -25,8 +25,13 @@ attendance-hub/
 │   │   └── [id]/
 │   │       ├── page.tsx          # イベント詳細
 │   │       └── register/page.tsx # 出欠登録
+│   ├── my-register/       # 一括出欠登録
+│   │   └── page.tsx              # 複数イベント一括登録
 │   └── globals.css        # Tailwind CSS
 ├── components/            # 再利用可能なコンポーネント
+│   ├── bulk-register/     # 一括登録関連コンポーネント
+│   │   ├── member-selector.tsx   # メンバー選択
+│   │   └── event-list.tsx        # イベント一覧
 │   ├── loading-spinner.tsx  # ローディング表示
 │   └── skeleton.tsx         # スケルトンUI
 ├── lib/                   # ビジネスロジック・ユーティリティ
@@ -38,6 +43,14 @@ attendance-hub/
 ├── types/                 # TypeScript型定義
 │   └── index.ts
 ├── __tests__/            # テスト
+│   ├── app/
+│   │   ├── my-register/page.test.tsx  # 一括登録ページ
+│   │   └── ...
+│   ├── components/
+│   │   ├── bulk-register/
+│   │   │   ├── member-selector.test.tsx
+│   │   │   └── event-list.test.tsx
+│   │   └── ...
 │   └── lib/
 │       ├── storage.test.ts
 │       ├── group-service.test.ts
@@ -48,7 +61,11 @@ attendance-hub/
     │   ├── plan.md
     │   ├── data-model.md
     │   └── quickstart.md
-    └── 002-input-text-visibility/
+    ├── 002-input-text-visibility/
+    │   ├── spec.md
+    │   ├── plan.md
+    │   └── tasks.md
+    └── 004-bulk-attendance-register/
         ├── spec.md
         ├── plan.md
         └── tasks.md
@@ -98,6 +115,26 @@ npx tsc --noEmit
 - **モバイルファースト**: 基本スタイルはモバイル、レスポンシブは`sm:`、`md:`、`lg:`で
 - **アクセシビリティ**: 適切なコントラスト比、フォーカス表示
 
+#### 入力欄の標準スタイル（必須）
+
+すべての入力欄（`<input>`、`<select>`、`<textarea>`）には、以下のクラスを**必ず含める**こと：
+
+```
+text-gray-900 placeholder:text-gray-400
+```
+
+**理由**: Feature 002で視認性改善を実施。ライトモード・ダークモード両方で良好なコントラスト比（WCAG AA基準）を確保。
+
+**完全な入力欄classNameの例**:
+```tsx
+// input / select / textarea共通
+className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+```
+
+**チェックリスト**:
+- [ ] 新規入力欄に `text-gray-900 placeholder:text-gray-400` が含まれているか
+- [ ] 既存の入力欄スタイルと一貫性があるか
+
 ### テスト（TDD）
 
 - **Red-Green-Refactor**: t-wadaのTDD原則に従う
@@ -109,6 +146,12 @@ npx tsc --noEmit
 
 ## 最近の変更
 
+- **2025-11-09**: 004-bulk-attendance-register フィーチャーを完了
+  - 複数イベント一括出欠登録機能実装
+  - `/my-register` 新規ページ追加
+  - イベントごとの個別ステータス設定
+  - 重複登録防止（upsert機能）
+  - 84テスト全てpass、ビルド成功
 - **2025-11-07**: Next.js 16とReact 19正式版へアップグレード
   - Next.js 15 → 16.0.1
   - React 19 → 19.2.0
@@ -140,6 +183,9 @@ npx tsc --noEmit
 1. **仕様確認**: `specs/001-attendance-prototype/spec.md`で要件を理解
 2. **テスト作成**: `__tests__/`にテストを先に書く（Red）
 3. **実装**: テストを通す最小限のコードを書く（Green）
+   - ⚠️ **入力欄作成時の必須チェック**:
+     - `<input>`、`<select>`、`<textarea>`に `text-gray-900 placeholder:text-gray-400` が含まれているか確認
+     - 既存の入力欄（admin/groups、admin/events、events/[id]/register）と同じスタイルになっているか確認
 4. **リファクタリング**: コードを整理・改善（Refactor）
 5. **動作確認**: ブラウザで実際の動作を確認
 6. **コミット**: 日本語または英語で明確なメッセージを付けてコミット
@@ -150,6 +196,9 @@ npx tsc --noEmit
 ## Active Technologies
 - TypeScript 5.9 (strict mode) + Next.js 16, React 19.2, Tailwind CSS 3.4 (003-event-attendance-count)
 - localStorage (プロトタイプ、将来的にSupabase PostgreSQLへ移行) (003-event-attendance-count)
+- TypeScript 5.9（strict mode） (004-bulk-attendance-register)
+- localStorage（プロトタイプ、将来的にSupabase PostgreSQLへ移行予定） (004-bulk-attendance-register)
 
 ## Recent Changes
+- 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function
 - 003-event-attendance-count: Added TypeScript 5.9 (strict mode) + Next.js 16, React 19.2, Tailwind CSS 3.4
