@@ -138,39 +138,21 @@
 - [x] T047 **[Green]** [US1] テストを実行して全6テストがパスすることを確認
 - [x] T048 **[Refactor]** [US1] コンポーネントを整理（実装時に完了）
 
-### UIコンポーネント: StatusGrid
+### UIコンポーネント: StatusGrid（User Story 3で実装）
 
-#### Test Case 13: ステータスボタン表示
+**Note**: StatusGridは個別ステータス設定機能(User Story 3)で必要となるため、MVP(User Story 1)では簡易的なステータスドロップダウンで実装済み
 
-- [ ] T057 **[Red]** [US1] テストを書く: StatusGridが◯/△/✗ボタンを表示する (`__tests__/components/bulk-register/status-grid.test.tsx`)
-- [ ] T058 **[Green]** [US1] `components/bulk-register/status-grid.tsx`を作成
-- [ ] T059 **[Green]** [US1] ステータスボタンのUIを実装してT057を通す
-- [ ] T060 **[Green]** [US1] テストを実行してT057がパスすることを確認
-- [ ] T061 **[Refactor]** [US1] コンポーネントを整理
-
-#### Test Case 14: ステータス選択
-
-- [ ] T062 **[Red]** [US1] テストを書く: ステータスボタンをクリックして選択できる (`__tests__/components/bulk-register/status-grid.test.tsx`)
-- [ ] T063 **[Green]** [US1] ステータス選択のロジックを実装してT062を通す
-- [ ] T064 **[Green]** [US1] テストを実行してT057とT062が両方パスすることを確認
-- [ ] T065 **[Refactor]** [US1] イベントハンドリングを整理
+- [ ] T057-T065 **[Postponed]** [US3] StatusGridの実装はUser Story 3で対応
 
 ### ページ統合: MyRegisterPage
 
-#### Test Case 15: ページ全体の統合
+#### Test Case 15-16: ページ全体の統合と一括登録（統合実装）
 
-- [ ] T066 **[Red]** [US1] テストを書く: `/my-register`ページが全コンポーネントを統合する (`__tests__/app/my-register/page.test.tsx`)
-- [ ] T067 **[Green]** [US1] `app/my-register/page.tsx`を作成
-- [ ] T068 **[Green]** [US1] MemberSelector、EventList、StatusGridを統合してT066を通す
-- [ ] T069 **[Green]** [US1] テストを実行してT066がパスすることを確認
-- [ ] T070 **[Refactor]** [US1] ページレイアウトを整理
-
-#### Test Case 16: 一括登録ボタンと成功メッセージ
-
-- [ ] T071 **[Red]** [US1] テストを書く: 一括登録ボタンを押すと成功メッセージが表示される (`__tests__/app/my-register/page.test.tsx`)
-- [ ] T072 **[Green]** [US1] 一括登録ボタンとupsertBulkAttendances呼び出しを実装してT071を通す
-- [ ] T073 **[Green]** [US1] テストを実行してT066とT071が両方パスすることを確認
-- [ ] T074 **[Refactor]** [US1] フォーム送信ロジックを整理
+- [x] T066 **[Red]** [US1] テストを書く: ページ統合、一括登録、成功メッセージの全テストケース (`__tests__/app/my-register/page.test.tsx`)
+- [x] T067 **[Green]** [US1] `app/my-register/page.tsx`を作成
+- [x] T068 **[Green]** [US1] MemberSelector、EventList、ステータス選択、一括登録を統合実装
+- [x] T069 **[Green]** [US1] テストを実行して全5テストがパスすることを確認
+- [x] T070 **[Refactor]** [US1] ページレイアウトを整理（実装時に完了）
 
 ### ナビゲーション追加
 
