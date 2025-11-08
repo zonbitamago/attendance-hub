@@ -115,6 +115,26 @@ npx tsc --noEmit
 - **モバイルファースト**: 基本スタイルはモバイル、レスポンシブは`sm:`、`md:`、`lg:`で
 - **アクセシビリティ**: 適切なコントラスト比、フォーカス表示
 
+#### 入力欄の標準スタイル（必須）
+
+すべての入力欄（`<input>`、`<select>`、`<textarea>`）には、以下のクラスを**必ず含める**こと：
+
+```
+text-gray-900 placeholder:text-gray-400
+```
+
+**理由**: Feature 002で視認性改善を実施。ライトモード・ダークモード両方で良好なコントラスト比（WCAG AA基準）を確保。
+
+**完全な入力欄classNameの例**:
+```tsx
+// input / select / textarea共通
+className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+```
+
+**チェックリスト**:
+- [ ] 新規入力欄に `text-gray-900 placeholder:text-gray-400` が含まれているか
+- [ ] 既存の入力欄スタイルと一貫性があるか
+
 ### テスト（TDD）
 
 - **Red-Green-Refactor**: t-wadaのTDD原則に従う
@@ -163,6 +183,9 @@ npx tsc --noEmit
 1. **仕様確認**: `specs/001-attendance-prototype/spec.md`で要件を理解
 2. **テスト作成**: `__tests__/`にテストを先に書く（Red）
 3. **実装**: テストを通す最小限のコードを書く（Green）
+   - ⚠️ **入力欄作成時の必須チェック**:
+     - `<input>`、`<select>`、`<textarea>`に `text-gray-900 placeholder:text-gray-400` が含まれているか確認
+     - 既存の入力欄（admin/groups、admin/events、events/[id]/register）と同じスタイルになっているか確認
 4. **リファクタリング**: コードを整理・改善（Refactor）
 5. **動作確認**: ブラウザで実際の動作を確認
 6. **コミット**: 日本語または英語で明確なメッセージを付けてコミット
