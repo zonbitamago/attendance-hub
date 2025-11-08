@@ -44,10 +44,10 @@ export function EventList({ memberId, selectedEvents, onSelectionChange }: Event
 
   return (
     <div className="space-y-3">
-      <h3 className="text-lg font-semibold text-gray-800">イベントを選択</h3>
+      <h3 className="text-base sm:text-lg font-semibold text-gray-800">イベントを選択</h3>
 
       {eventDates.length === 0 ? (
-        <p className="text-gray-500">イベントがありません</p>
+        <p className="text-sm sm:text-base text-gray-500">イベントがありません</p>
       ) : (
         <div className="space-y-2">
           {eventDates.map((event) => {
@@ -57,7 +57,7 @@ export function EventList({ memberId, selectedEvents, onSelectionChange }: Event
             return (
               <div
                 key={event.id}
-                className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                className="border border-gray-200 rounded-lg p-3 sm:p-4 hover:bg-gray-50 transition-colors"
               >
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input

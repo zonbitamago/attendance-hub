@@ -97,19 +97,19 @@ export default function MyRegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">一括出欠登録</h1>
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">一括出欠登録</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           {/* メンバー選択 */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
             <MemberSelector onSelect={handleMemberSelect} />
           </div>
 
           {/* イベント選択（メンバーが選択された後に表示） */}
           {memberSelection && (
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
               <EventList
                 memberId={memberSelection.memberId}
                 selectedEvents={selectedEvents}
@@ -120,7 +120,7 @@ export default function MyRegisterPage() {
 
           {/* ステータス選択と登録ボタン */}
           {memberSelection && selectedEvents.length > 0 && (
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
               <div className="space-y-4">
                 {/* ステータス選択 */}
                 <div>

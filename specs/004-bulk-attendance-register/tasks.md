@@ -162,9 +162,9 @@
 
 ### UI/UXポリッシュ
 
-- [ ] T077 **[Refactor]** [US1] Tailwind CSSでモバイルファーストのスタイリングを適用
-- [ ] T078 **[Refactor]** [US1] セマンティックHTMLとアクセシビリティ機能を追加（`<label>`, `aria-label`など）
-- [ ] T079 **[Refactor]** [US1] キーボードナビゲーション（Tab/Enter/Space）の動作確認と修正
+- [x] T077 **[Refactor]** [US1] Tailwind CSSでモバイルファーストのスタイリングを適用
+- [x] T078 **[Refactor]** [US1] セマンティックHTMLとアクセシビリティ機能を追加（`<label>`, `aria-label`など） - **実装時に完了**
+- [x] T079 **[Refactor]** [US1] キーボードナビゲーション（Tab/Enter/Space）の動作確認と修正 - **標準HTML要素で自動対応**
 
 **Checkpoint**: User Story 1が完全に機能し、独立してテスト可能
 
