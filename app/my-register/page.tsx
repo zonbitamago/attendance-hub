@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { MemberSelector, type MemberSelection } from '@/components/bulk-register/member-selector';
 import { EventList } from '@/components/bulk-register/event-list';
 import { upsertBulkAttendances } from '@/lib/attendance-service';
@@ -8,6 +10,7 @@ import { saveMember } from '@/lib/member-service';
 import type { AttendanceStatus } from '@/types';
 
 export default function MyRegisterPage() {
+  const router = useRouter();
   const [memberSelection, setMemberSelection] = useState<MemberSelection | null>(null);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [eventStatuses, setEventStatuses] = useState<Record<string, AttendanceStatus>>({});
@@ -90,11 +93,15 @@ export default function MyRegisterPage() {
           `${totalCount}件登録しました（うち${updatedCount}件更新）。${result.failed.length}件失敗しました。`
         );
       } else {
-        setMessage(
-          updatedCount > 0
-            ? `${totalCount}件登録しました（うち${updatedCount}件更新）`
-            : `${totalCount}件登録しました`
-        );
+        const successMessage = updatedCount > 0
+          ? `${totalCount}件登録しました（うち${updatedCount}件更新）`
+          : `${totalCount}件登録しました`;
+        setMessage(successMessage);
+
+        // 成功時は1秒後にトップページへリダイレクト
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
       }
 
       // 成功後、選択をクリア
@@ -111,6 +118,15 @@ export default function MyRegisterPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-6">
+          <Link
+            href="/"
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+          >
+            ← トップページへ戻る
+          </Link>
+        </div>
+
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">一括出欠登録</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">

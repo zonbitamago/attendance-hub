@@ -11,6 +11,13 @@ jest.mock('@/lib/member-service', () => ({
   saveMember: jest.fn(),
 }));
 
+// next/navigation をモック
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
 describe('MyRegisterPage', () => {
   const mockLoadGroups = loadGroups as jest.MockedFunction<typeof loadGroups>;
   const mockLoadMembers = loadMembers as jest.MockedFunction<typeof loadMembers>;
