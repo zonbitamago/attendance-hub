@@ -20,13 +20,13 @@ describe('MyRegisterPage', () => {
   const mockSaveMember = saveMember as jest.MockedFunction<typeof saveMember>;
 
   const mockGroups: Group[] = [
-    { id: 'group-1', name: 'トランペット', order: 1 },
-    { id: 'group-2', name: 'トロンボーン', order: 2 },
+    { id: 'group-1', name: 'トランペット', order: 1, createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'group-2', name: 'トロンボーン', order: 2, createdAt: '2025-01-01T00:00:00Z' },
   ];
 
   const mockMembers: Member[] = [
-    { id: 'member-1', groupId: 'group-1', name: '田中太郎' },
-    { id: 'member-2', groupId: 'group-1', name: '佐藤花子' },
+    { id: 'member-1', groupId: 'group-1', name: '田中太郎', createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'member-2', groupId: 'group-1', name: '佐藤花子', createdAt: '2025-01-01T00:00:00Z' },
   ];
 
   const mockEventDates: EventDate[] = [
@@ -35,12 +35,14 @@ describe('MyRegisterPage', () => {
       date: '2025-01-15',
       title: '定期演奏会',
       location: '市民ホール',
+      createdAt: '2025-01-01T00:00:00Z',
     },
     {
       id: 'event-2',
       date: '2025-01-22',
       title: '通常練習',
       location: '練習場A',
+      createdAt: '2025-01-01T00:00:00Z',
     },
   ];
 
@@ -55,6 +57,7 @@ describe('MyRegisterPage', () => {
       id: 'new-member-id',
       groupId: 'group-1',
       name: '山田太郎',
+      createdAt: '2025-01-01T00:00:00Z',
     });
   });
 

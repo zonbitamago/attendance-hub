@@ -17,18 +17,21 @@ describe('EventList', () => {
       date: '2025-01-15',
       title: '定期演奏会',
       location: '市民ホール',
+      createdAt: '2025-01-01T00:00:00Z',
     },
     {
       id: 'event-2',
       date: '2025-01-22',
       title: '通常練習',
       location: '練習場A',
+      createdAt: '2025-01-01T00:00:00Z',
     },
     {
       id: 'event-3',
       date: '2025-01-29',
       title: 'アンサンブル練習',
       location: '練習場B',
+      createdAt: '2025-01-01T00:00:00Z',
     },
   ];
 
