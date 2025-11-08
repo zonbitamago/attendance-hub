@@ -12,13 +12,13 @@ const mockCalculateEventTotalSummary = calculateEventTotalSummary as jest.Mocked
   typeof calculateEventTotalSummary
 >;
 
-describe('Home (Event List Page)', () => {
+describe('Home（イベント一覧ページ）', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   describe('イベント一覧の出欠人数表示', () => {
-    it('should render attendance counts for each event in the list', async () => {
+    it('一覧で各イベントの出欠人数を表示できる', async () => {
       // Arrange: モックデータの準備
       const mockEvents = [
         {
@@ -89,7 +89,7 @@ describe('Home (Event List Page)', () => {
       expect(totalElements).toHaveLength(2);
     });
 
-    it('should display zero counts when no attendances are registered', async () => {
+    it('出欠登録がない場合は0人を表示する', async () => {
       // Arrange: モックデータの準備（出欠登録なし）
       const mockEvents = [
         {
@@ -126,7 +126,7 @@ describe('Home (Event List Page)', () => {
       expect(screen.getByText(/（計0人）/)).toBeInTheDocument();
     });
 
-    it('should display correct counts for multiple events', async () => {
+    it('複数のイベントで正しい人数を表示できる', async () => {
       // Arrange: 複数のイベントをモック
       const mockEvents = [
         {

@@ -27,7 +27,7 @@ describe('EventDetailPage', () => {
   });
 
   describe('イベント全体集計の表示', () => {
-    it('should render total event summary above group summaries', async () => {
+    it('グループ別集計の上にイベント全体集計を表示できる', async () => {
       // Arrange: モックデータの準備
       const mockEvent = {
         id: 'event1',
@@ -90,7 +90,7 @@ describe('EventDetailPage', () => {
       expect(screen.getByText('管楽器')).toBeInTheDocument();
     });
 
-    it('should display zero counts when no attendances are registered', async () => {
+    it('出欠登録がない場合は0人を表示する', async () => {
       // Arrange: モックデータの準備（出欠登録なし）
       const mockEvent = {
         id: 'event1',
@@ -127,7 +127,7 @@ describe('EventDetailPage', () => {
       expect(screen.getByText(/計0人/)).toBeInTheDocument();
     });
 
-    it('should ensure total summary matches sum of group summaries', async () => {
+    it('全体集計がグループ別集計の合計と一致することを確認できる', async () => {
       // Arrange: モックデータの準備
       const mockEvent = {
         id: 'event1',

@@ -17,12 +17,12 @@ describe('Storage utilities', () => {
   });
 
   describe('EventDates', () => {
-    it('should load empty array when no event dates exist', () => {
+    it('イベント日付が存在しない場合は空配列を読み込む', () => {
       const events = loadEventDates();
       expect(events).toEqual([]);
     });
 
-    it('should save and load event dates', () => {
+    it('イベント日付を保存・読み込みできる', () => {
       const testEvents: EventDate[] = [
         {
           id: '1',
@@ -46,7 +46,7 @@ describe('Storage utilities', () => {
       expect(loaded).toEqual(testEvents);
     });
 
-    it('should handle invalid JSON data', () => {
+    it('不正なJSONデータを処理できる', () => {
       localStorage.setItem('attendance_event_dates', 'invalid json');
       const events = loadEventDates();
       expect(events).toEqual([]);
@@ -54,12 +54,12 @@ describe('Storage utilities', () => {
   });
 
   describe('Groups', () => {
-    it('should load empty array when no groups exist', () => {
+    it('グループが存在しない場合は空配列を読み込む', () => {
       const groups = loadGroups();
       expect(groups).toEqual([]);
     });
 
-    it('should save and load groups', () => {
+    it('グループを保存・読み込みできる', () => {
       const testGroups: Group[] = [
         {
           id: '1',
@@ -83,13 +83,13 @@ describe('Storage utilities', () => {
       expect(loaded).toEqual(testGroups);
     });
 
-    it('should handle invalid JSON data', () => {
+    it('不正なJSONデータを処理できる', () => {
       localStorage.setItem('attendance_groups', 'invalid json');
       const groups = loadGroups();
       expect(groups).toEqual([]);
     });
 
-    it('should overwrite existing groups', () => {
+    it('既存のグループを上書きできる', () => {
       const groups1: Group[] = [
         {
           id: '1',
@@ -117,12 +117,12 @@ describe('Storage utilities', () => {
   });
 
   describe('Members', () => {
-    it('should load empty array when no members exist', () => {
+    it('メンバーが存在しない場合は空配列を読み込む', () => {
       const members = loadMembers();
       expect(members).toEqual([]);
     });
 
-    it('should save and load members', () => {
+    it('メンバーを保存・読み込みできる', () => {
       const testMembers: Member[] = [
         {
           id: '1',
@@ -145,7 +145,7 @@ describe('Storage utilities', () => {
       expect(loaded).toEqual(testMembers);
     });
 
-    it('should handle invalid JSON data', () => {
+    it('不正なJSONデータを処理できる', () => {
       localStorage.setItem('attendance_members', 'invalid json');
       const members = loadMembers();
       expect(members).toEqual([]);
@@ -153,12 +153,12 @@ describe('Storage utilities', () => {
   });
 
   describe('Attendances', () => {
-    it('should load empty array when no attendances exist', () => {
+    it('出欠情報が存在しない場合は空配列を読み込む', () => {
       const attendances = loadAttendances();
       expect(attendances).toEqual([]);
     });
 
-    it('should save and load attendances', () => {
+    it('出欠情報を保存・読み込みできる', () => {
       const testAttendances: Attendance[] = [
         {
           id: '1',
@@ -183,13 +183,13 @@ describe('Storage utilities', () => {
       expect(loaded).toEqual(testAttendances);
     });
 
-    it('should handle invalid JSON data', () => {
+    it('不正なJSONデータを処理できる', () => {
       localStorage.setItem('attendance_attendances', 'invalid json');
       const attendances = loadAttendances();
       expect(attendances).toEqual([]);
     });
 
-    it('should overwrite existing attendances', () => {
+    it('既存の出欠情報を上書きできる', () => {
       const attendances1: Attendance[] = [
         {
           id: '1',
@@ -218,8 +218,8 @@ describe('Storage utilities', () => {
     });
   });
 
-  describe('Data isolation', () => {
-    it('should keep all data types separate', () => {
+  describe('データの分離', () => {
+    it('すべてのデータタイプを分離して保持できる', () => {
       const testEvent: EventDate = {
         id: '1',
         date: '2025-01-15',

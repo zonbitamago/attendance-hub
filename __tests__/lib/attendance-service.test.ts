@@ -28,7 +28,7 @@ describe('Attendance Service', () => {
   });
 
   describe('createAttendance', () => {
-    it('should create a new attendance with valid input', () => {
+    it('有効な入力で新しい出欠情報を作成できる', () => {
       const input = {
         eventDateId: '00000000-0000-0000-0000-000000000001',
         memberId: '00000000-0000-0000-0000-000000000002',
@@ -47,7 +47,7 @@ describe('Attendance Service', () => {
       expect(mockSaveAttendances).toHaveBeenCalledWith([attendance]);
     });
 
-    it('should throw error for invalid status', () => {
+    it('無効なステータスでエラーをスローする', () => {
       const input = {
         eventDateId: '00000000-0000-0000-0000-000000000001',
         memberId: '00000000-0000-0000-0000-000000000002',
@@ -57,7 +57,7 @@ describe('Attendance Service', () => {
       expect(() => createAttendance(input)).toThrow();
     });
 
-    it('should throw error when storage fails', () => {
+    it('ストレージが失敗した場合はエラーをスローする', () => {
       mockSaveAttendances.mockReturnValue(false);
 
       const input = {
@@ -71,7 +71,7 @@ describe('Attendance Service', () => {
   });
 
   describe('getAttendancesByEventDateId', () => {
-    it('should return attendances for a specific event date', () => {
+    it('特定のイベント日付の出欠情報を取得できる', () => {
       const mockAttendances: Attendance[] = [
         {
           id: '1',
@@ -105,7 +105,7 @@ describe('Attendance Service', () => {
       expect(attendances[1].eventDateId).toBe('event1');
     });
 
-    it('should return empty array when no attendances exist for event', () => {
+    it('イベントに出欠情報が存在しない場合は空配列を返す', () => {
       mockLoadAttendances.mockReturnValue([]);
 
       const attendances = getAttendancesByEventDateId('event1');
@@ -115,7 +115,7 @@ describe('Attendance Service', () => {
   });
 
   describe('getAttendancesByMemberId', () => {
-    it('should return attendances for a specific member', () => {
+    it('特定のメンバーの出欠情報を取得できる', () => {
       const mockAttendances: Attendance[] = [
         {
           id: '1',
@@ -151,7 +151,7 @@ describe('Attendance Service', () => {
   });
 
   describe('updateAttendance', () => {
-    it('should update existing attendance status', () => {
+    it('既存の出欠ステータスを更新できる', () => {
       const existingAttendance: Attendance = {
         id: '00000000-0000-0000-0000-000000000001',
         eventDateId: '00000000-0000-0000-0000-000000000011',
@@ -176,7 +176,7 @@ describe('Attendance Service', () => {
       expect(mockSaveAttendances).toHaveBeenCalled();
     });
 
-    it('should throw error when attendance not found', () => {
+    it('出欠情報が見つからない場合はエラーをスローする', () => {
       mockLoadAttendances.mockReturnValue([]);
 
       expect(() =>
@@ -184,7 +184,7 @@ describe('Attendance Service', () => {
       ).toThrow();
     });
 
-    it('should throw error for invalid update data', () => {
+    it('無効な更新データの場合はエラーをスローする', () => {
       const existingAttendance: Attendance = {
         id: '00000000-0000-0000-0000-000000000001',
         eventDateId: '00000000-0000-0000-0000-000000000011',
@@ -202,7 +202,7 @@ describe('Attendance Service', () => {
   });
 
   describe('deleteAttendance', () => {
-    it('should delete existing attendance', () => {
+    it('既存の出欠情報を削除できる', () => {
       const attendances: Attendance[] = [
         {
           id: '1',
@@ -228,7 +228,7 @@ describe('Attendance Service', () => {
       expect(mockSaveAttendances).toHaveBeenCalledWith([attendances[1]]);
     });
 
-    it('should return false when attendance not found', () => {
+    it('出欠情報が見つからない場合はfalseを返す', () => {
       mockLoadAttendances.mockReturnValue([]);
 
       const result = deleteAttendance('nonexistent');
@@ -239,7 +239,7 @@ describe('Attendance Service', () => {
   });
 
   describe('calculateEventSummary', () => {
-    it('should calculate correct summary by group', () => {
+    it('グループごとの集計を正しく計算できる', () => {
       const mockGroups: Group[] = [
         {
           id: 'group1',
@@ -329,7 +329,7 @@ describe('Attendance Service', () => {
       });
     });
 
-    it('should return empty array when no attendances exist', () => {
+    it('出欠情報が存在しない場合は空配列を返す', () => {
       mockLoadGroups.mockReturnValue([]);
       mockLoadMembers.mockReturnValue([]);
       mockLoadAttendances.mockReturnValue([]);
@@ -339,7 +339,7 @@ describe('Attendance Service', () => {
       expect(summaries).toEqual([]);
     });
 
-    it('should filter out groups with no attendances', () => {
+    it('出欠情報がないグループを除外する', () => {
       const mockGroups: Group[] = [
         {
           id: 'group1',
@@ -388,7 +388,7 @@ describe('Attendance Service', () => {
 
   describe('calculateEventTotalSummary', () => {
     describe('基本シナリオの集計', () => {
-      it('should calculate event total summary correctly with basic scenario', () => {
+      it('基本シナリオでイベント全体の集計を正しく計算できる', () => {
         const mockAttendances: Attendance[] = [
           {
             id: '1',
@@ -441,7 +441,7 @@ describe('Attendance Service', () => {
     });
 
     describe('出欠登録なしの場合', () => {
-      it('should return all zeros when no attendances exist', () => {
+      it('出欠情報が存在しない場合はすべて0を返す', () => {
         mockLoadAttendances.mockReturnValue([]);
 
         const result = calculateEventTotalSummary('event1');
@@ -456,7 +456,7 @@ describe('Attendance Service', () => {
     });
 
     describe('メンバー重複カウント防止', () => {
-      it('should count each member only once even if they have multiple attendances', () => {
+      it('複数の出欠登録があっても各メンバーを1回のみカウントする', () => {
         // 同じメンバーが複数の出欠登録を持つ場合（将来的に複数グループに所属する可能性）
         const mockAttendances: Attendance[] = [
           {

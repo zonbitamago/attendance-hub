@@ -27,7 +27,7 @@ describe('AdminEventsPage', () => {
   });
 
   describe('イベント一覧の出欠人数表示', () => {
-    it('should render attendance counts for each event in the admin page', async () => {
+    it('管理画面で各イベントの出欠人数を表示できる', async () => {
       // Arrange: モックデータの準備
       const mockEvents = [
         {
@@ -98,7 +98,7 @@ describe('AdminEventsPage', () => {
       expect(totalElements).toHaveLength(2);
     });
 
-    it('should display zero counts when no attendances are registered', async () => {
+    it('出欠登録がない場合は0人を表示する', async () => {
       // Arrange: モックデータの準備（出欠登録なし）
       const mockEvents = [
         {
@@ -135,7 +135,7 @@ describe('AdminEventsPage', () => {
       expect(screen.getByText(/（計0人）/)).toBeInTheDocument();
     });
 
-    it('should update attendance counts when an event is deleted', async () => {
+    it('イベント削除時に出欠人数が更新される', async () => {
       // Arrange: 初期状態で2つのイベントがある
       const mockEvents = [
         {

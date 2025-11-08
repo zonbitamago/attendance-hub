@@ -22,7 +22,7 @@ describe('Group Service', () => {
   });
 
   describe('createGroup', () => {
-    it('should create a new group with valid input', () => {
+    it('有効な入力で新しいグループを作成できる', () => {
       const input = {
         name: '打',
         order: 0,
@@ -41,7 +41,7 @@ describe('Group Service', () => {
       expect(mockSaveGroups).toHaveBeenCalledWith([group]);
     });
 
-    it('should create a group without color', () => {
+    it('色なしでグループを作成できる', () => {
       const input = {
         name: 'Cla',
         order: 1,
@@ -54,7 +54,7 @@ describe('Group Service', () => {
       expect(group.color).toBeUndefined();
     });
 
-    it('should throw error for invalid input', () => {
+    it('無効な入力でエラーをスローする', () => {
       const input = {
         name: '',
         order: 0,
@@ -63,7 +63,7 @@ describe('Group Service', () => {
       expect(() => createGroup(input)).toThrow();
     });
 
-    it('should throw error when name is too long', () => {
+    it('名前が長すぎる場合はエラーをスローする', () => {
       const input = {
         name: 'a'.repeat(51),
         order: 0,
@@ -72,7 +72,7 @@ describe('Group Service', () => {
       expect(() => createGroup(input)).toThrow();
     });
 
-    it('should throw error for invalid color format', () => {
+    it('無効な色フォーマットの場合はエラーをスローする', () => {
       const input = {
         name: 'Test',
         order: 0,
@@ -82,7 +82,7 @@ describe('Group Service', () => {
       expect(() => createGroup(input)).toThrow();
     });
 
-    it('should throw error when storage fails', () => {
+    it('ストレージが失敗した場合はエラーをスローする', () => {
       mockSaveGroups.mockReturnValue(false);
 
       const input = {
@@ -95,7 +95,7 @@ describe('Group Service', () => {
   });
 
   describe('getAllGroups', () => {
-    it('should return all groups sorted by order', () => {
+    it('すべてのグループを順序でソートして取得できる', () => {
       const mockGroups: Group[] = [
         {
           id: '2',
@@ -128,7 +128,7 @@ describe('Group Service', () => {
       expect(mockLoadGroups).toHaveBeenCalled();
     });
 
-    it('should return empty array when no groups exist', () => {
+    it('グループが存在しない場合は空配列を返す', () => {
       mockLoadGroups.mockReturnValue([]);
 
       const groups = getAllGroups();
@@ -138,7 +138,7 @@ describe('Group Service', () => {
   });
 
   describe('getGroupById', () => {
-    it('should return group by id', () => {
+    it('IDでグループを取得できる', () => {
       const mockGroups: Group[] = [
         {
           id: '1',
@@ -161,7 +161,7 @@ describe('Group Service', () => {
       expect(group).toEqual(mockGroups[0]);
     });
 
-    it('should return null when group not found', () => {
+    it('グループが見つからない場合はnullを返す', () => {
       mockLoadGroups.mockReturnValue([]);
 
       const group = getGroupById('nonexistent');
@@ -171,7 +171,7 @@ describe('Group Service', () => {
   });
 
   describe('updateGroup', () => {
-    it('should update existing group', () => {
+    it('既存のグループを更新できる', () => {
       const existingGroup: Group = {
         id: '1',
         name: 'Old Name',
@@ -197,7 +197,7 @@ describe('Group Service', () => {
       expect(mockSaveGroups).toHaveBeenCalled();
     });
 
-    it('should throw error when group not found', () => {
+    it('グループが見つからない場合はエラーをスローする', () => {
       mockLoadGroups.mockReturnValue([]);
 
       expect(() =>
@@ -205,7 +205,7 @@ describe('Group Service', () => {
       ).toThrow();
     });
 
-    it('should throw error for invalid update data', () => {
+    it('無効な更新データの場合はエラーをスローする', () => {
       const existingGroup: Group = {
         id: '1',
         name: 'Old Name',
@@ -222,7 +222,7 @@ describe('Group Service', () => {
   });
 
   describe('deleteGroup', () => {
-    it('should delete existing group', () => {
+    it('既存のグループを削除できる', () => {
       const groups: Group[] = [
         {
           id: '1',
@@ -246,7 +246,7 @@ describe('Group Service', () => {
       expect(mockSaveGroups).toHaveBeenCalledWith([groups[1]]);
     });
 
-    it('should return false when group not found', () => {
+    it('グループが見つからない場合はfalseを返す', () => {
       mockLoadGroups.mockReturnValue([]);
 
       const result = deleteGroup('nonexistent');
