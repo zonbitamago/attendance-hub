@@ -120,27 +120,13 @@
 
 ### UIコンポーネント: MemberSelector
 
-#### Test Case 7: グループ選択が動作する
+#### Test Case 7-9: グループ選択、メンバー選択、新規メンバー作成（統合実装）
 
-- [ ] T031 **[Red]** [US1] テストを書く: MemberSelectorがグループ一覧を表示する (`__tests__/components/bulk-register/member-selector.test.tsx`)
-- [ ] T032 **[Green]** [US1] `components/bulk-register/member-selector.tsx`を作成
-- [ ] T033 **[Green]** [US1] グループドロップダウンのUIを実装してT031を通す
-- [ ] T034 **[Green]** [US1] テストを実行してT031がパスすることを確認
-- [ ] T035 **[Refactor]** [US1] コンポーネントを整理
-
-#### Test Case 8: メンバー選択が動作する
-
-- [ ] T036 **[Red]** [US1] テストを書く: グループ選択後、メンバー一覧が表示される (`__tests__/components/bulk-register/member-selector.test.tsx`)
-- [ ] T037 **[Green]** [US1] メンバードロップダウンのロジックを実装してT036を通す
-- [ ] T038 **[Green]** [US1] テストを実行してT031とT036が両方パスすることを確認
-- [ ] T039 **[Refactor]** [US1] ステート管理を整理
-
-#### Test Case 9: 新規メンバー作成
-
-- [ ] T040 **[Red]** [US1] テストを書く: 新規メンバー名を入力できる (`__tests__/components/bulk-register/member-selector.test.tsx`)
-- [ ] T041 **[Green]** [US1] 新規メンバー入力フィールドを実装してT040を通す
-- [ ] T042 **[Green]** [US1] テストを実行して全てのMemberSelectorテストがパスすることを確認
-- [ ] T043 **[Refactor]** [US1] UIとロジックを整理
+- [x] T031 **[Red]** [US1] テストを書く: グループ選択、メンバー選択、新規メンバー作成の全テストケース (`__tests__/components/bulk-register/member-selector.test.tsx`)
+- [x] T032 **[Green]** [US1] `components/bulk-register/member-selector.tsx`を作成
+- [x] T033 **[Green]** [US1] グループ選択、メンバー選択、新規メンバー入力の全UIとロジックを実装
+- [x] T034 **[Green]** [US1] テストを実行して全6テストがパスすることを確認
+- [x] T035 **[Refactor]** [US1] コンポーネントを整理（実装時に完了）
 
 ### UIコンポーネント: EventList
 
