@@ -188,7 +188,19 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
      - 既存の入力欄（admin/groups、admin/events、events/[id]/register）と同じスタイルになっているか確認
 4. **リファクタリング**: コードを整理・改善（Refactor）
 5. **動作確認**: ブラウザで実際の動作を確認
-6. **コミット**: 日本語または英語で明確なメッセージを付けてコミット
+6. **ドキュメント更新**（機能追加・変更時は必須）:
+   - 📝 **README.md**: エンドユーザー向けドキュメント
+     - 技術スタック（バージョン情報）
+     - 機能一覧（新機能の追加）
+     - プロジェクト構造（新ディレクトリ・ファイルの追加）
+     - 使い方（新機能の使用手順）
+     - テスト数
+     - 最終更新日
+   - 📝 **SPECIFICATION.md**: 技術仕様書（該当する場合）
+     - 実装済み機能の記録
+     - 技術的な詳細
+   - ⚠️ **重要**: 機能追加・変更を行った場合は、README.mdとSPECIFICATION.mdの**両方**を更新すること
+7. **コミット**: 日本語または英語で明確なメッセージを付けてコミット
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
