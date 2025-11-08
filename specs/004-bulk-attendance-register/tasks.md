@@ -130,27 +130,13 @@
 
 ### UIコンポーネント: EventList
 
-#### Test Case 10: イベント一覧表示
+#### Test Case 10-12: イベント一覧、選択、既存ステータス表示（統合実装）
 
-- [ ] T044 **[Red]** [US1] テストを書く: EventListがイベント一覧を表示する (`__tests__/components/bulk-register/event-list.test.tsx`)
-- [ ] T045 **[Green]** [US1] `components/bulk-register/event-list.tsx`を作成
-- [ ] T046 **[Green]** [US1] イベントカードのリスト表示を実装してT044を通す
-- [ ] T047 **[Green]** [US1] テストを実行してT044がパスすることを確認
-- [ ] T048 **[Refactor]** [US1] コンポーネントを整理
-
-#### Test Case 11: イベント選択（チェックボックス）
-
-- [ ] T049 **[Red]** [US1] テストを書く: チェックボックスでイベントを選択/解除できる (`__tests__/components/bulk-register/event-list.test.tsx`)
-- [ ] T050 **[Green]** [US1] チェックボックスの状態管理を実装してT049を通す
-- [ ] T051 **[Green]** [US1] テストを実行してT044とT049が両方パスすることを確認
-- [ ] T052 **[Refactor]** [US1] ステート管理を整理
-
-#### Test Case 12: 既存ステータス表示
-
-- [ ] T053 **[Red]** [US1] テストを書く: 既存登録があるイベントに現在のステータスを表示 (`__tests__/components/bulk-register/event-list.test.tsx`)
-- [ ] T054 **[Green]** [US1] 既存ステータス取得と表示ロジックを実装してT053を通す
-- [ ] T055 **[Green]** [US1] テストを実行して全てのEventListテストがパスすることを確認
-- [ ] T056 **[Refactor]** [US1] コードを整理
+- [x] T044 **[Red]** [US1] テストを書く: イベント一覧、チェックボックス選択、既存ステータス表示の全テストケース (`__tests__/components/bulk-register/event-list.test.tsx`)
+- [x] T045 **[Green]** [US1] `components/bulk-register/event-list.tsx`を作成
+- [x] T046 **[Green]** [US1] イベントカード表示、チェックボックス、既存ステータス表示を実装
+- [x] T047 **[Green]** [US1] テストを実行して全6テストがパスすることを確認
+- [x] T048 **[Refactor]** [US1] コンポーネントを整理（実装時に完了）
 
 ### UIコンポーネント: StatusGrid
 
