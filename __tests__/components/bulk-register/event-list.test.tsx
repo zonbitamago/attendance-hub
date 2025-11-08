@@ -188,4 +188,67 @@ describe('EventList', () => {
       expect(screen.queryByText(/現在:/)).not.toBeInTheDocument();
     });
   });
+
+  describe('Test Case 4: 個別ステータス設定 (User Story 3)', () => {
+    it('各イベントに個別のステータス選択UIが表示される', () => {
+      const onSelectionChange = jest.fn();
+      const onStatusChange = jest.fn();
+
+      render(
+        <EventList
+          memberId={null}
+          selectedEvents={['event-1', 'event-2']}
+          onSelectionChange={onSelectionChange}
+          eventStatuses={{}}
+          onStatusChange={onStatusChange}
+        />
+      );
+
+      // 選択されたイベントにはステータス選択が表示される
+      const statusSelects = screen.getAllByRole('combobox', { name: /ステータス/i });
+      expect(statusSelects).toHaveLength(2);
+    });
+
+    it('イベントのステータスを個別に変更できる', async () => {
+      const user = userEvent.setup();
+      const onSelectionChange = jest.fn();
+      const onStatusChange = jest.fn();
+
+      render(
+        <EventList
+          memberId={null}
+          selectedEvents={['event-1', 'event-2']}
+          onSelectionChange={onSelectionChange}
+          eventStatuses={{ 'event-1': '◯', 'event-2': '△' }}
+          onStatusChange={onStatusChange}
+        />
+      );
+
+      const statusSelects = screen.getAllByRole('combobox', { name: /ステータス/i });
+
+      // event-1のステータスを変更
+      await user.selectOptions(statusSelects[0], '✗');
+
+      expect(onStatusChange).toHaveBeenCalledWith('event-1', '✗');
+    });
+
+    it('未選択のイベントにはステータス選択UIが表示されない', () => {
+      const onSelectionChange = jest.fn();
+      const onStatusChange = jest.fn();
+
+      render(
+        <EventList
+          memberId={null}
+          selectedEvents={['event-1']}
+          onSelectionChange={onSelectionChange}
+          eventStatuses={{ 'event-1': '◯' }}
+          onStatusChange={onStatusChange}
+        />
+      );
+
+      // 1つのイベントのみ選択されているので、ステータス選択は1つだけ
+      const statusSelects = screen.getAllByRole('combobox', { name: /ステータス/i });
+      expect(statusSelects).toHaveLength(1);
+    });
+  });
 });

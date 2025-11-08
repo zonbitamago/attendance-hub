@@ -10,7 +10,7 @@ import type { AttendanceStatus } from '@/types';
 export default function MyRegisterPage() {
   const [memberSelection, setMemberSelection] = useState<MemberSelection | null>(null);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
-  const [status, setStatus] = useState<AttendanceStatus>('◯');
+  const [eventStatuses, setEventStatuses] = useState<Record<string, AttendanceStatus>>({});
   const [message, setMessage] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,11 +24,23 @@ export default function MyRegisterPage() {
   const handleEventSelectionChange = (eventIds: string[]) => {
     setSelectedEvents(eventIds);
     setMessage('');
+
+    // 新しく選択されたイベントにデフォルトステータスを設定
+    const newStatuses = { ...eventStatuses };
+    eventIds.forEach((eventId) => {
+      if (!newStatuses[eventId]) {
+        newStatuses[eventId] = '◯'; // デフォルトは出席
+      }
+    });
+    setEventStatuses(newStatuses);
   };
 
-  // ステータス変更時の処理
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(e.target.value as AttendanceStatus);
+  // 個別イベントのステータス変更時の処理
+  const handleEventStatusChange = (eventId: string, status: AttendanceStatus) => {
+    setEventStatuses((prev) => ({
+      ...prev,
+      [eventId]: status,
+    }));
   };
 
   // 一括登録処理
@@ -60,11 +72,11 @@ export default function MyRegisterPage() {
         memberId = newMember.id;
       }
 
-      // 一括登録用の入力データを作成
+      // 一括登録用の入力データを作成（各イベントの個別ステータスを使用）
       const inputs = selectedEvents.map((eventDateId) => ({
         eventDateId,
         memberId,
-        status,
+        status: eventStatuses[eventDateId] || '◯',
       }));
 
       // 一括登録を実行
@@ -114,44 +126,22 @@ export default function MyRegisterPage() {
                 memberId={memberSelection.memberId}
                 selectedEvents={selectedEvents}
                 onSelectionChange={handleEventSelectionChange}
+                eventStatuses={eventStatuses}
+                onStatusChange={handleEventStatusChange}
               />
             </div>
           )}
 
-          {/* ステータス選択と登録ボタン */}
+          {/* 登録ボタン */}
           {memberSelection && selectedEvents.length > 0 && (
             <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-              <div className="space-y-4">
-                {/* ステータス選択 */}
-                <div>
-                  <label
-                    htmlFor="status-select"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    ステータスを選択
-                  </label>
-                  <select
-                    id="status-select"
-                    aria-label="ステータス"
-                    value={status}
-                    onChange={handleStatusChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="◯">◯ 出席</option>
-                    <option value="△">△ 未定</option>
-                    <option value="✗">✗ 欠席</option>
-                  </select>
-                </div>
-
-                {/* 登録ボタン */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isSubmitting ? '登録中...' : `${selectedEvents.length}件のイベントに登録`}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              >
+                {isSubmitting ? '登録中...' : `${selectedEvents.length}件のイベントに登録`}
+              </button>
             </div>
           )}
 

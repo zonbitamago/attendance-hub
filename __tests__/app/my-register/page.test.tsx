@@ -75,7 +75,7 @@ describe('MyRegisterPage', () => {
       expect(screen.queryByRole('button', { name: /登録/ })).not.toBeInTheDocument();
     });
 
-    it('メンバーとイベントを選択してステータスを設定し、一括登録できる', async () => {
+    it('メンバーとイベントを選択して一括登録できる', async () => {
       const user = userEvent.setup();
 
       render(<MyRegisterPage />);
@@ -93,9 +93,7 @@ describe('MyRegisterPage', () => {
       await user.click(checkboxes[0]); // event-1
       await user.click(checkboxes[1]); // event-2
 
-      // ステータスを選択
-      const statusSelect = screen.getByRole('combobox', { name: /ステータス/i });
-      await user.selectOptions(statusSelect, '◯');
+      // 各イベントにデフォルトステータス（◯）が設定されている
 
       // 一括登録ボタンをクリック
       const submitButton = screen.getByRole('button', { name: /登録/ });
@@ -158,9 +156,7 @@ describe('MyRegisterPage', () => {
       const checkboxes = screen.getAllByRole('checkbox');
       await user.click(checkboxes[0]);
 
-      // ステータスを選択
-      const statusSelect = screen.getByRole('combobox', { name: /ステータス/i });
-      await user.selectOptions(statusSelect, '◯');
+      // デフォルトステータス（◯）が自動設定される
 
       // 一括登録ボタンをクリック
       const submitButton = screen.getByRole('button', { name: /登録/ });
@@ -170,6 +166,48 @@ describe('MyRegisterPage', () => {
       await waitFor(() => {
         expect(mockSaveAttendances).toHaveBeenCalled();
       });
+    });
+
+    it('各イベントに異なるステータスを設定して一括登録できる (User Story 3)', async () => {
+      const user = userEvent.setup();
+
+      render(<MyRegisterPage />);
+
+      // グループを選択
+      const groupSelect = screen.getByRole('combobox', { name: /グループ/i });
+      await user.selectOptions(groupSelect, 'group-1');
+
+      // メンバーを選択
+      const memberSelect = screen.getByRole('combobox', { name: /メンバー/i });
+      await user.selectOptions(memberSelect, 'member-1');
+
+      // イベントを選択
+      const checkboxes = screen.getAllByRole('checkbox');
+      await user.click(checkboxes[0]); // event-1
+      await user.click(checkboxes[1]); // event-2
+
+      // 各イベントに異なるステータスを設定
+      // IDで直接取得
+      const statusEvent1 = document.querySelector('#status-event-1') as HTMLSelectElement;
+      const statusEvent2 = document.querySelector('#status-event-2') as HTMLSelectElement;
+
+      expect(statusEvent1).toBeInTheDocument();
+      expect(statusEvent2).toBeInTheDocument();
+
+      await user.selectOptions(statusEvent1, '◯');
+      await user.selectOptions(statusEvent2, '✗');
+
+      // 一括登録ボタンをクリック
+      const submitButton = screen.getByRole('button', { name: /登録/ });
+      await user.click(submitButton);
+
+      // saveAttendancesが呼ばれることを確認
+      await waitFor(() => {
+        expect(mockSaveAttendances).toHaveBeenCalled();
+      });
+
+      // 成功メッセージが表示される（個別ステータスで2件登録）
+      expect(screen.getByText(/登録しました/)).toBeInTheDocument();
     });
   });
 });
