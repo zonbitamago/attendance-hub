@@ -156,8 +156,9 @@
 
 ### ナビゲーション追加
 
-- [ ] T075 [US1] `app/page.tsx`に「複数イベントの出欠を登録」リンクを追加
-- [ ] T076 [US1] `app/admin/page.tsx`に「複数イベントの出欠を登録」リンクを追加
+- [x] T075 [US1] `app/page.tsx`に「一括出欠登録」リンクを追加
+- [x] T076 [US1] `app/admin/page.tsx`に「一括出欠登録」リンクを追加
+- [x] T075.1 [US1] `lib/member-service.ts`に`saveMember`関数を追加（createMemberのエイリアス）
 
 ### UI/UXポリッシュ
 
