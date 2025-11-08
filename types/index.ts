@@ -58,3 +58,20 @@ export interface EventSummary {
 
 // イベント全体の人数集計結果（グループ情報なし）
 export type EventTotalSummary = Omit<EventSummary, 'eventDateId' | 'groupSummaries'>;
+
+// 一括登録の入力データ
+export interface BulkAttendanceInput {
+  eventDateId: string;
+  memberId: string;
+  status: AttendanceStatus;
+}
+
+// 一括登録の結果
+export interface BulkAttendanceResult {
+  success: Attendance[];      // 新規作成に成功した出欠レコード
+  updated: Attendance[];      // 既存レコードの更新に成功した出欠レコード
+  failed: Array<{             // 失敗した項目とエラー情報
+    input: BulkAttendanceInput;
+    error: string;
+  }>;
+}

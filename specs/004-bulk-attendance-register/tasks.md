@@ -51,8 +51,8 @@
 
 ### 型定義の追加
 
-- [ ] T003 [P] `types/index.ts`に`BulkAttendanceInput`型を追加
-- [ ] T004 [P] `types/index.ts`に`BulkAttendanceResult`型を追加
+- [x] T003 [P] `types/index.ts`に`BulkAttendanceInput`型を追加
+- [x] T004 [P] `types/index.ts`に`BulkAttendanceResult`型を追加
 
 **Checkpoint**: 基盤準備完了 - ユーザーストーリー実装を並列開始可能
 
@@ -68,49 +68,55 @@
 
 #### Test Case 1: 新規レコードを作成する
 
-- [ ] T005 **[Red]** [US1] テストを書く: upsertAttendanceが新規レコードを作成する (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T006 **[Green]** [US1] `lib/attendance-service.ts`に`upsertAttendance`関数のスケルトンを作成
-- [ ] T007 **[Green]** [US1] 新規レコード作成ロジックを実装してT005を通す
-- [ ] T008 **[Green]** [US1] テストを実行してT005がパスすることを確認
-- [ ] T009 **[Refactor]** [US1] コードを整理（テストは通ったまま）
+- [x] T005 **[Red]** [US1] テストを書く: upsertAttendanceが新規レコードを作成する (`__tests__/lib/attendance-service.test.ts`)
+- [x] T006 **[Green]** [US1] `lib/attendance-service.ts`に`upsertAttendance`関数のスケルトンを作成
+- [x] T007 **[Green]** [US1] 新規レコード作成ロジックを実装してT005を通す
+- [x] T008 **[Green]** [US1] テストを実行してT005がパスすることを確認
+- [x] T009 **[Refactor]** [US1] コードを整理（テストは通ったまま）
 
 #### Test Case 2: 既存レコードを更新する
 
-- [ ] T010 **[Red]** [US1] テストを書く: upsertAttendanceが既存レコードを更新する (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T011 **[Green]** [US1] 既存レコード検索と更新ロジックを実装してT010を通す
-- [ ] T012 **[Green]** [US1] テストを実行してT005とT010が両方パスすることを確認
-- [ ] T013 **[Refactor]** [US1] コード構造を改善（テストは通ったまま）
+- [x] T010 **[Red]** [US1] テストを書く: upsertAttendanceが既存レコードを更新する (`__tests__/lib/attendance-service.test.ts`)
+- [x] T011 **[Green]** [US1] 既存レコード検索と更新ロジックを実装してT010を通す
+- [x] T012 **[Green]** [US1] テストを実行してT005とT010が両方パスすることを確認
+- [x] T013 **[Refactor]** [US1] コード構造を改善（テストは通ったまま）
 
-#### Test Case 3: createdAtを保持する
+#### Test Case 3: createdAtを保持する（重複レコード処理に統合）
 
-- [ ] T014 **[Red]** [US1] テストを書く: 更新時にcreatedAtが変更されないことを確認 (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T015 **[Green]** [US1] createdAt保持ロジックを実装してT014を通す
-- [ ] T016 **[Green]** [US1] テストを実行してT005, T010, T014が全てパスすることを確認
-- [ ] T017 **[Refactor]** [US1] 必要に応じてリファクタリング
+- [x] T014 **[Red]** [US1] テストを書く: 重複レコードがある場合、最新のものを保持し古いものを削除する (`__tests__/lib/attendance-service.test.ts`)
+- [x] T015 **[Green]** [US1] 重複レコード処理ロジック（最新のもの保持、createdAt保持）を実装してT014を通す
+- [x] T016 **[Green]** [US1] テストを実行してT005, T010, T014が全てパスすることを確認
+- [x] T017 **[Refactor]** [US1] 必要に応じてリファクタリング
 
 ### サービス層: upsertBulkAttendances 関数
 
-#### Test Case 4: 全件成功
+#### Test Case 4: 全件成功（新規と既存の混在を含む）
 
-- [ ] T018 **[Red]** [US1] テストを書く: upsertBulkAttendancesが全件成功する (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T019 **[Green]** [US1] `lib/attendance-service.ts`に`upsertBulkAttendances`関数を作成
-- [ ] T020 **[Green]** [US1] バッチ処理ロジックを実装してT018を通す
-- [ ] T021 **[Green]** [US1] テストを実行してT018がパスすることを確認
-- [ ] T022 **[Refactor]** [US1] コードを整理
+- [x] T018 **[Red]** [US1] テストを書く: すべて新規レコードの場合、全件成功する (`__tests__/lib/attendance-service.test.ts`)
+- [x] T019 **[Green]** [US1] `lib/attendance-service.ts`に`upsertBulkAttendances`関数を作成
+- [x] T020 **[Green]** [US1] バッチ処理ロジックを実装してT018を通す
+- [x] T021 **[Green]** [US1] テストを実行してT018がパスすることを確認
+- [x] T022 **[Refactor]** [US1] コードを整理
 
-#### Test Case 5: 一部成功・一部失敗
+#### Test Case 5: 新規と既存が混在
 
-- [ ] T023 **[Red]** [US1] テストを書く: 一部のレコードが失敗しても成功分は保存される (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T024 **[Green]** [US1] エラーハンドリングと部分的成功のロジックを実装してT023を通す
-- [ ] T025 **[Green]** [US1] テストを実行してT018とT023が両方パスすることを確認
-- [ ] T026 **[Refactor]** [US1] エラーハンドリングコードを整理
+- [x] T023 **[Red]** [US1] テストを書く: 新規レコードと既存レコードが混在する場合、それぞれsuccessとupdatedに分類される (`__tests__/lib/attendance-service.test.ts`)
+- [x] T024 **[Green]** [US1] 既存レコード判定と分類ロジックを実装してT023を通す
+- [x] T025 **[Green]** [US1] テストを実行してT018とT023が両方パスすることを確認
+- [x] T026 **[Refactor]** [US1] エラーハンドリングコードを整理
 
-#### Test Case 6: 空配列
+#### Test Case 6: バリデーションエラー時の部分的失敗
 
-- [ ] T027 **[Red]** [US1] テストを書く: 空配列を渡した場合の動作 (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T028 **[Green]** [US1] 空配列のハンドリングを実装してT027を通す
-- [ ] T029 **[Green]** [US1] テストを実行して全てのupsertBulkAttendancesテストがパスすることを確認
-- [ ] T030 **[Refactor]** [US1] 必要に応じてリファクタリング
+- [x] T027 **[Red]** [US1] テストを書く: 無効な入力があっても他の有効な入力は処理される (`__tests__/lib/attendance-service.test.ts`)
+- [x] T028 **[Green]** [US1] 部分的失敗のエラーハンドリングを実装してT027を通す
+- [x] T029 **[Green]** [US1] テストを実行して全てのupsertBulkAttendancesテストがパスすることを確認
+- [x] T030 **[Refactor]** [US1] 必要に応じてリファクタリング
+
+#### Test Case 7: 空配列の処理
+
+- [x] T030a **[Red]** [US1] テストを書く: 空配列を渡した場合の動作 (`__tests__/lib/attendance-service.test.ts`)
+- [x] T030b **[Green]** [US1] 空配列のハンドリングを実装してT030aを通す
+- [x] T030c **[Green]** [US1] テストを実行して全てのupsertBulkAttendancesテストがパスすることを確認
 
 ### UIコンポーネント: MemberSelector
 

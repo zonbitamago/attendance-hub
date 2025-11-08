@@ -6,6 +6,8 @@ import {
   deleteAttendance,
   calculateEventSummary,
   calculateEventTotalSummary,
+  upsertAttendance,
+  upsertBulkAttendances,
 } from '@/lib/attendance-service';
 import { loadAttendances, saveAttendances, loadGroups, loadMembers } from '@/lib/storage';
 import type { Attendance, Group, Member } from '@/types';
@@ -493,6 +495,284 @@ describe('Attendance Service', () => {
           totalNotAttending: 0,
           totalResponded: 2,
         });
+      });
+    });
+  });
+
+  // User Story 1: 複数イベント一括出欠登録
+  describe('upsertAttendance', () => {
+    describe('Test Case 1: 新規レコードを作成する', () => {
+      it('既存レコードがない場合、新規レコードを作成する', () => {
+        const eventDateId = '550e8400-e29b-41d4-a716-446655440001';
+        const memberId = '550e8400-e29b-41d4-a716-446655440002';
+
+        const input = {
+          eventDateId,
+          memberId,
+          status: '◯' as const,
+        };
+
+        mockLoadAttendances.mockReturnValue([]);
+        mockSaveAttendances.mockReturnValue(true);
+
+        const result = upsertAttendance(input);
+
+        expect(result).toMatchObject({
+          eventDateId,
+          memberId,
+          status: '◯',
+        });
+        expect(result.id).toBeDefined();
+        expect(result.createdAt).toBeDefined();
+        expect(mockSaveAttendances).toHaveBeenCalled();
+      });
+    });
+
+    describe('Test Case 2: 既存レコードを更新する', () => {
+      it('既存レコードがある場合、ステータスのみを更新する', () => {
+        const eventDateId = '550e8400-e29b-41d4-a716-446655440001';
+        const memberId = '550e8400-e29b-41d4-a716-446655440002';
+        const existingAttendanceId = '550e8400-e29b-41d4-a716-446655440003';
+
+        const existingAttendance: Attendance = {
+          id: existingAttendanceId,
+          eventDateId,
+          memberId,
+          status: '◯',
+          createdAt: '2025-01-15T10:00:00Z',
+        };
+
+        const input = {
+          eventDateId,
+          memberId,
+          status: '✗' as const,
+        };
+
+        mockLoadAttendances.mockReturnValue([existingAttendance]);
+        mockSaveAttendances.mockReturnValue(true);
+
+        const result = upsertAttendance(input);
+
+        expect(result).toMatchObject({
+          id: existingAttendanceId,
+          eventDateId,
+          memberId,
+          status: '✗',
+          createdAt: '2025-01-15T10:00:00Z',
+        });
+        expect(mockSaveAttendances).toHaveBeenCalled();
+      });
+    });
+
+    describe('Test Case 3: 重複レコードを処理する', () => {
+      it('重複レコードがある場合、最新のものを保持し古いものを削除する', () => {
+        const eventDateId = '550e8400-e29b-41d4-a716-446655440001';
+        const memberId = '550e8400-e29b-41d4-a716-446655440002';
+
+        // 重複レコード（同じeventDateId + memberId）
+        const olderDuplicate: Attendance = {
+          id: '550e8400-e29b-41d4-a716-446655440003',
+          eventDateId,
+          memberId,
+          status: '◯',
+          createdAt: '2025-01-15T10:00:00Z',
+        };
+
+        const newerDuplicate: Attendance = {
+          id: '550e8400-e29b-41d4-a716-446655440004',
+          eventDateId,
+          memberId,
+          status: '△',
+          createdAt: '2025-01-15T11:00:00Z',
+        };
+
+        const input = {
+          eventDateId,
+          memberId,
+          status: '✗' as const,
+        };
+
+        mockLoadAttendances.mockReturnValue([olderDuplicate, newerDuplicate]);
+        mockSaveAttendances.mockReturnValue(true);
+
+        const result = upsertAttendance(input);
+
+        // 最新のレコード（newerDuplicate）が更新される
+        expect(result).toMatchObject({
+          id: newerDuplicate.id,
+          eventDateId,
+          memberId,
+          status: '✗',
+          createdAt: newerDuplicate.createdAt,
+        });
+
+        // saveAttendancesが呼ばれたときの引数を検証
+        expect(mockSaveAttendances).toHaveBeenCalled();
+        const savedAttendances = mockSaveAttendances.mock.calls[0][0];
+
+        // 保存されたレコードに重複がないことを確認
+        const duplicates = savedAttendances.filter(
+          (a: Attendance) => a.eventDateId === eventDateId && a.memberId === memberId
+        );
+        expect(duplicates).toHaveLength(1);
+        expect(duplicates[0].id).toBe(newerDuplicate.id);
+      });
+    });
+  });
+
+  // 一括登録機能のテスト
+  describe('upsertBulkAttendances', () => {
+    describe('Test Case 1: すべて新規レコードを作成', () => {
+      it('すべての入力が新規レコードの場合、すべてsuccessに格納される', () => {
+        const inputs = [
+          {
+            eventDateId: '550e8400-e29b-41d4-a716-446655440001',
+            memberId: '550e8400-e29b-41d4-a716-446655440010',
+            status: '◯' as const,
+          },
+          {
+            eventDateId: '550e8400-e29b-41d4-a716-446655440002',
+            memberId: '550e8400-e29b-41d4-a716-446655440011',
+            status: '△' as const,
+          },
+          {
+            eventDateId: '550e8400-e29b-41d4-a716-446655440003',
+            memberId: '550e8400-e29b-41d4-a716-446655440012',
+            status: '✗' as const,
+          },
+        ];
+
+        mockLoadAttendances.mockReturnValue([]);
+        mockSaveAttendances.mockReturnValue(true);
+
+        const result = upsertBulkAttendances(inputs);
+
+        expect(result.success).toHaveLength(3);
+        expect(result.updated).toHaveLength(0);
+        expect(result.failed).toHaveLength(0);
+
+        expect(result.success[0]).toMatchObject({
+          eventDateId: inputs[0].eventDateId,
+          memberId: inputs[0].memberId,
+          status: '◯',
+        });
+        expect(result.success[1]).toMatchObject({
+          eventDateId: inputs[1].eventDateId,
+          memberId: inputs[1].memberId,
+          status: '△',
+        });
+        expect(result.success[2]).toMatchObject({
+          eventDateId: inputs[2].eventDateId,
+          memberId: inputs[2].memberId,
+          status: '✗',
+        });
+
+        // localStorageへの読み書きは1回ずつのみ
+        expect(mockLoadAttendances).toHaveBeenCalledTimes(1);
+        expect(mockSaveAttendances).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('Test Case 2: 新規と既存が混在', () => {
+      it('新規レコードはsuccessに、既存レコードはupdatedに格納される', () => {
+        const existingAttendance: Attendance = {
+          id: '550e8400-e29b-41d4-a716-446655440020',
+          eventDateId: '550e8400-e29b-41d4-a716-446655440001',
+          memberId: '550e8400-e29b-41d4-a716-446655440010',
+          status: '◯',
+          createdAt: '2025-01-15T10:00:00Z',
+        };
+
+        const inputs = [
+          {
+            eventDateId: '550e8400-e29b-41d4-a716-446655440001',
+            memberId: '550e8400-e29b-41d4-a716-446655440010',
+            status: '△' as const, // 既存レコードを更新
+          },
+          {
+            eventDateId: '550e8400-e29b-41d4-a716-446655440002',
+            memberId: '550e8400-e29b-41d4-a716-446655440011',
+            status: '◯' as const, // 新規レコード
+          },
+        ];
+
+        mockLoadAttendances.mockReturnValue([existingAttendance]);
+        mockSaveAttendances.mockReturnValue(true);
+
+        const result = upsertBulkAttendances(inputs);
+
+        expect(result.success).toHaveLength(1);
+        expect(result.updated).toHaveLength(1);
+        expect(result.failed).toHaveLength(0);
+
+        // 更新されたレコードはIDとcreatedAtが保持される
+        expect(result.updated[0]).toMatchObject({
+          id: existingAttendance.id,
+          eventDateId: inputs[0].eventDateId,
+          memberId: inputs[0].memberId,
+          status: '△',
+          createdAt: existingAttendance.createdAt,
+        });
+
+        // 新規レコード
+        expect(result.success[0]).toMatchObject({
+          eventDateId: inputs[1].eventDateId,
+          memberId: inputs[1].memberId,
+          status: '◯',
+        });
+
+        expect(mockLoadAttendances).toHaveBeenCalledTimes(1);
+        expect(mockSaveAttendances).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('Test Case 3: バリデーションエラー時の部分的失敗', () => {
+      it('無効な入力があっても他の有効な入力は処理される', () => {
+        const inputs = [
+          {
+            eventDateId: '550e8400-e29b-41d4-a716-446655440001',
+            memberId: '550e8400-e29b-41d4-a716-446655440010',
+            status: '◯' as const,
+          },
+          {
+            eventDateId: 'invalid-uuid',
+            memberId: '550e8400-e29b-41d4-a716-446655440011',
+            status: '△' as const,
+          },
+          {
+            eventDateId: '550e8400-e29b-41d4-a716-446655440003',
+            memberId: '550e8400-e29b-41d4-a716-446655440012',
+            status: '✗' as const,
+          },
+        ];
+
+        mockLoadAttendances.mockReturnValue([]);
+        mockSaveAttendances.mockReturnValue(true);
+
+        const result = upsertBulkAttendances(inputs);
+
+        expect(result.success).toHaveLength(2);
+        expect(result.updated).toHaveLength(0);
+        expect(result.failed).toHaveLength(1);
+
+        expect(result.failed[0].input).toEqual(inputs[1]);
+        expect(result.failed[0].error).toBeDefined();
+      });
+    });
+
+    describe('Test Case 4: 空配列の処理', () => {
+      it('空配列の場合、すべて0件として処理される', () => {
+        mockLoadAttendances.mockReturnValue([]);
+
+        const result = upsertBulkAttendances([]);
+
+        expect(result.success).toHaveLength(0);
+        expect(result.updated).toHaveLength(0);
+        expect(result.failed).toHaveLength(0);
+
+        // 空配列の場合は読み込みは行うが、保存は不要
+        expect(mockLoadAttendances).toHaveBeenCalledTimes(1);
+        expect(mockSaveAttendances).not.toHaveBeenCalled();
       });
     });
   });
