@@ -176,48 +176,50 @@
 
 **Independent Test**: 既に出欠登録済みのイベントに対して、異なるステータスで再登録を試みる。データを確認し、重複レコードが作成されず、既存レコードが更新されていることを検証できる
 
+**Status**: ✅ **Phase 3の実装時に同時実装済み**
+
 ### 重複検出ロジック
 
 #### Test Case 17: 重複レコードのクリーンアップ
 
-- [ ] T080 **[Red]** [US2] テストを書く: 重複レコードが存在する場合、最新のもの以外を削除 (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T081 **[Green]** [US2] `lib/attendance-service.ts`の`upsertAttendance`に重複検出と削除ロジックを追加してT080を通す
-- [ ] T082 **[Green]** [US2] テストを実行してT080がパスすることを確認
-- [ ] T083 **[Refactor]** [US2] 重複削除ロジックを整理
+- [x] T080 **[Red]** [US2] テストを書く: 重複レコードが存在する場合、最新のもの以外を削除 (`__tests__/lib/attendance-service.test.ts`) - **Phase 3で実装済み**
+- [x] T081 **[Green]** [US2] `lib/attendance-service.ts`の`upsertAttendance`に重複検出と削除ロジックを追加してT080を通す - **Phase 3で実装済み**
+- [x] T082 **[Green]** [US2] テストを実行してT080がパスすることを確認 - **Phase 3で実装済み**
+- [x] T083 **[Refactor]** [US2] 重複削除ロジックを整理 - **Phase 3で実装済み**
 
 #### Test Case 18: upsertでの重複防止
 
-- [ ] T084 **[Red]** [US2] テストを書く: upsertAttendanceが常に1メンバー×1イベント=1レコードを保証 (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T085 **[Green]** [US2] upsertロジックが重複を作成しないことを確認してT084を通す
-- [ ] T086 **[Green]** [US2] テストを実行してT080とT084が両方パスすることを確認
-- [ ] T087 **[Refactor]** [US2] コードを整理
+- [x] T084 **[Red]** [US2] テストを書く: upsertAttendanceが常に1メンバー×1イベント=1レコードを保証 (`__tests__/lib/attendance-service.test.ts`) - **Phase 3で実装済み**
+- [x] T085 **[Green]** [US2] upsertロジックが重複を作成しないことを確認してT084を通す - **Phase 3で実装済み**
+- [x] T086 **[Green]** [US2] テストを実行してT080とT084が両方パスすることを確認 - **Phase 3で実装済み**
+- [x] T087 **[Refactor]** [US2] コードを整理 - **Phase 3で実装済み**
 
 ### 一括登録での重複防止
 
 #### Test Case 19: upsertBulkAttendancesでの重複防止
 
-- [ ] T088 **[Red]** [US2] テストを書く: upsertBulkAttendancesが既存レコードを正しく更新する (`__tests__/lib/attendance-service.test.ts`)
-- [ ] T089 **[Green]** [US2] upsertBulkAttendancesが各レコードに対してupsertを呼び出すことを確認してT088を通す
-- [ ] T090 **[Green]** [US2] テストを実行してT088がパスすることを確認
-- [ ] T091 **[Refactor]** [US2] 必要に応じてリファクタリング
+- [x] T088 **[Red]** [US2] テストを書く: upsertBulkAttendancesが既存レコードを正しく更新する (`__tests__/lib/attendance-service.test.ts`) - **Phase 3で実装済み**
+- [x] T089 **[Green]** [US2] upsertBulkAttendancesが各レコードに対してupsertを呼び出すことを確認してT088を通す - **Phase 3で実装済み**
+- [x] T090 **[Green]** [US2] テストを実行してT088がパスすることを確認 - **Phase 3で実装済み**
+- [x] T091 **[Refactor]** [US2] 必要に応じてリファクタリング - **Phase 3で実装済み**
 
 ### UI更新: 既存レコード表示
 
 #### Test Case 20: 既存登録の視覚的表示
 
-- [ ] T092 **[Red]** [US2] テストを書く: EventListが既存登録を「既存: ◯」のように表示 (`__tests__/components/bulk-register/event-list.test.tsx`)
-- [ ] T093 **[Green]** [US2] `components/bulk-register/event-list.tsx`に既存ステータス表示を実装してT092を通す
-- [ ] T094 **[Green]** [US2] テストを実行してT092がパスすることを確認
-- [ ] T095 **[Refactor]** [US2] UI表示を整理
+- [x] T092 **[Red]** [US2] テストを書く: EventListが既存登録を「現在: ◯」のように表示 (`__tests__/components/bulk-register/event-list.test.tsx`) - **Phase 3で実装済み**
+- [x] T093 **[Green]** [US2] `components/bulk-register/event-list.tsx`に既存ステータス表示を実装してT092を通す - **Phase 3で実装済み**
+- [x] T094 **[Green]** [US2] テストを実行してT092がパスすることを確認 - **Phase 3で実装済み**
+- [x] T095 **[Refactor]** [US2] UI表示を整理 - **Phase 3で実装済み**
 
 ### フィードバックメッセージ
 
 #### Test Case 21: 更新件数の表示
 
-- [ ] T096 **[Red]** [US2] テストを書く: 「5件登録（うち2件更新）」のメッセージを表示 (`__tests__/app/my-register/page.test.tsx`)
-- [ ] T097 **[Green]** [US2] `app/my-register/page.tsx`にBulkAttendanceResultから更新件数を抽出してメッセージ表示するロジックを実装してT096を通す
-- [ ] T098 **[Green]** [US2] テストを実行してT096がパスすることを確認
-- [ ] T099 **[Refactor]** [US2] メッセージロジックを整理
+- [x] T096 **[Red]** [US2] テストを書く: 「5件登録（うち2件更新）」のメッセージを表示 (`__tests__/app/my-register/page.test.tsx`) - **Phase 3で実装済み**
+- [x] T097 **[Green]** [US2] `app/my-register/page.tsx`にBulkAttendanceResultから更新件数を抽出してメッセージ表示するロジックを実装してT096を通す - **Phase 3で実装済み**
+- [x] T098 **[Green]** [US2] テストを実行してT096がパスすることを確認 - **Phase 3で実装済み**
+- [x] T099 **[Refactor]** [US2] メッセージロジックを整理 - **Phase 3で実装済み**
 
 **Checkpoint**: User Story 1と2が両方独立して機能する
 
