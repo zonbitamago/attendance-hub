@@ -106,7 +106,7 @@ export function EventList({
                           onChange={(e) =>
                             onStatusChange(event.id, e.target.value as AttendanceStatus)
                           }
-                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
                         >
                           <option value="◯">◯ 出席</option>
                           <option value="△">△ 未定</option>

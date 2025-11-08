@@ -93,7 +93,7 @@ export function MemberSelector({ onSelect }: MemberSelectorProps) {
           aria-label="グループ"
           value={selectedGroupId}
           onChange={handleGroupChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
         >
           <option value="">グループを選んでください</option>
           {groups.map((group) => (
@@ -115,7 +115,7 @@ export function MemberSelector({ onSelect }: MemberSelectorProps) {
             aria-label="メンバー"
             value={selectedMemberId}
             onChange={handleMemberChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
           >
             <option value="">メンバーを選んでください</option>
             {filteredMembers.map((member) => (
@@ -141,7 +141,7 @@ export function MemberSelector({ onSelect }: MemberSelectorProps) {
             value={newMemberName}
             onChange={handleNewMemberNameChange}
             placeholder="例: 山田太郎"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
           />
         </div>
       )}
