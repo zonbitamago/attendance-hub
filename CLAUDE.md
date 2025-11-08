@@ -150,6 +150,8 @@ npx tsc --noEmit
 ## Active Technologies
 - TypeScript 5.9 (strict mode) + Next.js 16, React 19.2, Tailwind CSS 3.4 (003-event-attendance-count)
 - localStorage (プロトタイプ、将来的にSupabase PostgreSQLへ移行) (003-event-attendance-count)
+- TypeScript 5.9（strict mode） (004-bulk-attendance-register)
+- localStorage（プロトタイプ、将来的にSupabase PostgreSQLへ移行予定） (004-bulk-attendance-register)
 
 ## Recent Changes
 - 003-event-attendance-count: Added TypeScript 5.9 (strict mode) + Next.js 16, React 19.2, Tailwind CSS 3.4
