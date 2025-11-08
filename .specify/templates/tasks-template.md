@@ -242,6 +242,14 @@ If the project has a constitution (e.g., .specify/memory/constitution.md), perfo
 
 - [ ] TXXX [P] Update project documentation (e.g., README, CLAUDE.md) with latest changes
 - [ ] TXXX Run quickstart.md validation: Verify setup instructions work
+- [ ] TXXX **[Required]** SPECIFICATION.md更新
+  - [ ] バージョン番号の更新
+  - [ ] 機能一覧に新機能を追加
+  - [ ] データモデル変更の反映（該当する場合）
+  - [ ] API仕様に新規関数を追加（該当する場合）
+  - [ ] UI/UX仕様に新規ページを追加（該当する場合）
+  - [ ] テスト仕様の統計を更新
+  - [ ] 変更履歴に実装完了を記録
 
 ### Code Review Issue Resolution
 
