@@ -210,6 +210,8 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 - localStorage (プロトタイプ、将来的にSupabase PostgreSQLへ移行) (003-event-attendance-count)
 - TypeScript 5.9（strict mode） (004-bulk-attendance-register)
 - localStorage（プロトタイプ、将来的にSupabase PostgreSQLへ移行予定） (004-bulk-attendance-register)
+- TypeScript 5.9 (strict mode必須) + Next.js 16 (App Router), React 19.2, Tailwind CSS 3.4, nanoid（ランダムID生成） (005-multi-tenant)
+- localStorage（プロトタイプ用、将来的にSupabase PostgreSQLへ移行予定） (005-multi-tenant)
 
 ## Recent Changes
 - 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function
