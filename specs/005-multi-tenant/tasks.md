@@ -53,24 +53,24 @@
 
 #### テストケース1: OrganizationSchemaの検証
 
-- [ ] T011 **[Red]** [基盤] テスト記述: OrganizationSchemaが有効な団体データを検証（__tests__/lib/validation.test.ts）
-- [ ] T012 **[Green]** [基盤] lib/validation.tsにOrganizationSchemaを追加（name: 1-100文字、description: 0-500文字オプション）
-- [ ] T013 **[Green]** [基盤] バリデーションテストを実行してT011が通ることを確認
-- [ ] T014 **[Refactor]** [基盤] 必要に応じてバリデーションスキーマ構造をクリーンアップ
+- [x] T011 **[Red]** [基盤] テスト記述: OrganizationSchemaが有効な団体データを検証（__tests__/lib/validation.test.ts）
+- [x] T012 **[Green]** [基盤] lib/validation.tsにOrganizationSchemaを追加（name: 1-100文字、description: 0-500文字オプション）
+- [x] T013 **[Green]** [基盤] バリデーションテストを実行してT011が通ることを確認
+- [x] T014 **[Refactor]** [基盤] 必要に応じてバリデーションスキーマ構造をクリーンアップ
 
 #### テストケース2: CreateOrganizationInputSchemaの検証
 
-- [ ] T015 **[Red]** [基盤] テスト記述: CreateOrganizationInputSchemaが入力を検証（__tests__/lib/validation.test.ts）
-- [ ] T016 **[Green]** [基盤] lib/validation.tsにCreateOrganizationInputSchemaを追加
-- [ ] T017 **[Green]** [基盤] バリデーションテストを実行してT015が通ることを確認
-- [ ] T018 **[Refactor]** [基盤] スキーマ定義を最適化
+- [x] T015 **[Red]** [基盤] テスト記述: CreateOrganizationInputSchemaが入力を検証（__tests__/lib/validation.test.ts）
+- [x] T016 **[Green]** [基盤] lib/validation.tsにCreateOrganizationInputSchemaを追加
+- [x] T017 **[Green]** [基盤] バリデーションテストを実行してT015が通ることを確認
+- [x] T018 **[Refactor]** [基盤] スキーマ定義を最適化
 
 #### テストケース3: UpdateOrganizationInputSchemaの検証
 
-- [ ] T019 **[Red]** [基盤] テスト記述: UpdateOrganizationInputSchemaが少なくとも1つのフィールドを要求（__tests__/lib/validation.test.ts）
-- [ ] T020 **[Green]** [基盤] lib/validation.tsにrefinementを含むUpdateOrganizationInputSchemaを追加
-- [ ] T021 **[Green]** [基盤] バリデーションテストを実行してT019が通ることを確認
-- [ ] T022 **[Refactor]** [基盤] すべてのバリデーションスキーマをレビューしてクリーンアップ
+- [x] T019 **[Red]** [基盤] テスト記述: UpdateOrganizationInputSchemaが少なくとも1つのフィールドを要求（__tests__/lib/validation.test.ts）
+- [x] T020 **[Green]** [基盤] lib/validation.tsにrefinementを含むUpdateOrganizationInputSchemaを追加
+- [x] T021 **[Green]** [基盤] バリデーションテストを実行してT019が通ることを確認
+- [x] T022 **[Refactor]** [基盤] すべてのバリデーションスキーマをレビューしてクリーンアップ
 
 ### ストレージ層更新
 
