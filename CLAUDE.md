@@ -93,6 +93,60 @@ npm run build
 npx tsc --noEmit
 ```
 
+## CI/CD
+
+### 自動チェック
+
+すべてのプルリクエストで以下が自動実行されます：
+
+- **型チェック**: `npx tsc --noEmit`
+- **リント**: `npm run lint`
+- **テスト**: `npm test`（カバレッジ測定付き）
+- **ビルド**: `npm run build`
+
+### CI失敗時の対応
+
+1. GitHub ActionsのActionsタブでエラー詳細を確認
+2. ローカルで該当するコマンドを実行して再現
+3. 修正後、再度プッシュして自動再実行
+
+### カバレッジ要件
+
+- **最小閾値**: branches: 30%、functions: 50%、lines: 45%、statements: 45%
+- **閾値未達時**: ビルドが失敗し、マージ不可
+
+## ドキュメント言語規約
+
+### プロジェクト標準言語: 日本語
+
+**必須**: すべてのプロジェクトドキュメントは**日本語**で記載すること：
+
+- ✅ **日本語で記載するドキュメント**:
+  - 機能仕様書（`specs/*/spec.md`）
+  - 実装計画（`specs/*/plan.md`）
+  - タスク一覧（`specs/*/tasks.md`）
+  - チェックリスト（`specs/*/checklists/*.md`）
+  - README.md
+  - SPECIFICATION.md
+  - CLAUDE.md（本ファイル）
+  - コミットメッセージ（日本語または英語）
+  - プルリクエストの説明
+
+- ⚠️ **例外**: 以下は英語で記載可：
+  - コード内のコメント（英語推奨、日本語も可）
+  - 変数名・関数名・クラス名（英語必須）
+  - npm scripts（英語必須）
+  - 設定ファイル（package.json、tsconfig.jsonなど）
+
+**理由**:
+- プロジェクトの主要ユーザーとメンテナーは日本語話者
+- 日本語で記載することで、仕様の理解と保守性が向上
+- 一貫性のあるドキュメント体験を提供
+
+**speckitワークフロー使用時の注意**:
+- `/speckit.specify` などのコマンド使用時は、フィーチャー説明を**日本語**で入力すること
+- 英語で生成された場合は、速やかに日本語に翻訳すること
+
 ## コーディング規約
 
 ### TypeScript
@@ -212,6 +266,8 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 - localStorage（プロトタイプ、将来的にSupabase PostgreSQLへ移行予定） (004-bulk-attendance-register)
 - TypeScript 5.9 (strict mode必須) + Next.js 16 (App Router), React 19.2, Tailwind CSS 3.4, nanoid（ランダムID生成） (005-multi-tenant)
 - localStorage（プロトタイプ用、将来的にSupabase PostgreSQLへ移行予定） (005-multi-tenant)
+- TypeScript 5.9 + Node.js 20.x, 22.x (マトリックステスト) (006-ci-cd-setup)
+- N/A (設定ファイルのみ) (006-ci-cd-setup)
 
 ## Recent Changes
 - 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function
