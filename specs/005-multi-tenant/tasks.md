@@ -76,65 +76,65 @@
 
 #### テストケース1: loadOrganizationsがデータなしで空配列を返す
 
-- [ ] T023 **[Red]** [基盤] テスト記述: loadOrganizationsがデータなしで[]を返す（__tests__/lib/storage.test.ts）
-- [ ] T024 **[Green]** [基盤] lib/storage.tsにSTORAGE_KEYS.ORGANIZATIONSを追加
-- [ ] T025 **[Green]** [基盤] lib/storage.tsにloadOrganizations()を実装
-- [ ] T026 **[Green]** [基盤] ストレージテストを実行してT023が通ることを確認
-- [ ] T027 **[Refactor]** [基盤] ストレージキー構造をクリーンアップ
+- [x] T023 **[Red]** [基盤] テスト記述: loadOrganizationsがデータなしで[]を返す（__tests__/lib/storage.test.ts）
+- [x] T024 **[Green]** [基盤] lib/storage.tsにSTORAGE_KEYS.ORGANIZATIONSを追加
+- [x] T025 **[Green]** [基盤] lib/storage.tsにloadOrganizations()を実装
+- [x] T026 **[Green]** [基盤] ストレージテストを実行してT023が通ることを確認
+- [x] T027 **[Refactor]** [基盤] ストレージキー構造をクリーンアップ
 
 #### テストケース2: saveOrganizationsがlocalStorageにデータを永続化
 
-- [ ] T028 **[Red]** [基盤] テスト記述: saveOrganizationsがlocalStorageに永続化（__tests__/lib/storage.test.ts）
-- [ ] T029 **[Green]** [基盤] lib/storage.tsにsaveOrganizations(organizations)を実装
-- [ ] T030 **[Green]** [基盤] ストレージテストを実行してT028が通ることを確認
-- [ ] T031 **[Refactor]** [基盤] 必要に応じてJSONシリアライゼーションを最適化
+- [x] T028 **[Red]** [基盤] テスト記述: saveOrganizationsがlocalStorageに永続化（__tests__/lib/storage.test.ts）
+- [x] T029 **[Green]** [基盤] lib/storage.tsにsaveOrganizations(organizations)を実装
+- [x] T030 **[Green]** [基盤] ストレージテストを実行してT028が通ることを確認
+- [x] T031 **[Refactor]** [基盤] 必要に応じてJSONシリアライゼーションを最適化
 
 #### テストケース3: イベント日付の団体スコープキー
 
-- [ ] T032 **[Red]** [基盤] テスト記述: loadEventDates(orgId)がorgIdの正しいデータを返す（__tests__/lib/storage.test.ts）
-- [ ] T033 **[Green]** [基盤] lib/storage.tsのSTORAGE_KEYS.EVENT_DATESをorgIdを受け取る関数に更新
-- [ ] T034 **[Green]** [基盤] lib/storage.tsのloadEventDates(organizationId: string)シグネチャを更新
-- [ ] T035 **[Green]** [基盤] lib/storage.tsのsaveEventDates(organizationId: string, eventDates: EventDate[])を更新
-- [ ] T036 **[Green]** [基盤] ストレージテストを実行してT032が通ることを確認
-- [ ] T037 **[Refactor]** [基盤] orgIdパラメータの命名が一貫していることを確認
+- [x] T032 **[Red]** [基盤] テスト記述: loadEventDates(orgId)がorgIdの正しいデータを返す（__tests__/lib/storage.test.ts）
+- [x] T033 **[Green]** [基盤] lib/storage.tsのSTORAGE_KEYS.EVENT_DATESをorgIdを受け取る関数に更新
+- [x] T034 **[Green]** [基盤] lib/storage.tsのloadEventDates(organizationId: string)シグネチャを更新
+- [x] T035 **[Green]** [基盤] lib/storage.tsのsaveEventDates(organizationId: string, eventDates: EventDate[])を更新
+- [x] T036 **[Green]** [基盤] ストレージテストを実行してT032が通ることを確認
+- [x] T037 **[Refactor]** [基盤] orgIdパラメータの命名が一貫していることを確認
 
 #### テストケース4: グループの団体スコープキー
 
-- [ ] T038 **[Red]** [基盤] テスト記述: loadGroups(orgId)がorgIdでデータを分離（__tests__/lib/storage.test.ts）
-- [ ] T039 **[Green]** [基盤] lib/storage.tsのSTORAGE_KEYS.GROUPSをorgIdを受け取る関数に更新
-- [ ] T040 **[Green]** [基盤] lib/storage.tsのloadGroups(organizationId: string)とsaveGroups(organizationId: string, groups: Group[])を更新
-- [ ] T041 **[Green]** [基盤] ストレージテストを実行してT038が通ることを確認
-- [ ] T042 **[Refactor]** [基盤] 重複コードパターンをクリーンアップ
+- [x] T038 **[Red]** [基盤] テスト記述: loadGroups(orgId)がorgIdでデータを分離（__tests__/lib/storage.test.ts）
+- [x] T039 **[Green]** [基盤] lib/storage.tsのSTORAGE_KEYS.GROUPSをorgIdを受け取る関数に更新
+- [x] T040 **[Green]** [基盤] lib/storage.tsのloadGroups(organizationId: string)とsaveGroups(organizationId: string, groups: Group[])を更新
+- [x] T041 **[Green]** [基盤] ストレージテストを実行してT038が通ることを確認
+- [x] T042 **[Refactor]** [基盤] 重複コードパターンをクリーンアップ
 
 #### テストケース5: メンバーの団体スコープキー
 
-- [ ] T043 **[Red]** [基盤] テスト記述: loadMembers(orgId)がorgIdでデータを分離（__tests__/lib/storage.test.ts）
-- [ ] T044 **[Green]** [基盤] lib/storage.tsのSTORAGE_KEYS.MEMBERSをorgIdを受け取る関数に更新
-- [ ] T045 **[Green]** [基盤] lib/storage.tsのloadMembers(organizationId: string)とsaveMembers(organizationId: string, members: Member[])を更新
-- [ ] T046 **[Green]** [基盤] ストレージテストを実行してT043が通ることを確認
-- [ ] T047 **[Refactor]** [基盤] 共通ストレージパターンを統合
+- [x] T043 **[Red]** [基盤] テスト記述: loadMembers(orgId)がorgIdでデータを分離（__tests__/lib/storage.test.ts）
+- [x] T044 **[Green]** [基盤] lib/storage.tsのSTORAGE_KEYS.MEMBERSをorgIdを受け取る関数に更新
+- [x] T045 **[Green]** [基盤] lib/storage.tsのloadMembers(organizationId: string)とsaveMembers(organizationId: string, members: Member[])を更新
+- [x] T046 **[Green]** [基盤] ストレージテストを実行してT043が通ることを確認
+- [x] T047 **[Refactor]** [基盤] 共通ストレージパターンを統合
 
 #### テストケース6: 出欠記録の団体スコープキー
 
-- [ ] T048 **[Red]** [基盤] テスト記述: loadAttendances(orgId)がorgIdでデータを分離（__tests__/lib/storage.test.ts）
-- [ ] T049 **[Green]** [基盤] lib/storage.tsのSTORAGE_KEYS.ATTENDANCESをorgIdを受け取る関数に更新
-- [ ] T050 **[Green]** [基盤] lib/storage.tsのloadAttendances(organizationId: string)とsaveAttendances(organizationId: string, attendances: Attendance[])を更新
-- [ ] T051 **[Green]** [基盤] ストレージテストを実行してT048が通ることを確認
-- [ ] T052 **[Refactor]** [基盤] storage.tsの最終クリーンアップ
+- [x] T048 **[Red]** [基盤] テスト記述: loadAttendances(orgId)がorgIdでデータを分離（__tests__/lib/storage.test.ts）
+- [x] T049 **[Green]** [基盤] lib/storage.tsのSTORAGE_KEYS.ATTENDANCESをorgIdを受け取る関数に更新
+- [x] T050 **[Green]** [基盤] lib/storage.tsのloadAttendances(organizationId: string)とsaveAttendances(organizationId: string, attendances: Attendance[])を更新
+- [x] T051 **[Green]** [基盤] ストレージテストを実行してT048が通ることを確認
+- [x] T052 **[Refactor]** [基盤] storage.tsの最終クリーンアップ
 
 #### テストケース7: clearOrganizationDataが特定団体のすべてのデータを削除
 
-- [ ] T053 **[Red]** [基盤] テスト記述: clearOrganizationDataが特定団体のデータのみ削除、他は残す（__tests__/lib/storage.test.ts）
-- [ ] T054 **[Green]** [基盤] lib/storage.tsにclearOrganizationData(organizationId: string)を実装
-- [ ] T055 **[Green]** [基盤] ストレージテストを実行してT053が通ることを確認
-- [ ] T056 **[Refactor]** [基盤] clearOrganizationData実装を最適化
+- [x] T053 **[Red]** [基盤] テスト記述: clearOrganizationDataが特定団体のデータのみ削除、他は残す（__tests__/lib/storage.test.ts）
+- [x] T054 **[Green]** [基盤] lib/storage.tsにclearOrganizationData(organizationId: string)を実装
+- [x] T055 **[Green]** [基盤] ストレージテストを実行してT053が通ることを確認
+- [x] T056 **[Refactor]** [基盤] clearOrganizationData実装を最適化
 
 #### テストケース8: clearAllDataがすべてのattendance-hubデータを削除
 
-- [ ] T057 **[Red]** [基盤] テスト記述: clearAllDataがすべてのattendance_*キーを削除（__tests__/lib/storage.test.ts）
-- [ ] T058 **[Green]** [基盤] lib/storage.tsのclearAllData()をすべてのattendance-hubキー削除に更新
-- [ ] T059 **[Green]** [基盤] ストレージテストを実行してT057が通ることを確認
-- [ ] T060 **[Refactor]** [基盤] すべてのストレージ関数をレビューして最終化
+- [x] T057 **[Red]** [基盤] テスト記述: clearAllDataがすべてのattendance_*キーを削除（__tests__/lib/storage.test.ts）
+- [x] T058 **[Green]** [基盤] lib/storage.tsのclearAllData()をすべてのattendance-hubキー削除に更新
+- [x] T059 **[Green]** [基盤] ストレージテストを実行してT057が通ることを確認
+- [x] T060 **[Refactor]** [基盤] すべてのストレージ関数をレビューして最終化
 
 **チェックポイント**: 基盤準備完了 - ユーザーストーリー実装を並列開始可能
 
