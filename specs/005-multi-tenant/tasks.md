@@ -188,87 +188,87 @@
 
 #### テストケース1: OrganizationProviderが団体コンテキストを提供
 
-- [ ] T082 **[Red]** [US1] テスト記述: useOrganizationがコンテキストから団体を返す（__tests__/contexts/organization-context.test.tsx）
-- [ ] T083 **[Green]** [US1] OrganizationContextでcontexts/organization-context.tsxを作成
-- [ ] T084 **[Green]** [US1] contexts/organization-context.tsxにOrganizationProviderコンポーネントを実装
-- [ ] T085 **[Green]** [US1] contexts/organization-context.tsxにuseOrganizationフックを実装
-- [ ] T086 **[Green]** [US1] コンテキストテストを実行してT082が通ることを確認
-- [ ] T087 **[Refactor]** [US1] useMemoでコンテキストプロバイダーを最適化
+- [x] T082 **[Red]** [US1] テスト記述: useOrganizationがコンテキストから団体を返す（__tests__/contexts/organization-context.test.tsx）
+- [x] T083 **[Green]** [US1] OrganizationContextでcontexts/organization-context.tsxを作成
+- [x] T084 **[Green]** [US1] contexts/organization-context.tsxにOrganizationProviderコンポーネントを実装
+- [x] T085 **[Green]** [US1] contexts/organization-context.tsxにuseOrganizationフックを実装
+- [x] T086 **[Green]** [US1] コンテキストテストを実行してT082が通ることを確認
+- [x] T087 **[Refactor]** [US1] useMemoでコンテキストプロバイダーを最適化
 
 #### テストケース2: useOrganizationが団体未検出時にエラーをスロー
 
-- [ ] T088 **[Red]** [US1] テスト記述: OrganizationProviderが団体未検出を処理（__tests__/contexts/organization-context.test.tsx）
-- [ ] T089 **[Green]** [US1] OrganizationProviderに団体未検出時のエラーハンドリングを追加
-- [ ] T090 **[Green]** [US1] テストを実行してT088が通ることを確認
-- [ ] T091 **[Refactor]** [US1] エラーハンドリングロジックをクリーンアップ
+- [x] T088 **[Red]** [US1] テスト記述: OrganizationProviderが団体未検出を処理（__tests__/contexts/organization-context.test.tsx）
+- [x] T089 **[Green]** [US1] OrganizationProviderに団体未検出時のエラーハンドリングを追加
+- [x] T090 **[Green]** [US1] テストを実行してT088が通ることを確認
+- [x] T091 **[Refactor]** [US1] エラーハンドリングロジックをクリーンアップ
 
 ### App Router構造変更
 
 #### テストケース1: [org]レイアウトがOrganizationProviderを提供
 
-- [ ] T092 **[Red]** [US1] テスト記述: [org]レイアウトがOrganizationProviderでレンダリング（__tests__/app/[org]/layout.test.tsx）
-- [ ] T093 **[Green]** [US1] OrganizationProviderラッパーでapp/[org]/layout.tsxを作成
-- [ ] T094 **[Green]** [US1] app/[org]/layout.tsxにローディングとエラー状態を追加
-- [ ] T095 **[Green]** [US1] レイアウトテストを実行してT092が通ることを確認
-- [ ] T096 **[Refactor]** [US1] レイアウトコンポーネント構造を最適化
+- [x] T092 **[Red]** [US1] テスト記述: [org]レイアウトがOrganizationProviderでレンダリング（__tests__/app/[org]/layout.test.tsx）
+- [x] T093 **[Green]** [US1] OrganizationProviderラッパーでapp/[org]/layout.tsxを作成
+- [x] T094 **[Green]** [US1] app/[org]/layout.tsxにローディングとエラー状態を追加
+- [x] T095 **[Green]** [US1] レイアウトテストを実行してT092が通ることを確認
+- [x] T096 **[Refactor]** [US1] レイアウトコンポーネント構造を最適化
 
 #### テストケース2: 既存page.tsxを[org]/page.tsxに移動
 
-- [ ] T097 **[Green]** [US1] app/page.tsx → app/[org]/page.tsxに移動
-- [ ] T098 **[Green]** [US1] app/[org]/page.tsxでインポートを更新しuseOrganizationフックを使用
-- [ ] T099 **[Green]** [US1] app/[org]/page.tsxのすべての内部リンクを{org}パラメータを含むよう更新
-- [ ] T100 **[Refactor]** [US1] 移動したpage.tsxをクリーンアップ
+- [x] T097 **[Green]** [US1] app/page.tsx → app/[org]/page.tsxに移動
+- [x] T098 **[Green]** [US1] app/[org]/page.tsxでインポートを更新しuseOrganizationフックを使用
+- [x] T099 **[Green]** [US1] app/[org]/page.tsxのすべての内部リンクを{org}パラメータを含むよう更新
+- [x] T100 **[Refactor]** [US1] 移動したpage.tsxをクリーンアップ
 
 #### テストケース3: 管理ページをapp/[org]/admin/に移動
 
-- [ ] T101 **[Green]** [US1] app/admin/ → app/[org]/admin/に移動（構造を保持）
-- [ ] T102 **[Green]** [US1] すべての管理ページのインポートをuseOrganization使用に更新
-- [ ] T103 **[Green]** [US1] 管理ページのすべての内部リンクを{org}を含むよう更新
-- [ ] T104 **[Refactor]** [US1] 管理ページのインポートとリンクをクリーンアップ
+- [x] T101 **[Green]** [US1] app/admin/ → app/[org]/admin/に移動（構造を保持）
+- [x] T102 **[Green]** [US1] すべての管理ページのインポートをuseOrganization使用に更新
+- [x] T103 **[Green]** [US1] 管理ページのすべての内部リンクを{org}を含むよう更新
+- [x] T104 **[Refactor]** [US1] 管理ページのインポートとリンクをクリーンアップ
 
 #### テストケース4: イベントページをapp/[org]/events/に移動
 
-- [ ] T105 **[Green]** [US1] app/events/ → app/[org]/events/に移動（構造を保持）
-- [ ] T106 **[Green]** [US1] イベントページのインポートをuseOrganization使用に更新
-- [ ] T107 **[Green]** [US1] イベントページのすべての内部リンクを{org}を含むよう更新
-- [ ] T108 **[Refactor]** [US1] イベントページのインポートとリンクをクリーンアップ
+- [x] T105 **[Green]** [US1] app/events/ → app/[org]/events/に移動（構造を保持）
+- [x] T106 **[Green]** [US1] イベントページのインポートをuseOrganization使用に更新
+- [x] T107 **[Green]** [US1] イベントページのすべての内部リンクを{org}を含むよう更新
+- [x] T108 **[Refactor]** [US1] イベントページのインポートとリンクをクリーンアップ
 
 #### テストケース5: my-registerページをapp/[org]/my-register/に移動
 
-- [ ] T109 **[Green]** [US1] app/my-register/ → app/[org]/my-register/に移動
-- [ ] T110 **[Green]** [US1] my-registerページのインポートをuseOrganization使用に更新
-- [ ] T111 **[Green]** [US1] my-registerページのすべての内部リンクを{org}を含むよう更新
-- [ ] T112 **[Refactor]** [US1] my-registerページをクリーンアップ
+- [x] T109 **[Green]** [US1] app/my-register/ → app/[org]/my-register/に移動
+- [x] T110 **[Green]** [US1] my-registerページのインポートをuseOrganization使用に更新
+- [x] T111 **[Green]** [US1] my-registerページのすべての内部リンクを{org}を含むよう更新
+- [x] T112 **[Refactor]** [US1] my-registerページをクリーンアップ
 
 ### 新しいトップページ実装
 
 #### テストケース1: 新トップページがランディングコンテンツを表示
 
-- [ ] T113 **[Red]** [US1] テスト記述: トップページが説明と作成ボタンを表示（__tests__/app/page.test.tsx）
-- [ ] T114 **[Green]** [US1] ランディングページコンテンツで新しいapp/page.tsxを作成
-- [ ] T115 **[Green]** [US1] ページテストを実行してT113が通ることを確認
-- [ ] T116 **[Refactor]** [US1] ランディングページレイアウトを最適化
+- [x] T113 **[Red]** [US1] テスト記述: トップページが説明と作成ボタンを表示（__tests__/app/page.test.tsx）
+- [x] T114 **[Green]** [US1] ランディングページコンテンツで新しいapp/page.tsxを作成
+- [x] T115 **[Green]** [US1] ページテストを実行してT113が通ることを確認
+- [x] T116 **[Refactor]** [US1] ランディングページレイアウトを最適化
 
 #### テストケース2: トップページが団体作成を許可
 
-- [ ] T117 **[Red]** [US1] テスト記述: トップページが団体を作成してリダイレクト（__tests__/app/page.test.tsx）
-- [ ] T118 **[Green]** [US1] app/page.tsxに団体作成フォームを追加
-- [ ] T119 **[Green]** [US1] createOrganizationを呼び出してリダイレクトするhandleCreateOrganizationを実装
-- [ ] T120 **[Green]** [US1] テストを実行してT117が通ることを確認
-- [ ] T121 **[Refactor]** [US1] フォーム処理ロジックをクリーンアップ
+- [x] T117 **[Red]** [US1] テスト記述: トップページが団体を作成してリダイレクト（__tests__/app/page.test.tsx）
+- [x] T118 **[Green]** [US1] app/page.tsxに団体作成フォームを追加
+- [x] T119 **[Green]** [US1] createOrganizationを呼び出してリダイレクトするhandleCreateOrganizationを実装
+- [x] T120 **[Green]** [US1] テストを実行してT117が通ることを確認
+- [x] T121 **[Refactor]** [US1] フォーム処理ロジックをクリーンアップ
 
 #### テストケース3: トップページが作成したURLをブックマーク用に表示
 
-- [ ] T122 **[Red]** [US1] テスト記述: 作成後、ユーザーがコピーできるURLを表示（__tests__/app/page.test.tsx）
-- [ ] T123 **[Green]** [US1] app/page.tsxの団体作成後にURL表示コンポーネントを追加
-- [ ] T124 **[Green]** [US1] テストを実行してT122が通ることを確認
-- [ ] T125 **[Refactor]** [US1] URL表示のUXを改善
+- [x] T122 **[Red]** [US1] テスト記述: 作成後、ユーザーがコピーできるURLを表示（__tests__/app/page.test.tsx）
+- [x] T123 **[Green]** [US1] app/page.tsxの団体作成後にURL表示コンポーネントを追加
+- [x] T124 **[Green]** [US1] テストを実行してT122が通ることを確認
+- [x] T125 **[Refactor]** [US1] URL表示のUXを改善
 
 ### UI and Polish
 
-- [ ] T126 **[Refactor]** [US1] 団体作成フォームにTailwind CSSスタイリングを適用（モバイルファースト）
-- [ ] T127 **[Refactor]** [US1] アクセシビリティのためにセマンティックHTMLとARIAラベルを追加
-- [ ] T128 **[Refactor]** [US1] 入力フィールドが標準スタイリングに従うことを確保（text-gray-900 placeholder:text-gray-400）
+- [x] T126 **[Refactor]** [US1] 団体作成フォームにTailwind CSSスタイリングを適用（モバイルファースト）
+- [x] T127 **[Refactor]** [US1] アクセシビリティのためにセマンティックHTMLとARIAラベルを追加
+- [x] T128 **[Refactor]** [US1] 入力フィールドが標準スタイリングに従うことを確保（text-gray-900 placeholder:text-gray-400）
 
 **チェックポイント**: ユーザーストーリー1が完全に機能 - ユーザーが団体を作成しURLでアクセス可能
 

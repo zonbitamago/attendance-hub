@@ -32,6 +32,7 @@ describe('AdminEventsPage', () => {
       const mockEvents = [
         {
           id: 'event1',
+          organizationId: 'test-org-id',
           date: '2025-01-15',
           title: '練習',
           location: '音楽室',
@@ -39,6 +40,7 @@ describe('AdminEventsPage', () => {
         },
         {
           id: 'event2',
+          organizationId: 'test-org-id',
           date: '2025-01-20',
           title: '本番',
           location: 'ホール',
@@ -49,31 +51,33 @@ describe('AdminEventsPage', () => {
       mockGetAllEventDates.mockReturnValue(mockEvents);
 
       // event1の出欠集計: ◯ 5人 △ 3人 ✗ 2人（計10人）
-      mockCalculateEventTotalSummary.mockImplementation((eventDateId: string) => {
-        if (eventDateId === 'event1') {
+      mockCalculateEventTotalSummary.mockImplementation(
+        (organizationId: string, eventDateId: string) => {
+          if (eventDateId === 'event1') {
+            return {
+              totalAttending: 5,
+              totalMaybe: 3,
+              totalNotAttending: 2,
+              totalResponded: 10,
+            };
+          }
+          // event2の出欠集計: ◯ 8人 △ 1人 ✗ 1人（計10人）
+          if (eventDateId === 'event2') {
+            return {
+              totalAttending: 8,
+              totalMaybe: 1,
+              totalNotAttending: 1,
+              totalResponded: 10,
+            };
+          }
           return {
-            totalAttending: 5,
-            totalMaybe: 3,
-            totalNotAttending: 2,
-            totalResponded: 10,
+            totalAttending: 0,
+            totalMaybe: 0,
+            totalNotAttending: 0,
+            totalResponded: 0,
           };
         }
-        // event2の出欠集計: ◯ 8人 △ 1人 ✗ 1人（計10人）
-        if (eventDateId === 'event2') {
-          return {
-            totalAttending: 8,
-            totalMaybe: 1,
-            totalNotAttending: 1,
-            totalResponded: 10,
-          };
-        }
-        return {
-          totalAttending: 0,
-          totalMaybe: 0,
-          totalNotAttending: 0,
-          totalResponded: 0,
-        };
-      });
+      );
 
       // Act: コンポーネントをレンダリング
       render(<AdminEventsPage />);
@@ -103,6 +107,7 @@ describe('AdminEventsPage', () => {
       const mockEvents = [
         {
           id: 'event1',
+          organizationId: 'test-org-id',
           date: '2025-01-15',
           title: '練習',
           location: '音楽室',
@@ -140,6 +145,7 @@ describe('AdminEventsPage', () => {
       const mockEvents = [
         {
           id: 'event1',
+          organizationId: 'test-org-id',
           date: '2025-01-15',
           title: '練習',
           location: '音楽室',
@@ -147,6 +153,7 @@ describe('AdminEventsPage', () => {
         },
         {
           id: 'event2',
+          organizationId: 'test-org-id',
           date: '2025-01-20',
           title: '本番',
           location: 'ホール',
@@ -158,33 +165,35 @@ describe('AdminEventsPage', () => {
       let eventsList = [...mockEvents];
       mockGetAllEventDates.mockImplementation(() => eventsList);
 
-      mockCalculateEventTotalSummary.mockImplementation((eventDateId: string) => {
-        if (eventDateId === 'event1') {
+      mockCalculateEventTotalSummary.mockImplementation(
+        (organizationId: string, eventDateId: string) => {
+          if (eventDateId === 'event1') {
+            return {
+              totalAttending: 5,
+              totalMaybe: 3,
+              totalNotAttending: 2,
+              totalResponded: 10,
+            };
+          }
+          if (eventDateId === 'event2') {
+            return {
+              totalAttending: 8,
+              totalMaybe: 1,
+              totalNotAttending: 1,
+              totalResponded: 10,
+            };
+          }
           return {
-            totalAttending: 5,
-            totalMaybe: 3,
-            totalNotAttending: 2,
-            totalResponded: 10,
+            totalAttending: 0,
+            totalMaybe: 0,
+            totalNotAttending: 0,
+            totalResponded: 0,
           };
         }
-        if (eventDateId === 'event2') {
-          return {
-            totalAttending: 8,
-            totalMaybe: 1,
-            totalNotAttending: 1,
-            totalResponded: 10,
-          };
-        }
-        return {
-          totalAttending: 0,
-          totalMaybe: 0,
-          totalNotAttending: 0,
-          totalResponded: 0,
-        };
-      });
+      );
 
       // 削除処理のモック: event1を削除したら、eventsListを更新
-      mockDeleteEventDate.mockImplementation((id: string) => {
+      mockDeleteEventDate.mockImplementation((organizationId: string, id: string) => {
         eventsList = eventsList.filter((e) => e.id !== id);
         return true;
       });

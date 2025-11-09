@@ -1,17 +1,20 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getAllEventDates, createEventDate, updateEventDate, deleteEventDate } from '@/lib/event-service';
 import { calculateEventTotalSummary } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
-import { DEFAULT_ORGANIZATION_ID } from '@/lib/constants';
+import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
 import type { EventDate } from '@/types';
 
 export default function AdminEventsPage() {
   const router = useRouter();
+  const params = useParams();
+  const org = params.org as string;
+  const { organization } = useOrganization();
   const [events, setEvents] = useState<EventDate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -20,8 +23,9 @@ export default function AdminEventsPage() {
   const [error, setError] = useState('');
 
   const loadData = () => {
+    if (!organization) return;
     try {
-      const allEvents = getAllEventDates(DEFAULT_ORGANIZATION_ID);
+      const allEvents = getAllEventDates(organization.id);
       setEvents(allEvents);
     } catch (error) {
       console.error('Failed to load events:', error);
@@ -36,28 +40,34 @@ export default function AdminEventsPage() {
 
   // メモ化: すべてのイベントの出欠集計を計算
   const eventSummaries = useMemo(() => {
+    if (!organization) return new Map();
     const summaries = new Map();
     events.forEach((event) => {
-      summaries.set(event.id, calculateEventTotalSummary(DEFAULT_ORGANIZATION_ID, event.id));
+      summaries.set(event.id, calculateEventTotalSummary(organization.id, event.id));
     });
     return summaries;
-  }, [events]);
+  }, [events, organization]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
+    if (!organization) {
+      setError('団体情報が見つかりません');
+      return;
+    }
+
     try {
       if (editingEvent) {
         // 更新
-        updateEventDate(DEFAULT_ORGANIZATION_ID, editingEvent.id, {
+        updateEventDate(organization.id, editingEvent.id, {
           date: formData.date,
           title: formData.title,
           location: formData.location || undefined,
         });
       } else {
-        // 新規作成（レガシーページ用にデフォルト団体IDを使用）
-        createEventDate(DEFAULT_ORGANIZATION_ID, {
+        // 新規作成
+        createEventDate(organization.id, {
           date: formData.date,
           title: formData.title,
           location: formData.location || undefined,
@@ -88,8 +98,13 @@ export default function AdminEventsPage() {
       return;
     }
 
+    if (!organization) {
+      setError('団体情報が見つかりません');
+      return;
+    }
+
     try {
-      deleteEventDate(DEFAULT_ORGANIZATION_ID, id);
+      deleteEventDate(organization.id, id);
       loadData();
     } catch (err) {
       setError(err instanceof Error ? err.message : '削除に失敗しました');
@@ -117,7 +132,7 @@ export default function AdminEventsPage() {
         {/* ナビゲーション */}
         <div className="mb-6">
           <Link
-            href="/admin"
+            href={`/${org}/admin`}
             className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
           >
             ← 管理画面に戻る

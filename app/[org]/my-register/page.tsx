@@ -1,17 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useOrganization } from '@/contexts/organization-context';
 import { MemberSelector, type MemberSelection } from '@/components/bulk-register/member-selector';
 import { EventList } from '@/components/bulk-register/event-list';
 import { upsertBulkAttendances } from '@/lib/attendance-service';
 import { saveMember } from '@/lib/member-service';
-import { DEFAULT_ORGANIZATION_ID } from '@/lib/constants';
 import type { AttendanceStatus } from '@/types';
 
 export default function MyRegisterPage() {
   const router = useRouter();
+  const params = useParams();
+  const org = params.org as string;
+  const { organization } = useOrganization();
   const [memberSelection, setMemberSelection] = useState<MemberSelection | null>(null);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [eventStatuses, setEventStatuses] = useState<Record<string, AttendanceStatus>>({});
@@ -63,13 +66,18 @@ export default function MyRegisterPage() {
       return;
     }
 
+    if (!organization) {
+      setMessage('団体情報が見つかりません');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // 新規メンバーの場合は先に作成（レガシーページ用にデフォルト団体IDを使用）
+      // 新規メンバーの場合は先に作成
       let memberId = memberSelection.memberId;
       if (!memberId) {
-        const newMember = saveMember(DEFAULT_ORGANIZATION_ID, {
+        const newMember = saveMember(organization.id, {
           groupId: memberSelection.groupId,
           name: memberSelection.memberName,
         });
@@ -83,8 +91,8 @@ export default function MyRegisterPage() {
         status: eventStatuses[eventDateId] || '◯',
       }));
 
-      // 一括登録を実行（レガシーページ用にデフォルト団体IDを使用）
-      const result = upsertBulkAttendances(DEFAULT_ORGANIZATION_ID, inputs);
+      // 一括登録を実行
+      const result = upsertBulkAttendances(organization.id, inputs);
 
       const totalCount = result.success.length + result.updated.length;
       const updatedCount = result.updated.length;
@@ -101,7 +109,7 @@ export default function MyRegisterPage() {
 
         // 成功時は1秒後にトップページへリダイレクト
         setTimeout(() => {
-          router.push('/');
+          router.push(`/${org}`);
         }, 1000);
       }
 
@@ -121,7 +129,7 @@ export default function MyRegisterPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <Link
-            href="/"
+            href={`/${org}`}
             className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
           >
             ← トップページへ戻る
@@ -133,7 +141,7 @@ export default function MyRegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           {/* メンバー選択 */}
           <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-            <MemberSelector onSelect={handleMemberSelect} organizationId={DEFAULT_ORGANIZATION_ID} />
+            <MemberSelector onSelect={handleMemberSelect} organizationId={organization.id} />
           </div>
 
           {/* イベント選択（メンバーが選択された後に表示） */}
@@ -145,7 +153,7 @@ export default function MyRegisterPage() {
                 onSelectionChange={handleEventSelectionChange}
                 eventStatuses={eventStatuses}
                 onStatusChange={handleEventStatusChange}
-                organizationId={DEFAULT_ORGANIZATION_ID}
+                organizationId={organization.id}
               />
             </div>
           )}

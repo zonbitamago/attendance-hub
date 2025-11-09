@@ -12,15 +12,15 @@ describe('MemberSelector', () => {
   const mockLoadMembers = loadMembers as jest.MockedFunction<typeof loadMembers>;
 
   const mockGroups: Group[] = [
-    { id: 'group-1', name: 'トランペット', order: 1, createdAt: '2025-01-01T00:00:00Z' },
-    { id: 'group-2', name: 'トロンボーン', order: 2, createdAt: '2025-01-01T00:00:00Z' },
-    { id: 'group-3', name: 'ホルン', order: 3, createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'group-1', organizationId: 'test-org-id', name: 'トランペット', order: 1, createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'group-2', organizationId: 'test-org-id', name: 'トロンボーン', order: 2, createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'group-3', organizationId: 'test-org-id', name: 'ホルン', order: 3, createdAt: '2025-01-01T00:00:00Z' },
   ];
 
   const mockMembers: Member[] = [
-    { id: 'member-1', groupId: 'group-1', name: '田中太郎', createdAt: '2025-01-01T00:00:00Z' },
-    { id: 'member-2', groupId: 'group-1', name: '佐藤花子', createdAt: '2025-01-01T00:00:00Z' },
-    { id: 'member-3', groupId: 'group-2', name: '鈴木一郎', createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'member-1', organizationId: 'test-org-id', groupId: 'group-1', name: '田中太郎', createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'member-2', organizationId: 'test-org-id', groupId: 'group-1', name: '佐藤花子', createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'member-3', organizationId: 'test-org-id', groupId: 'group-2', name: '鈴木一郎', createdAt: '2025-01-01T00:00:00Z' },
   ];
 
   beforeEach(() => {

@@ -1,15 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getAllGroups, createGroup, updateGroup, deleteGroup } from '@/lib/group-service';
-import { DEFAULT_ORGANIZATION_ID } from '@/lib/constants';
+import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
 import type { Group } from '@/types';
 
 export default function AdminGroupsPage() {
   const router = useRouter();
+  const params = useParams();
+  const org = params.org as string;
+  const { organization } = useOrganization();
   const [groups, setGroups] = useState<Group[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -18,8 +21,9 @@ export default function AdminGroupsPage() {
   const [error, setError] = useState('');
 
   const loadData = () => {
+    if (!organization) return;
     try {
-      const allGroups = getAllGroups(DEFAULT_ORGANIZATION_ID);
+      const allGroups = getAllGroups(organization.id);
       setGroups(allGroups);
     } catch (error) {
       console.error('Failed to load groups:', error);
@@ -36,17 +40,22 @@ export default function AdminGroupsPage() {
     e.preventDefault();
     setError('');
 
+    if (!organization) {
+      setError('団体情報が見つかりません');
+      return;
+    }
+
     try {
       if (editingGroup) {
         // 更新
-        updateGroup(DEFAULT_ORGANIZATION_ID, editingGroup.id, {
+        updateGroup(organization.id, editingGroup.id, {
           name: formData.name,
           order: formData.order,
           color: formData.color || undefined,
         });
       } else {
-        // 新規作成（レガシーページ用にデフォルト団体IDを使用）
-        createGroup(DEFAULT_ORGANIZATION_ID, {
+        // 新規作成
+        createGroup(organization.id, {
           name: formData.name,
           order: formData.order,
           color: formData.color || undefined,
@@ -77,8 +86,13 @@ export default function AdminGroupsPage() {
       return;
     }
 
+    if (!organization) {
+      setError('団体情報が見つかりません');
+      return;
+    }
+
     try {
-      deleteGroup(DEFAULT_ORGANIZATION_ID, id);
+      deleteGroup(organization.id, id);
       loadData();
     } catch (err) {
       setError(err instanceof Error ? err.message : '削除に失敗しました');
@@ -106,7 +120,7 @@ export default function AdminGroupsPage() {
         {/* ナビゲーション */}
         <div className="mb-6">
           <Link
-            href="/admin"
+            href={`/${org}/admin`}
             className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
           >
             ← 管理画面に戻る

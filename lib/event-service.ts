@@ -5,21 +5,22 @@ import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
 
 // イベント日付を作成
-export function createEventDate(input: EventDateInput): EventDate {
+export function createEventDate(organizationId: string, input: EventDateInput): EventDate {
   const validated = CreateEventDateInputSchema.parse(input);
 
   const newEventDate: EventDate = {
     id: crypto.randomUUID(),
+    organizationId,
     date: validated.date,
     title: validated.title,
     location: validated.location,
     createdAt: getCurrentTimestamp(),
   };
 
-  const eventDates = loadEventDates();
+  const eventDates = loadEventDates(organizationId);
   eventDates.push(newEventDate);
 
-  const success = saveEventDates(eventDates);
+  const success = saveEventDates(organizationId, eventDates);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -28,20 +29,20 @@ export function createEventDate(input: EventDateInput): EventDate {
 }
 
 // すべてのイベント日付を取得（日付昇順）
-export function getAllEventDates(): EventDate[] {
-  const eventDates = loadEventDates();
+export function getAllEventDates(organizationId: string): EventDate[] {
+  const eventDates = loadEventDates(organizationId);
   return eventDates.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 // IDでイベント日付を取得
-export function getEventDateById(id: string): EventDate | null {
-  const eventDates = loadEventDates();
+export function getEventDateById(organizationId: string, id: string): EventDate | null {
+  const eventDates = loadEventDates(organizationId);
   return eventDates.find((event) => event.id === id) || null;
 }
 
 // イベント日付を更新
-export function updateEventDate(id: string, input: Partial<EventDateInput>): EventDate {
-  const eventDates = loadEventDates();
+export function updateEventDate(organizationId: string, id: string, input: Partial<EventDateInput>): EventDate {
+  const eventDates = loadEventDates(organizationId);
   const index = eventDates.findIndex((event) => event.id === id);
 
   if (index === -1) {
@@ -64,7 +65,7 @@ export function updateEventDate(id: string, input: Partial<EventDateInput>): Eve
 
   eventDates[index] = updatedEventDate;
 
-  const success = saveEventDates(eventDates);
+  const success = saveEventDates(organizationId, eventDates);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -73,13 +74,13 @@ export function updateEventDate(id: string, input: Partial<EventDateInput>): Eve
 }
 
 // イベント日付を削除
-export function deleteEventDate(id: string): boolean {
-  const eventDates = loadEventDates();
+export function deleteEventDate(organizationId: string, id: string): boolean {
+  const eventDates = loadEventDates(organizationId);
   const filteredEventDates = eventDates.filter((event) => event.id !== id);
 
   if (eventDates.length === filteredEventDates.length) {
     return false;
   }
 
-  return saveEventDates(filteredEventDates);
+  return saveEventDates(organizationId, filteredEventDates);
 }

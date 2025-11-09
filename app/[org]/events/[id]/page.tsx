@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getEventDateById } from '@/lib/event-service';
 import { calculateEventSummary, calculateEventTotalSummary } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
-import { DEFAULT_ORGANIZATION_ID } from '@/lib/constants';
+import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
 import type { EventDate, GroupSummary } from '@/types';
 
@@ -14,20 +14,22 @@ export default function EventDetailPage() {
   const params = useParams();
   const router = useRouter();
   const eventId = params.id as string;
+  const { organization } = useOrganization();
 
   const [event, setEvent] = useState<EventDate | null>(null);
   const [summaries, setSummaries] = useState<GroupSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const loadData = () => {
+    if (!organization) return;
     try {
-      const foundEvent = getEventDateById(DEFAULT_ORGANIZATION_ID, eventId);
+      const foundEvent = getEventDateById(organization.id, eventId);
       if (!foundEvent) {
-        router.push('/');
+        router.push(`/${params.org as string}`);
         return;
       }
 
-      const eventSummaries = calculateEventSummary(DEFAULT_ORGANIZATION_ID, eventId);
+      const eventSummaries = calculateEventSummary(organization.id, eventId);
       setEvent(foundEvent);
       setSummaries(eventSummaries);
     } catch (error) {
@@ -45,9 +47,9 @@ export default function EventDetailPage() {
   // NOTE: eventIdだけでなくeventも依存配列に含める必要がある
   // eventが読み込まれるまでcalculateEventTotalSummaryを実行すべきでないため
   const totalSummary = useMemo(() => {
-    if (!event) return null;
-    return calculateEventTotalSummary(DEFAULT_ORGANIZATION_ID, eventId);
-  }, [event, eventId]);
+    if (!event || !organization) return null;
+    return calculateEventTotalSummary(organization.id, eventId);
+  }, [event, eventId, organization]);
 
   if (isLoading) {
     return (
@@ -67,7 +69,7 @@ export default function EventDetailPage() {
         {/* ナビゲーション */}
         <div className="mb-6">
           <Link
-            href="/"
+            href={`/${params.org as string}`}
             className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
           >
             ← トップページに戻る
@@ -86,7 +88,7 @@ export default function EventDetailPage() {
         {/* 出欠登録ボタン */}
         <div className="mb-6">
           <Link
-            href={`/events/${eventId}/register`}
+            href={`/${params.org as string}/events/${eventId}/register`}
             className="inline-block w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm text-center"
           >
             + 出欠を登録する

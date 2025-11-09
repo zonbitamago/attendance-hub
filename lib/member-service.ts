@@ -5,20 +5,21 @@ import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
 
 // メンバーを作成
-export function createMember(input: MemberInput): Member {
+export function createMember(organizationId: string, input: MemberInput): Member {
   const validated = CreateMemberInputSchema.parse(input);
 
   const newMember: Member = {
     id: crypto.randomUUID(),
+    organizationId,
     groupId: validated.groupId,
     name: validated.name,
     createdAt: getCurrentTimestamp(),
   };
 
-  const members = loadMembers();
+  const members = loadMembers(organizationId);
   members.push(newMember);
 
-  const success = saveMembers(members);
+  const success = saveMembers(organizationId, members);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -28,30 +29,30 @@ export function createMember(input: MemberInput): Member {
 
 // メンバーを保存（新規作成のエイリアス）
 // 一括登録機能で使用
-export function saveMember(input: MemberInput): Member {
-  return createMember(input);
+export function saveMember(organizationId: string, input: MemberInput): Member {
+  return createMember(organizationId, input);
 }
 
 // すべてのメンバーを取得
-export function getAllMembers(): Member[] {
-  return loadMembers();
+export function getAllMembers(organizationId: string): Member[] {
+  return loadMembers(organizationId);
 }
 
 // グループIDでメンバーを取得
-export function getMembersByGroupId(groupId: string): Member[] {
-  const members = loadMembers();
+export function getMembersByGroupId(organizationId: string, groupId: string): Member[] {
+  const members = loadMembers(organizationId);
   return members.filter((member) => member.groupId === groupId);
 }
 
 // IDでメンバーを取得
-export function getMemberById(id: string): Member | null {
-  const members = loadMembers();
+export function getMemberById(organizationId: string, id: string): Member | null {
+  const members = loadMembers(organizationId);
   return members.find((member) => member.id === id) || null;
 }
 
 // メンバーを更新
-export function updateMember(id: string, input: Partial<Omit<MemberInput, 'groupId'>>): Member {
-  const members = loadMembers();
+export function updateMember(organizationId: string, id: string, input: Partial<Omit<MemberInput, 'groupId'>>): Member {
+  const members = loadMembers(organizationId);
   const index = members.findIndex((member) => member.id === id);
 
   if (index === -1) {
@@ -71,7 +72,7 @@ export function updateMember(id: string, input: Partial<Omit<MemberInput, 'group
 
   members[index] = updatedMember;
 
-  const success = saveMembers(members);
+  const success = saveMembers(organizationId, members);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -80,13 +81,13 @@ export function updateMember(id: string, input: Partial<Omit<MemberInput, 'group
 }
 
 // メンバーを削除
-export function deleteMember(id: string): boolean {
-  const members = loadMembers();
+export function deleteMember(organizationId: string, id: string): boolean {
+  const members = loadMembers(organizationId);
   const filteredMembers = members.filter((member) => member.id !== id);
 
   if (members.length === filteredMembers.length) {
     return false;
   }
 
-  return saveMembers(filteredMembers);
+  return saveMembers(organizationId, filteredMembers);
 }

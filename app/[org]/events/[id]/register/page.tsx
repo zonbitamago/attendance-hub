@@ -8,7 +8,7 @@ import { getAllGroups } from '@/lib/group-service';
 import { getMembersByGroupId, createMember } from '@/lib/member-service';
 import { createAttendance } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
-import { DEFAULT_ORGANIZATION_ID } from '@/lib/constants';
+import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
 import type { EventDate, Group, Member, AttendanceStatus } from '@/types';
 
@@ -16,6 +16,7 @@ export default function RegisterAttendancePage() {
   const params = useParams();
   const router = useRouter();
   const eventId = params.id as string;
+  const { organization } = useOrganization();
 
   const [event, setEvent] = useState<EventDate | null>(null);
   const [groups, setGroups] = useState<Group[]>([]);
@@ -31,14 +32,15 @@ export default function RegisterAttendancePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const loadData = () => {
+    if (!organization) return;
     try {
-      const foundEvent = getEventDateById(DEFAULT_ORGANIZATION_ID, eventId);
+      const foundEvent = getEventDateById(organization.id, eventId);
       if (!foundEvent) {
-        router.push('/');
+        router.push(`/${params.org as string}`);
         return;
       }
 
-      const allGroups = getAllGroups(DEFAULT_ORGANIZATION_ID);
+      const allGroups = getAllGroups(organization.id);
       setEvent(foundEvent);
       setGroups(allGroups);
     } catch (error) {
@@ -54,20 +56,26 @@ export default function RegisterAttendancePage() {
 
   useEffect(() => {
     // グループが選択されたらそのグループのメンバーを読み込む
-    if (selectedGroupId) {
-      const groupMembers = getMembersByGroupId(DEFAULT_ORGANIZATION_ID, selectedGroupId);
+    if (selectedGroupId && organization) {
+      const groupMembers = getMembersByGroupId(organization.id, selectedGroupId);
       setMembers(groupMembers);
       setSelectedMemberId('');
       setNewMemberName('');
     } else {
       setMembers([]);
     }
-  }, [selectedGroupId]);
+  }, [selectedGroupId, organization]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
+
+    if (!organization) {
+      setError('団体情報が見つかりません');
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       if (!selectedGroupId) {
@@ -76,9 +84,9 @@ export default function RegisterAttendancePage() {
 
       let memberId = selectedMemberId;
 
-      // 新しいメンバー名が入力されている場合は作成（レガシーページ用にデフォルト団体IDを使用）
+      // 新しいメンバー名が入力されている場合は作成
       if (newMemberName.trim()) {
-        const newMember = createMember(DEFAULT_ORGANIZATION_ID, {
+        const newMember = createMember(organization.id, {
           groupId: selectedGroupId,
           name: newMemberName.trim(),
         });
@@ -89,15 +97,15 @@ export default function RegisterAttendancePage() {
         throw new Error('メンバーを選択するか、新しい名前を入力してください');
       }
 
-      // 出欠登録を作成（レガシーページ用にデフォルト団体IDを使用）
-      createAttendance(DEFAULT_ORGANIZATION_ID, {
+      // 出欠登録を作成
+      createAttendance(organization.id, {
         eventDateId: eventId,
         memberId,
         status,
       });
 
       // 成功したらイベント詳細ページに戻る
-      router.push(`/events/${eventId}`);
+      router.push(`/${params.org as string}/events/${eventId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : '登録に失敗しました');
       setIsSubmitting(false);
@@ -122,7 +130,7 @@ export default function RegisterAttendancePage() {
         {/* ナビゲーション */}
         <div className="mb-6">
           <Link
-            href={`/events/${eventId}`}
+            href={`/${params.org as string}/events/${eventId}`}
             className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
           >
             ← イベント詳細に戻る
@@ -145,7 +153,7 @@ export default function RegisterAttendancePage() {
             <div className="text-center py-8">
               <p className="text-gray-500 mb-4">グループが登録されていません</p>
               <Link
-                href="/admin/groups"
+                href={`/${params.org as string}/admin/groups`}
                 className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors text-sm"
               >
                 グループを登録する

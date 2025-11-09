@@ -27,18 +27,19 @@ describe('MyRegisterPage', () => {
   const mockSaveMember = saveMember as jest.MockedFunction<typeof saveMember>;
 
   const mockGroups: Group[] = [
-    { id: 'group-1', name: 'トランペット', order: 1, createdAt: '2025-01-01T00:00:00Z' },
-    { id: 'group-2', name: 'トロンボーン', order: 2, createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'group-1', organizationId: 'test-org-id', name: 'トランペット', order: 1, createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'group-2', organizationId: 'test-org-id', name: 'トロンボーン', order: 2, createdAt: '2025-01-01T00:00:00Z' },
   ];
 
   const mockMembers: Member[] = [
-    { id: 'member-1', groupId: 'group-1', name: '田中太郎', createdAt: '2025-01-01T00:00:00Z' },
-    { id: 'member-2', groupId: 'group-1', name: '佐藤花子', createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'member-1', organizationId: 'test-org-id', groupId: 'group-1', name: '田中太郎', createdAt: '2025-01-01T00:00:00Z' },
+    { id: 'member-2', organizationId: 'test-org-id', groupId: 'group-1', name: '佐藤花子', createdAt: '2025-01-01T00:00:00Z' },
   ];
 
   const mockEventDates: EventDate[] = [
     {
       id: 'event-1',
+      organizationId: 'test-org-id',
       date: '2025-01-15',
       title: '定期演奏会',
       location: '市民ホール',
@@ -46,6 +47,7 @@ describe('MyRegisterPage', () => {
     },
     {
       id: 'event-2',
+      organizationId: 'test-org-id',
       date: '2025-01-22',
       title: '通常練習',
       location: '練習場A',
@@ -62,6 +64,7 @@ describe('MyRegisterPage', () => {
     mockSaveAttendances.mockReturnValue(true);
     mockSaveMember.mockReturnValue({
       id: 'new-member-id',
+      organizationId: 'test-org-id',
       groupId: 'group-1',
       name: '山田太郎',
       createdAt: '2025-01-01T00:00:00Z',

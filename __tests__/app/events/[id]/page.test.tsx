@@ -31,6 +31,7 @@ describe('EventDetailPage', () => {
       // Arrange: モックデータの準備
       const mockEvent = {
         id: 'event1',
+        organizationId: 'test-org-id',
         date: '2025-01-15',
         title: '練習',
         location: '音楽室',
@@ -94,6 +95,7 @@ describe('EventDetailPage', () => {
       // Arrange: モックデータの準備（出欠登録なし）
       const mockEvent = {
         id: 'event1',
+        organizationId: 'test-org-id',
         date: '2025-01-15',
         title: '練習',
         location: '音楽室',
@@ -131,6 +133,7 @@ describe('EventDetailPage', () => {
       // Arrange: モックデータの準備
       const mockEvent = {
         id: 'event1',
+        organizationId: 'test-org-id',
         date: '2025-01-15',
         title: '練習',
         createdAt: '2025-01-01T00:00:00.000Z',
