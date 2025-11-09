@@ -1,5 +1,7 @@
 # Attendance Hub
 
+[![CI](https://github.com/zonbitamago/attendance-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/zonbitamago/attendance-hub/actions/workflows/ci.yml)
+
 グループやイベントの出欠確認を簡単に管理できるWebアプリケーションです。
 
 ## 機能
@@ -123,7 +125,7 @@ attendance-hub/
 │   └── date-utils.ts     # 日付フォーマット
 ├── types/                 # TypeScript型定義
 │   └── index.ts
-├── __tests__/            # テスト（199テスト）
+├── __tests__/            # テスト（187テスト）
 │   ├── app/
 │   ├── components/
 │   ├── contexts/
@@ -187,7 +189,11 @@ attendance-hub/
 
 ## テスト
 
-全199テストが実装されています:
+- **テストスイート**: 187テスト
+- **カバレッジ**: branches: 30%以上、functions: 50%以上、lines: 45%以上、statements: 45%以上
+- **CI**: すべてのPRで自動実行
+
+全187テストが実装されています:
 
 - **ストレージ**: localStorage操作のテスト（団体スコープ対応）
 - **団体サービス**: 団体CRUD操作、ID生成のテスト
