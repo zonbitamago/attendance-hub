@@ -401,65 +401,65 @@
 
 #### テストケース1: updateOrganizationが名前と説明を更新
 
-- [ ] T189 **[Red]** [US3] テスト記述: updateOrganizationが団体フィールドを更新（__tests__/lib/organization-service.test.ts）
-- [ ] T190 **[Green]** [US3] lib/organization-service.tsにupdateOrganization(id: string, input: UpdateOrganizationInput)を実装
-- [ ] T191 **[Green]** [US3] UpdateOrganizationInputSchemaを使用した検証を追加
-- [ ] T192 **[Green]** [US3] テストを実行してT189が通ることを確認
-- [ ] T193 **[Refactor]** [US3] updateOrganization実装をクリーンアップ
+- [x] T189 **[Red]** [US3] テスト記述: updateOrganizationが団体フィールドを更新（__tests__/lib/organization-service.test.ts）
+- [x] T190 **[Green]** [US3] lib/organization-service.tsにupdateOrganization(id: string, input: UpdateOrganizationInput)を実装
+- [x] T191 **[Green]** [US3] UpdateOrganizationInputSchemaを使用した検証を追加
+- [x] T192 **[Green]** [US3] テストを実行してT189が通ることを確認
+- [x] T193 **[Refactor]** [US3] updateOrganization実装をクリーンアップ
 
 #### テストケース2: updateOrganizationが未知の団体でエラーをスロー
 
-- [ ] T194 **[Red]** [US3] テスト記述: updateOrganizationが存在しないidでスロー（__tests__/lib/organization-service.test.ts）
-- [ ] T195 **[Green]** [US3] updateOrganizationにエラーハンドリングを追加
-- [ ] T196 **[Green]** [US3] テストを実行してT194が通ることを確認
-- [ ] T197 **[Refactor]** [US3] エラーメッセージを最適化
+- [x] T194 **[Red]** [US3] テスト記述: updateOrganizationが存在しないidでスロー（__tests__/lib/organization-service.test.ts）
+- [x] T195 **[Green]** [US3] updateOrganizationにエラーハンドリングを追加
+- [x] T196 **[Green]** [US3] テストを実行してT194が通ることを確認
+- [x] T197 **[Refactor]** [US3] エラーメッセージを最適化
 
 #### テストケース3: deleteOrganizationがリストから団体を削除
 
-- [ ] T198 **[Red]** [US3] テスト記述: deleteOrganizationがリストから団体を削除（__tests__/lib/organization-service.test.ts）
-- [ ] T199 **[Green]** [US3] lib/organization-service.tsにdeleteOrganization(id: string)を実装
-- [ ] T200 **[Green]** [US3] 存在しない団体のエラーハンドリングを追加
-- [ ] T201 **[Green]** [US3] テストを実行してT198が通ることを確認
-- [ ] T202 **[Refactor]** [US3] deleteOrganizationをクリーンアップ
+- [x] T198 **[Red]** [US3] テスト記述: deleteOrganizationがリストから団体を削除（__tests__/lib/organization-service.test.ts）
+- [x] T199 **[Green]** [US3] lib/organization-service.tsにdeleteOrganization(id: string)を実装
+- [x] T200 **[Green]** [US3] 存在しない団体のエラーハンドリングを追加
+- [x] T201 **[Green]** [US3] テストを実行してT198が通ることを確認
+- [x] T202 **[Refactor]** [US3] deleteOrganizationをクリーンアップ
 
 #### テストケース4: deleteOrganizationがclearOrganizationDataを呼び出す（カスケード）
 
-- [ ] T203 **[Red]** [US3] テスト記述: deleteOrganizationがclearOrganizationDataを呼び出す（__tests__/lib/organization-service.test.ts）
-- [ ] T204 **[Green]** [US3] deleteOrganizationにclearOrganizationData呼び出しを追加
-- [ ] T205 **[Green]** [US3] テストを実行してT203が通ることを確認（カスケード削除）
-- [ ] T206 **[Refactor]** [US3] deleteOrganization実装を最終化
+- [x] T203 **[Red]** [US3] テスト記述: deleteOrganizationがclearOrganizationDataを呼び出す（__tests__/lib/organization-service.test.ts）
+- [x] T204 **[Green]** [US3] deleteOrganizationにclearOrganizationData呼び出しを追加
+- [x] T205 **[Green]** [US3] テストを実行してT203が通ることを確認（カスケード削除）
+- [x] T206 **[Refactor]** [US3] deleteOrganization実装を最終化
 
 ### 団体設定ページ実装
 
 #### テストケース1: 団体管理ページが団体情報を表示
 
-- [ ] T207 **[Red]** [US3] テスト記述: 団体ページが現在の団体情報を表示（__tests__/app/[org]/admin/organizations/page.test.tsx）
-- [ ] T208 **[Green]** [US3] app/[org]/admin/organizations/page.tsxを作成
-- [ ] T209 **[Green]** [US3] useOrganizationを使用して団体名と説明を表示
-- [ ] T210 **[Green]** [US3] テストを実行してT207が通ることを確認
-- [ ] T211 **[Refactor]** [US3] 団体ページレイアウトをクリーンアップ
+- [x] T207 **[Red]** [US3] テスト記述: 団体ページが現在の団体情報を表示（__tests__/app/[org]/admin/organizations/page.test.tsx）
+- [x] T208 **[Green]** [US3] app/[org]/admin/organizations/page.tsxを作成
+- [x] T209 **[Green]** [US3] useOrganizationを使用して団体名と説明を表示
+- [x] T210 **[Green]** [US3] テストを実行してT207が通ることを確認
+- [x] T211 **[Refactor]** [US3] 団体ページレイアウトをクリーンアップ
 
 #### テストケース2: 団体ページが名前/説明の更新を許可
 
-- [ ] T212 **[Red]** [US3] テスト記述: 団体ページが団体名を更新可能（__tests__/app/[org]/admin/organizations/page.test.tsx）
-- [ ] T213 **[Green]** [US3] app/[org]/admin/organizations/page.tsxに団体更新フォームを追加
-- [ ] T214 **[Green]** [US3] updateOrganizationを呼び出すhandleUpdateOrganizationを実装
-- [ ] T215 **[Green]** [US3] テストを実行してT212が通ることを確認
-- [ ] T216 **[Refactor]** [US3] フォーム処理を最適化
+- [x] T212 **[Red]** [US3] テスト記述: 団体ページが団体名を更新可能（__tests__/app/[org]/admin/organizations/page.test.tsx）
+- [x] T213 **[Green]** [US3] app/[org]/admin/organizations/page.tsxに団体更新フォームを追加
+- [x] T214 **[Green]** [US3] updateOrganizationを呼び出すhandleUpdateOrganizationを実装
+- [x] T215 **[Green]** [US3] テストを実行してT212が通ることを確認
+- [x] T216 **[Refactor]** [US3] フォーム処理を最適化
 
 #### テストケース3: 団体ページが確認付き削除を許可
 
-- [ ] T217 **[Red]** [US3] テスト記述: 団体ページが削除確認ダイアログを表示（__tests__/app/[org]/admin/organizations/page.test.tsx）
-- [ ] T218 **[Green]** [US3] app/[org]/admin/organizations/page.tsxに確認ダイアログ付き削除ボタンを追加
-- [ ] T219 **[Green]** [US3] deleteOrganizationを呼び出して/にリダイレクトするhandleDeleteOrganizationを実装
-- [ ] T220 **[Green]** [US3] テストを実行してT217が通ることを確認
-- [ ] T221 **[Refactor]** [US3] 削除処理ロジックをクリーンアップ
+- [x] T217 **[Red]** [US3] テスト記述: 団体ページが削除確認ダイアログを表示（__tests__/app/[org]/admin/organizations/page.test.tsx）
+- [x] T218 **[Green]** [US3] app/[org]/admin/organizations/page.tsxに確認ダイアログ付き削除ボタンを追加
+- [x] T219 **[Green]** [US3] deleteOrganizationを呼び出して/にリダイレクトするhandleDeleteOrganizationを実装
+- [x] T220 **[Green]** [US3] テストを実行してT217が通ることを確認
+- [x] T221 **[Refactor]** [US3] 削除処理ロジックをクリーンアップ
 
 ### UI and Polish
 
-- [ ] T222 **[Refactor]** [US3] 団体設定ページにTailwind CSSスタイリングを適用
-- [ ] T223 **[Refactor]** [US3] セマンティックHTMLとアクセシビリティ機能を追加
-- [ ] T224 **[Refactor]** [US3] 入力フィールドが標準スタイリングガイドラインに従うことを確保
+- [x] T222 **[Refactor]** [US3] 団体設定ページにTailwind CSSスタイリングを適用
+- [x] T223 **[Refactor]** [US3] セマンティックHTMLとアクセシビリティ機能を追加
+- [x] T224 **[Refactor]** [US3] 入力フィールドが標準スタイリングガイドラインに従うことを確保
 
 **チェックポイント**: ユーザーストーリー3完了 - 団体の編集と削除が可能
 
