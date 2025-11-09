@@ -1,8 +1,8 @@
 # attendance-hub 仕様書
 
-**バージョン:** 1.0.0
-**最終更新:** 2025-11-08
-**ステータス:** プロトタイプ（localStorage版）
+**バージョン:** 2.0.0
+**最終更新:** 2025-11-09
+**ステータス:** プロトタイプ（localStorage版、マルチテナント対応）
 
 ---
 
@@ -29,11 +29,14 @@
 
 ### 1.2 目的
 
-複数のグループに所属するメンバーの、イベント日付ごとの出欠状況を管理するWebアプリケーション。
+複数の団体を独立して管理し、各団体内のグループに所属するメンバーの、イベント日付ごとの出欠状況を管理するWebアプリケーション。
 吹奏楽団、スポーツチーム、企業の部署など、グループベースの組織における練習・イベント出欠管理を効率化します。
 
 ### 1.3 主な用途
 
+- **団体管理:** 複数の団体を独立して作成・管理（New! v2.0）
+- **専用URLアクセス:** 各団体に一意のURLを発行、ブックマークで簡単アクセス（New! v2.0）
+- **プライバシー保護:** 団体一覧は非公開、URLを知っている人のみアクセス可能（New! v2.0）
 - イベント日付の作成・管理
 - グループ・メンバーの管理
 - 出欠状況の登録（◯出席/△未定/✗欠席）
@@ -64,8 +67,8 @@
 | 技術 | バージョン | 用途 |
 |------|-----------|------|
 | **Next.js** | 16.0.1 | フレームワーク（App Router） |
-| **React** | 19.0.0 | UIライブラリ |
-| **TypeScript** | 5.3.3 | 型安全な開発 |
+| **React** | 19.2.0 | UIライブラリ |
+| **TypeScript** | 5.9.3 | 型安全な開発 |
 | **Tailwind CSS** | 3.4.15 | スタイリング |
 
 #### バリデーション・ユーティリティ
@@ -74,6 +77,7 @@
 |------|-----------|------|
 | **Zod** | 3.23.8 | スキーマバリデーション |
 | **date-fns** | 4.1.0 | 日付処理 |
+| **nanoid** | 5.0.9 | URL-safeなランダムID生成（New! v2.0） |
 
 #### テスト
 
@@ -95,17 +99,25 @@
 │          App Router (Next.js 16)            │
 ├─────────────────────────────────────────────┤
 │  Pages (app/)                               │
-│  ├─ page.tsx (イベント一覧)                   │
-│  ├─ events/[id]/page.tsx (詳細)              │
-│  ├─ events/[id]/register/page.tsx (出欠登録) │
-│  ├─ admin/events/page.tsx (イベント管理)      │
-│  └─ admin/groups/page.tsx (グループ管理)      │
+│  ├─ page.tsx (ランディング・団体作成)          │
+│  ├─ [org]/layout.tsx (団体コンテキスト)       │
+│  ├─ [org]/page.tsx (イベント一覧)             │
+│  ├─ [org]/events/[id]/page.tsx (詳細)        │
+│  ├─ [org]/events/[id]/register (出欠登録)    │
+│  ├─ [org]/admin/events (イベント管理)         │
+│  ├─ [org]/admin/groups (グループ管理)         │
+│  └─ [org]/not-found.tsx (404ページ)          │
+├─────────────────────────────────────────────┤
+│  Contexts (contexts/)                        │
+│  └─ organization-context.tsx                 │
 ├─────────────────────────────────────────────┤
 │  Components (components/)                    │
 │  ├─ loading-spinner.tsx                      │
 │  └─ skeleton.tsx                             │
 ├─────────────────────────────────────────────┤
 │  Service Layer (lib/)                        │
+│  ├─ organization-service.ts (New! v2.0)      │
+│  ├─ migration.ts (New! v2.0)                 │
 │  ├─ event-service.ts                         │
 │  ├─ group-service.ts                         │
 │  ├─ member-service.ts                        │
@@ -114,10 +126,11 @@
 │  └─ storage.ts (localStorage I/O)            │
 ├─────────────────────────────────────────────┤
 │  Data Layer (localStorage)                   │
-│  ├─ attendance_event_dates                   │
-│  ├─ attendance_groups                        │
-│  ├─ attendance_members                       │
-│  └─ attendance_attendances                   │
+│  ├─ attendance_organizations (New! v2.0)     │
+│  ├─ attendance_event_dates_{orgId}           │
+│  ├─ attendance_groups_{orgId}                │
+│  ├─ attendance_members_{orgId}               │
+│  └─ attendance_attendances_{orgId}           │
 └─────────────────────────────────────────────┘
 ```
 
@@ -127,21 +140,29 @@
 attendance-hub/
 ├── app/                    # Next.js App Router
 │   ├── layout.tsx
-│   ├── page.tsx
-│   ├── admin/
-│   │   ├── page.tsx
-│   │   ├── groups/page.tsx
-│   │   └── events/page.tsx
-│   ├── events/
-│   │   └── [id]/
-│   │       ├── page.tsx
-│   │       └── register/page.tsx
+│   ├── page.tsx           # ランディングページ・団体作成
+│   ├── [org]/             # 団体専用ページ（New! v2.0）
+│   │   ├── layout.tsx
+│   │   ├── page.tsx       # イベント一覧
+│   │   ├── not-found.tsx  # 404ページ
+│   │   ├── admin/
+│   │   │   ├── page.tsx
+│   │   │   ├── groups/page.tsx
+│   │   │   └── events/page.tsx
+│   │   └── events/
+│   │       └── [id]/
+│   │           ├── page.tsx
+│   │           └── register/page.tsx
 │   └── globals.css
-├── components/             # 再利用可能なコンポーネント
+├── contexts/              # React Context（New! v2.0）
+│   └── organization-context.tsx
+├── components/            # 再利用可能なコンポーネント
 │   ├── loading-spinner.tsx
 │   └── skeleton.tsx
-├── lib/                    # ビジネスロジック
+├── lib/                   # ビジネスロジック
 │   ├── storage.ts
+│   ├── organization-service.ts  # New! v2.0
+│   ├── migration.ts            # New! v2.0
 │   ├── event-service.ts
 │   ├── group-service.ts
 │   ├── member-service.ts
@@ -149,18 +170,22 @@ attendance-hub/
 │   ├── validation.ts
 │   ├── date-utils.ts
 │   └── error-utils.ts
-├── types/                  # TypeScript型定義
+├── types/                 # TypeScript型定義
 │   └── index.ts
-├── __tests__/             # テスト
+├── __tests__/            # テスト
 │   ├── lib/
-│   └── app/
-├── specs/                 # 機能仕様・設計ドキュメント
+│   ├── app/
+│   ├── contexts/
+│   └── integration/
+├── specs/                # 機能仕様・設計ドキュメント
 │   ├── 001-attendance-prototype/
 │   ├── 002-input-text-visibility/
-│   └── 003-event-attendance-count/
-├── CLAUDE.md              # 開発ガイドライン
-├── SPECIFICATION.md       # 本ドキュメント
-└── README.md              # ユーザー向けドキュメント
+│   ├── 003-event-attendance-count/
+│   ├── 004-bulk-attendance-register/
+│   └── 005-multi-tenant/
+├── CLAUDE.md             # 開発ガイドライン
+├── SPECIFICATION.md      # 本ドキュメント
+└── README.md             # ユーザー向けドキュメント
 ```
 
 ---
@@ -169,69 +194,93 @@ attendance-hub/
 
 ### 3.1 エンティティ概要
 
-attendance-hubは4つの主要エンティティで構成されています：
+attendance-hubは5つの主要エンティティで構成されています（v2.0で団体エンティティを追加）：
 
-1. **EventDate（イベント日付）** - 練習日、本番日などのイベント
-2. **Group（グループ）** - 打楽器、管楽器、営業部などの組織単位
-3. **Member（メンバー）** - グループに所属する個人
-4. **Attendance（出欠登録）** - イベント×メンバーの出欠状況
+1. **Organization（団体）** - 独立した組織単位（吹奏楽団、スポーツチーム等）（New! v2.0）
+2. **EventDate（イベント日付）** - 練習日、本番日などのイベント
+3. **Group（グループ）** - 打楽器、管楽器、営業部などの組織単位
+4. **Member（メンバー）** - グループに所属する個人
+5. **Attendance（出欠登録）** - イベント×メンバーの出欠状況
 
 ### 3.2 エンティティ詳細
 
-#### 3.2.1 EventDate（イベント日付）
+#### 3.2.1 Organization（団体）（New! v2.0）
 
 ```typescript
-interface EventDate {
-  id: string;         // UUID v4形式
-  date: string;       // YYYY-MM-DD形式（例: "2025-01-15"）
-  title: string;      // イベント名（例: "練習", "本番"）
-  location?: string;  // 開催場所（任意）
-  createdAt: string;  // ISO 8601形式（例: "2025-01-01T00:00:00.000Z"）
+interface Organization {
+  id: string;              // nanoid形式（10文字、URL-safe）
+  name: string;            // 団体名（例: "音楽サークル"）
+  description?: string;    // 説明（任意）
+  createdAt: string;       // ISO 8601形式
 }
 ```
 
 **制約:**
+- `id`: nanoid生成（10文字、URL-safe）
+- `name`: 1-100文字
+- `description`: 最大500文字
+
+#### 3.2.2 EventDate（イベント日付）
+
+```typescript
+interface EventDate {
+  id: string;              // UUID v4形式
+  organizationId: string;  // 所属団体ID（外部キー）（New! v2.0）
+  date: string;            // YYYY-MM-DD形式（例: "2025-01-15"）
+  title: string;           // イベント名（例: "練習", "本番"）
+  location?: string;       // 開催場所（任意）
+  createdAt: string;       // ISO 8601形式（例: "2025-01-01T00:00:00.000Z"）
+}
+```
+
+**制約:**
+- `organizationId`: 既存のOrganizationに対する外部キー（New! v2.0）
 - `title`: 1-100文字
 - `date`: YYYY-MM-DD形式
 - `location`: 最大200文字
 
-#### 3.2.2 Group（グループ）
+#### 3.2.3 Group（グループ）
 
 ```typescript
 interface Group {
-  id: string;         // UUID v4形式
-  name: string;       // グループ名（例: "打", "Cla", "営業部"）
-  order: number;      // 表示順（0始まり）
-  color?: string;     // カラーコード（例: "#FF0000"、任意）
-  createdAt: string;  // ISO 8601形式
+  id: string;              // UUID v4形式
+  organizationId: string;  // 所属団体ID（外部キー）（New! v2.0）
+  name: string;            // グループ名（例: "打", "Cla", "営業部"）
+  order: number;           // 表示順（0始まり）
+  color?: string;          // カラーコード（例: "#FF0000"、任意）
+  createdAt: string;       // ISO 8601形式
 }
 ```
 
 **制約:**
+- `organizationId`: 既存のOrganizationに対する外部キー（New! v2.0）
 - `name`: 1-50文字
 - `order`: 0以上の整数
 - `color`: Hex形式（#RRGGBB）または未定義
 
-#### 3.2.3 Member（メンバー）
+#### 3.2.4 Member（メンバー）
 
 ```typescript
 interface Member {
-  id: string;        // UUID v4形式
-  groupId: string;   // 所属グループID（外部キー）
-  name: string;      // メンバー名
-  createdAt: string; // ISO 8601形式
+  id: string;              // UUID v4形式
+  organizationId: string;  // 所属団体ID（外部キー）（New! v2.0）
+  groupId: string;         // 所属グループID（外部キー）
+  name: string;            // メンバー名
+  createdAt: string;       // ISO 8601形式
 }
 ```
 
 **制約:**
+- `organizationId`: 既存のOrganizationに対する外部キー（New! v2.0）
 - `name`: 1-100文字
 - `groupId`: 既存のGroupに対する外部キー
 
-#### 3.2.4 Attendance（出欠登録）
+#### 3.2.5 Attendance（出欠登録）
 
 ```typescript
 interface Attendance {
   id: string;              // UUID v4形式
+  organizationId: string;  // 所属団体ID（外部キー）（New! v2.0）
   eventDateId: string;     // イベント日付ID（外部キー）
   memberId: string;        // メンバーID（外部キー）
   status: '◯' | '△' | '✗'; // 出欠ステータス
@@ -245,6 +294,7 @@ interface Attendance {
 - `✗`: 欠席
 
 **制約:**
+- `organizationId`: 既存のOrganizationに対する外部キー（New! v2.0）
 - `eventDateId`: 既存のEventDateに対する外部キー
 - `memberId`: 既存のMemberに対する外部キー
 - 同一`(eventDateId, memberId)`の組み合わせは1件のみ（論理的制約）
@@ -252,46 +302,39 @@ interface Attendance {
 ### 3.3 エンティティ関係図（ER図）
 
 ```
-┌─────────────┐       ┌─────────────┐
-│  EventDate  │       │    Group    │
-├─────────────┤       ├─────────────┤
-│ id (PK)     │       │ id (PK)     │
-│ date        │       │ name        │
-│ title       │       │ order       │
-│ location    │       │ color       │
-│ createdAt   │       │ createdAt   │
-└─────────────┘       └─────────────┘
-       │                      │
-       │                      │ 1
-       │                      │
-       │                      ├─────┐
-       │                      │     │
-       │ 1                    │     │ N
-       │                      ▼     │
-       │              ┌─────────────┤
-       │              │   Member    │
-       │              ├─────────────┤
-       │              │ id (PK)     │
-       │              │ groupId (FK)│
-       │              │ name        │
-       │              │ createdAt   │
-       │              └─────────────┘
-       │                      │
-       │ N                    │ 1
-       │                      │
-       ▼                      ▼
-   ┌──────────────────────────┐
-   │      Attendance          │
-   ├──────────────────────────┤
-   │ id (PK)                  │
-   │ eventDateId (FK)         │
-   │ memberId (FK)            │
-   │ status                   │
-   │ createdAt                │
-   └──────────────────────────┘
+                     ┌──────────────┐
+                     │Organization  │
+                     ├──────────────┤
+                     │ id (PK)      │
+                     │ name         │
+                     │ description  │
+                     │ createdAt    │
+                     └──────────────┘
+                            │ 1
+         ┌──────────────────┼──────────────────┬──────────────────┐
+         │ N                │ N                │ N                │ N
+         ▼                  ▼                  ▼                  ▼
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌──────────────┐
+│  EventDate  │    │    Group    │    │   Member    │    │ Attendance   │
+├─────────────┤    ├─────────────┤    ├─────────────┤    ├──────────────┤
+│ id (PK)     │    │ id (PK)     │    │ id (PK)     │    │ id (PK)      │
+│ orgId (FK)  │    │ orgId (FK)  │    │ orgId (FK)  │    │ orgId (FK)   │
+│ date        │    │ name        │    │ groupId(FK) │    │ eventId (FK) │
+│ title       │    │ order       │    │ name        │    │ memberId(FK) │
+│ location    │    │ color       │    │ createdAt   │    │ status       │
+│ createdAt   │    │ createdAt   │    └─────────────┘    │ createdAt    │
+└─────────────┘    └─────────────┘           │            └──────────────┘
+       │ 1                  │ 1              │ 1                 │
+       │                    └────────────────┘                   │
+       │ N                           │ N                         │
+       └─────────────────────────────┴───────────────────────────┘
 ```
 
 **関係性:**
+- Organization 1 : N EventDate（New! v2.0）
+- Organization 1 : N Group（New! v2.0）
+- Organization 1 : N Member（New! v2.0）
+- Organization 1 : N Attendance（New! v2.0）
 - EventDate 1 : N Attendance
 - Member 1 : N Attendance
 - Group 1 : N Member
@@ -331,25 +374,58 @@ interface EventTotalSummary {
 
 ### 3.5 localStorage設計
 
-**キー構造:**
+**キー構造（v2.0でマルチテナント対応）:**
 
 | キー名 | データ型 | 内容 |
 |--------|---------|------|
-| `attendance_event_dates` | `EventDate[]` | イベント日付一覧 |
-| `attendance_groups` | `Group[]` | グループ一覧 |
-| `attendance_members` | `Member[]` | メンバー一覧 |
-| `attendance_attendances` | `Attendance[]` | 出欠登録一覧 |
+| `attendance_organizations` | `Organization[]` | 団体一覧（New! v2.0） |
+| `attendance_event_dates_{organizationId}` | `EventDate[]` | 団体ごとのイベント日付一覧 |
+| `attendance_groups_{organizationId}` | `Group[]` | 団体ごとのグループ一覧 |
+| `attendance_members_{organizationId}` | `Member[]` | 団体ごとのメンバー一覧 |
+| `attendance_attendances_{organizationId}` | `Attendance[]` | 団体ごとの出欠登録一覧 |
+
+**データ分離:**
+- 団体（Organization）のみグローバルキー
+- その他のデータは団体IDをサフィックスとして持つ専用キーで分離
+- 団体間のデータ漏洩を防止
 
 **データ永続化:**
 - JSON形式でシリアライズ
 - 各操作（作成・更新・削除）後に即座に保存
 - エラー時はlocalStorageをクリアし、空配列にフォールバック
 
+**マイグレーション:**
+- レガシーキー（`attendance_event_dates`等）が存在する場合、自動的に「マイ団体」として移行
+- マイグレーション完了後、レガシーキーを削除
+
 ---
 
 ## 4. 機能仕様
 
 ### 4.1 実装済み機能一覧
+
+#### 4.1.0 マルチテナント機能（New! v2.0）
+
+**機能ID:** 005-001
+**概要:** 複数の団体を独立して管理
+
+**詳細:**
+- 団体の新規作成（名前、説明）
+- nanoidによる一意のURL-safe ID生成
+- 団体専用URLの発行（`/{organizationId}`）
+- 団体ごとのデータ分離（localStorage）
+- プライバシー保護（団体一覧非公開）
+- レガシーデータの自動マイグレーション
+
+**制約:**
+- 団体名は1-100文字
+- 説明は最大500文字（任意）
+- 団体IDはnanoid（10文字）
+
+**関連ページ:**
+- ランディングページ（`/`）- 団体作成フォーム
+- 団体専用ページ（`/[org]/*`）
+- 404ページ（`/[org]/not-found`）
 
 #### 4.1.1 イベント管理機能
 
@@ -472,7 +548,110 @@ interface EventTotalSummary {
 
 ## 5. API仕様（サービス層）
 
-### 5.1 event-service.ts
+### 5.1 organization-service.ts（New! v2.0）
+
+#### `createOrganization(input: CreateOrganizationInput): Organization`
+
+**概要:** 新しい団体を作成
+
+**パラメータ:**
+```typescript
+interface CreateOrganizationInput {
+  name: string;            // 1-100文字
+  description?: string;    // 最大500文字
+}
+```
+
+**戻り値:** 作成されたOrganizationオブジェクト（nanoid生成）
+
+**例外:**
+- バリデーションエラー（Zodスキーマ違反）
+- ストレージ保存失敗
+
+**使用例:**
+```typescript
+const org = createOrganization({
+  name: '音楽サークル',
+  description: '大学の音楽サークルです'
+});
+// { id: 'aBc1234567', name: '音楽サークル', ... }
+```
+
+#### `getAllOrganizations(): Organization[]`
+
+**概要:** すべての団体を作成日時昇順で取得
+
+**戻り値:** Organization配列（createdAt昇順）
+
+#### `getOrganizationById(id: string): Organization | null`
+
+**概要:** IDで団体を検索
+
+**パラメータ:**
+- `id`: Organization ID（nanoid）
+
+**戻り値:**
+- Organization（見つかった場合）
+- null（見つからない場合）
+
+#### `updateOrganization(id: string, input: Partial<CreateOrganizationInput>): Organization`
+
+**概要:** 団体情報を更新
+
+**パラメータ:**
+- `id`: 更新対象のOrganization ID
+- `input`: 更新するフィールド（部分更新）
+
+**戻り値:** 更新後のOrganizationオブジェクト
+
+**例外:**
+- 団体が存在しない
+- バリデーションエラー
+
+#### `deleteOrganization(id: string): boolean`
+
+**概要:** 団体を削除（関連するすべてのデータも連動削除）
+
+**パラメータ:**
+- `id`: 削除対象のOrganization ID
+
+**戻り値:**
+- `true`: 削除成功
+- `false`: 団体が存在しない
+
+**注意:** この操作により、団体に紐づくすべてのイベント、グループ、メンバー、出欠登録が削除されます。
+
+### 5.2 migration.ts（New! v2.0）
+
+#### `migrateToMultiTenant(): MigrationResult`
+
+**概要:** レガシーデータをマルチテナント構造にマイグレーション
+
+**戻り値:**
+```typescript
+interface MigrationResult {
+  migrated: boolean;        // マイグレーション実行されたか
+  defaultOrgId?: string;    // デフォルト団体ID
+  error?: string;           // エラーメッセージ
+}
+```
+
+**ロジック:**
+1. レガシーキー（`attendance_event_dates`等）の存在確認
+2. 存在する場合、「マイ団体」としてデフォルト団体を作成
+3. レガシーデータに`organizationId`を付与して新キーに移行
+4. マイグレーション完了後、レガシーキーを削除
+5. 成功した場合、`{ migrated: true, defaultOrgId: '...' }`を返す
+
+**使用例:**
+```typescript
+const result = migrateToMultiTenant();
+if (result.migrated && result.defaultOrgId) {
+  router.push(`/${result.defaultOrgId}`);
+}
+```
+
+### 5.3 event-service.ts
 
 #### `createEventDate(input: CreateEventDateInput): EventDate`
 
@@ -728,40 +907,53 @@ const summary = calculateEventTotalSummary('event1');
 
 | ページ | パス | 説明 |
 |--------|------|------|
-| **トップページ** | `/` | イベント一覧と出欠人数表示 |
-| **イベント詳細** | `/events/[id]` | イベント詳細・全体集計・グループ別集計 |
-| **出欠登録** | `/events/[id]/register` | 出欠登録フォーム |
-| **管理画面トップ** | `/admin` | 管理機能へのリンク |
-| **グループ管理** | `/admin/groups` | グループCRUD |
-| **イベント管理** | `/admin/events` | イベントCRUD |
+| **ランディングページ** | `/` | 団体作成フォーム、マイグレーション処理（New! v2.0） |
+| **団体トップページ** | `/[org]` | イベント一覧と出欠人数表示 |
+| **イベント詳細** | `/[org]/events/[id]` | イベント詳細・全体集計・グループ別集計 |
+| **出欠登録** | `/[org]/events/[id]/register` | 出欠登録フォーム |
+| **複数イベント一括登録** | `/[org]/my-register` | 複数イベントの一括出欠登録 |
+| **管理画面トップ** | `/[org]/admin` | 管理機能へのリンク |
+| **グループ管理** | `/[org]/admin/groups` | グループCRUD |
+| **イベント管理** | `/[org]/admin/events` | イベントCRUD |
+| **404ページ** | `/[org]/not-found` | 存在しない団体へのアクセス時（New! v2.0） |
 
 ### 6.2 画面遷移図
 
 ```
 ┌─────────────┐
-│ トップページ  │ ─────┐
-│ (/) イベント  │      │
-│ 一覧+人数     │      │
+│ランディング   │ ← マイグレーション実行
+│ (/)          │   既存データある → /{defaultOrgId}へリダイレクト
+│団体作成フォーム│   なし → 新規団体作成
+└─────────────┘
+       │ 団体作成成功
+       ▼
+  /{organizationId} ← URLブックマーク可能
+       │
+┌─────────────┐
+│団体トップ     │ ─────┐
+│(/[org])      │      │
+│イベント一覧+  │      │
+│人数表示       │      │
 └─────────────┘      │
        │             │
        │ クリック     │ 管理画面へ
        ▼             │
 ┌─────────────┐      │
 │イベント詳細   │      │
-│(/events/[id])│      │
-│全体集計+     │      │
-│グループ集計   │      │
+│(/[org]/      │      │
+│ events/[id]) │      │
+│全体集計+集計  │      │
 └─────────────┘      │
        │             │
        │ 出欠登録     │
        ▼             ▼
 ┌─────────────┐  ┌─────────────┐
 │出欠登録       │  │管理画面トップ │
-│(/events/[id]/ │  │(/admin)      │
-│ register)    │  └─────────────┘
-└─────────────┘         │
-                        ├─→ グループ管理 (/admin/groups)
-                        └─→ イベント管理 (/admin/events)
+│(/[org]/      │  │(/[org]/admin)│
+│ events/[id]/ │  └─────────────┘
+│ register)    │         │
+└─────────────┘         ├─→ グループ管理 (/[org]/admin/groups)
+                        └─→ イベント管理 (/[org]/admin/events)
 ```
 
 ### 6.3 レスポンシブデザイン
@@ -971,17 +1163,29 @@ try {
 ### 8.2 テストカバレッジ
 
 **現在のテスト状況:**
-- **テストスイート数:** 6
-- **テストケース数:** 56
+- **テストスイート数:** 14
+- **テストケース数:** 199
 - **合格率:** 100%
 
 **テスト対象:**
-- `lib/storage.test.ts` - localStorageのCRUD
-- `lib/group-service.test.ts` - グループサービス
-- `lib/attendance-service.test.ts` - 出欠サービス
-- `app/page.test.tsx` - トップページ
-- `app/events/[id]/page.test.tsx` - イベント詳細ページ
-- `app/admin/events/page.test.tsx` - 管理画面イベントページ
+- **サービス層:**
+  - `lib/storage.test.ts` - localStorageのCRUD
+  - `lib/organization-service.test.ts` - 団体サービス（New! v2.0）
+  - `lib/migration.test.ts` - マイグレーション処理（New! v2.0）
+  - `lib/group-service.test.ts` - グループサービス
+  - `lib/attendance-service.test.ts` - 出欠サービス
+- **ページコンポーネント:**
+  - `app/page.test.tsx` - ランディングページ
+  - `app/[org]/page.test.tsx` - イベント一覧ページ
+  - `app/[org]/events/[id]/page.test.tsx` - イベント詳細ページ
+  - `app/[org]/admin/events/page.test.tsx` - 管理画面イベントページ
+  - `app/[org]/my-register/page.test.tsx` - 一括出欠登録ページ
+- **コンテキスト:**
+  - `contexts/organization-context.test.tsx` - 団体コンテキスト（New! v2.0）
+- **統合テスト:**
+  - `__tests__/integration/data-isolation.test.ts` - データ分離検証（New! v2.0）
+  - `__tests__/integration/migration.test.ts` - マイグレーション統合（New! v2.0）
+  - `__tests__/integration/url-bookmark.test.ts` - URLブックマーク（New! v2.0）
 
 ### 8.3 テストケース分類
 
@@ -1294,11 +1498,12 @@ chore: ビルド・設定変更
 
 **フレームワーク・ライブラリ:**
 - Next.js 16.0.1 - https://nextjs.org/
-- React 19.0.0 - https://react.dev/
-- TypeScript 5.3.3 - https://www.typescriptlang.org/
+- React 19.2.0 - https://react.dev/
+- TypeScript 5.9.3 - https://www.typescriptlang.org/
 - Tailwind CSS 3.4.15 - https://tailwindcss.com/
 - Zod 3.23.8 - https://zod.dev/
 - date-fns 4.1.0 - https://date-fns.org/
+- nanoid 5.0.9 - https://github.com/ai/nanoid
 
 **テスト:**
 - Jest 29.7.0 - https://jestjs.io/
@@ -1313,6 +1518,7 @@ chore: ビルド・設定変更
 | 日付 | バージョン | 変更内容 |
 |------|-----------|---------|
 | 2025-11-08 | 1.0.0 | 初版作成 |
+| 2025-11-09 | 2.0.0 | マルチテナント対応（005-multi-tenant実装完了）<br>- Organization エンティティ追加<br>- 団体専用URL発行機能<br>- データ分離・プライバシー保護<br>- レガシーデータ自動マイグレーション<br>- OrganizationContext 実装<br>- テスト: 56 → 199 (143件追加) |
 
 ---
 
