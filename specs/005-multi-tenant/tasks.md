@@ -284,108 +284,108 @@
 
 #### テストケース1: group-serviceがorganizationIdを受け取り使用
 
-- [ ] T129 **[Red]** [US2] テスト記述: createGroupがorganizationIdを要求しグループに追加（__tests__/lib/group-service.test.ts）
-- [ ] T130 **[Green]** [US2] lib/group-service.tsのcreateGroupシグネチャを第1パラメータとしてorganizationIdを受け取るよう更新
-- [ ] T131 **[Green]** [US2] createGroupがgroupオブジェクトにorganizationIdを追加するよう更新
-- [ ] T132 **[Green]** [US2] createGroupがsaveGroups(organizationId, groups)を呼び出すよう更新
-- [ ] T133 **[Green]** [US2] テストを実行してT129が通ることを確認
-- [ ] T134 **[Refactor]** [US2] group-service.tsをクリーンアップ
+- [x] T129 **[Red]** [US2] テスト記述: createGroupがorganizationIdを要求しグループに追加（__tests__/lib/group-service.test.ts）
+- [x] T130 **[Green]** [US2] lib/group-service.tsのcreateGroupシグネチャを第1パラメータとしてorganizationIdを受け取るよう更新
+- [x] T131 **[Green]** [US2] createGroupがgroupオブジェクトにorganizationIdを追加するよう更新
+- [x] T132 **[Green]** [US2] createGroupがsaveGroups(organizationId, groups)を呼び出すよう更新
+- [x] T133 **[Green]** [US2] テストを実行してT129が通ることを確認
+- [x] T134 **[Refactor]** [US2] group-service.tsをクリーンアップ
 
 #### テストケース2: getGroupsByOrganizationが正しくフィルタ
 
-- [ ] T135 **[Red]** [US2] テスト記述: getGroupsByOrganizationが団体のグループのみを返す（__tests__/lib/group-service.test.ts）
-- [ ] T136 **[Green]** [US2] lib/group-service.tsのgetGroupsがorganizationIdパラメータを受け取るよう更新
-- [ ] T137 **[Green]** [US2] getGroupsがloadGroups(organizationId)を呼び出すよう更新
-- [ ] T138 **[Green]** [US2] テストを実行してT135が通ることを確認
-- [ ] T139 **[Refactor]** [US2] getGroups実装を最適化
+- [x] T135 **[Red]** [US2] テスト記述: getGroupsByOrganizationが団体のグループのみを返す（__tests__/lib/group-service.test.ts）
+- [x] T136 **[Green]** [US2] lib/group-service.tsのgetGroupsがorganizationIdパラメータを受け取るよう更新
+- [x] T137 **[Green]** [US2] getGroupsがloadGroups(organizationId)を呼び出すよう更新
+- [x] T138 **[Green]** [US2] テストを実行してT135が通ることを確認
+- [x] T139 **[Refactor]** [US2] getGroups実装を最適化
 
 #### テストケース3: updateGroupとdeleteGroupがorganizationIdを使用
 
-- [ ] T140 **[Red]** [US2] テスト記述: updateGroup/deleteGroupがorganizationIdで動作（__tests__/lib/group-service.test.ts）
-- [ ] T141 **[Green]** [US2] lib/group-service.tsのupdateGroupとdeleteGroupがorganizationIdを受け取るよう更新
-- [ ] T142 **[Green]** [US2] テストを実行してT140が通ることを確認
-- [ ] T143 **[Refactor]** [US2] group-service.ts更新を最終化
+- [x] T140 **[Red]** [US2] テスト記述: updateGroup/deleteGroupがorganizationIdで動作（__tests__/lib/group-service.test.ts）
+- [x] T141 **[Green]** [US2] lib/group-service.tsのupdateGroupとdeleteGroupがorganizationIdを受け取るよう更新
+- [x] T142 **[Green]** [US2] テストを実行してT140が通ることを確認
+- [x] T143 **[Refactor]** [US2] group-service.ts更新を最終化
 
 #### テストケース4: event-serviceがorganizationIdを受け取り使用
 
-- [ ] T144 **[Red]** [US2] テスト記述: createEventDateがorganizationIdを要求（__tests__/lib/event-service.test.ts）
-- [ ] T145 **[Green]** [US2] lib/event-service.tsのすべてのevent-service関数がorganizationIdを受け取るよう更新
-- [ ] T146 **[Green]** [US2] すべてのevent-service関数が団体スコープストレージを使用するよう更新
-- [ ] T147 **[Green]** [US2] テストを実行してT144が通ることを確認
-- [ ] T148 **[Refactor]** [US2] event-service.tsをクリーンアップ
+- [x] T144 **[Red]** [US2] テスト記述: createEventDateがorganizationIdを要求（__tests__/lib/event-service.test.ts）
+- [x] T145 **[Green]** [US2] lib/event-service.tsのすべてのevent-service関数がorganizationIdを受け取るよう更新
+- [x] T146 **[Green]** [US2] すべてのevent-service関数が団体スコープストレージを使用するよう更新
+- [x] T147 **[Green]** [US2] テストを実行してT144が通ることを確認
+- [x] T148 **[Refactor]** [US2] event-service.tsをクリーンアップ
 
 #### テストケース5: member-serviceがorganizationIdを受け取り使用
 
-- [ ] T149 **[Red]** [US2] テスト記述: createMemberがorganizationIdを要求（__tests__/lib/member-service.test.ts）
-- [ ] T150 **[Green]** [US2] lib/member-service.tsのすべてのmember-service関数がorganizationIdを受け取るよう更新
-- [ ] T151 **[Green]** [US2] すべてのmember-service関数が団体スコープストレージを使用するよう更新
-- [ ] T152 **[Green]** [US2] テストを実行してT149が通ることを確認
-- [ ] T153 **[Refactor]** [US2] member-service.tsをクリーンアップ
+- [x] T149 **[Red]** [US2] テスト記述: createMemberがorganizationIdを要求（__tests__/lib/member-service.test.ts）
+- [x] T150 **[Green]** [US2] lib/member-service.tsのすべてのmember-service関数がorganizationIdを受け取るよう更新
+- [x] T151 **[Green]** [US2] すべてのmember-service関数が団体スコープストレージを使用するよう更新
+- [x] T152 **[Green]** [US2] テストを実行してT149が通ることを確認
+- [x] T153 **[Refactor]** [US2] member-service.tsをクリーンアップ
 
 #### テストケース6: attendance-serviceがorganizationIdを受け取り使用
 
-- [ ] T154 **[Red]** [US2] テスト記述: registerAttendanceがorganizationIdを要求（__tests__/lib/attendance-service.test.ts）
-- [ ] T155 **[Green]** [US2] lib/attendance-service.tsのすべてのattendance-service関数がorganizationIdを受け取るよう更新
-- [ ] T156 **[Green]** [US2] すべてのattendance-service関数が団体スコープストレージを使用するよう更新
-- [ ] T157 **[Green]** [US2] テストを実行してT154が通ることを確認
-- [ ] T158 **[Refactor]** [US2] attendance-service.tsをクリーンアップ
+- [x] T154 **[Red]** [US2] テスト記述: registerAttendanceがorganizationIdを要求（__tests__/lib/attendance-service.test.ts）
+- [x] T155 **[Green]** [US2] lib/attendance-service.tsのすべてのattendance-service関数がorganizationIdを受け取るよう更新
+- [x] T156 **[Green]** [US2] すべてのattendance-service関数が団体スコープストレージを使用するよう更新
+- [x] T157 **[Green]** [US2] テストを実行してT154が通ることを確認
+- [x] T158 **[Refactor]** [US2] attendance-service.tsをクリーンアップ
 
 ### コンポーネント更新（organizationId prop追加）
 
 #### テストケース1: bulk-registerコンポーネントがorganizationIdを使用
 
-- [ ] T159 **[Red]** [US2] テスト記述: MemberSelectorがorganizationIdを受け取り使用（__tests__/components/bulk-register/member-selector.test.tsx）
-- [ ] T160 **[Green]** [US2] components/bulk-register/member-selector.tsxのMemberSelectorにorganizationId propを追加
-- [ ] T161 **[Green]** [US2] MemberSelectorがサービス層にorganizationIdを渡すよう更新
-- [ ] T162 **[Green]** [US2] テストを実行してT159が通ることを確認
-- [ ] T163 **[Refactor]** [US2] MemberSelectorコンポーネントをクリーンアップ
+- [x] T159 **[Red]** [US2] テスト記述: MemberSelectorがorganizationIdを受け取り使用（__tests__/components/bulk-register/member-selector.test.tsx）
+- [x] T160 **[Green]** [US2] components/bulk-register/member-selector.tsxのMemberSelectorにorganizationId propを追加
+- [x] T161 **[Green]** [US2] MemberSelectorがサービス層にorganizationIdを渡すよう更新
+- [x] T162 **[Green]** [US2] テストを実行してT159が通ることを確認
+- [x] T163 **[Refactor]** [US2] MemberSelectorコンポーネントをクリーンアップ
 
 #### テストケース2: EventListがorganizationIdを使用
 
-- [ ] T164 **[Red]** [US2] テスト記述: EventListがorganizationIdを受け取り使用（__tests__/components/bulk-register/event-list.test.tsx）
-- [ ] T165 **[Green]** [US2] components/bulk-register/event-list.tsxのEventListにorganizationId propを追加
-- [ ] T166 **[Green]** [US2] EventListがサービス層にorganizationIdを渡すよう更新
-- [ ] T167 **[Green]** [US2] テストを実行してT164が通ることを確認
-- [ ] T168 **[Refactor]** [US2] EventListコンポーネントをクリーンアップ
+- [x] T164 **[Red]** [US2] テスト記述: EventListがorganizationIdを受け取り使用（__tests__/components/bulk-register/event-list.test.tsx）
+- [x] T165 **[Green]** [US2] components/bulk-register/event-list.tsxのEventListにorganizationId propを追加
+- [x] T166 **[Green]** [US2] EventListがサービス層にorganizationIdを渡すよう更新
+- [x] T167 **[Green]** [US2] テストを実行してT164が通ることを確認
+- [x] T168 **[Refactor]** [US2] EventListコンポーネントをクリーンアップ
 
 ### ページ更新（useOrganization使用）
 
 #### テストケース1: 管理ページが団体コンテキストを使用
 
-- [ ] T169 **[Red]** [US2] テスト記述: グループページが現在の団体を使用（__tests__/app/[org]/admin/groups/page.test.tsx）
-- [ ] T170 **[Green]** [US2] app/[org]/admin/groups/page.tsxをuseOrganizationフック使用に更新
-- [ ] T171 **[Green]** [US2] グループページがサービス関数にorganization.idを渡すよう更新
-- [ ] T172 **[Green]** [US2] テストを実行してT169が通ることを確認
-- [ ] T173 **[Refactor]** [US2] グループページをクリーンアップ
+- [x] T169 **[Red]** [US2] テスト記述: グループページが現在の団体を使用（__tests__/app/[org]/admin/groups/page.test.tsx）
+- [x] T170 **[Green]** [US2] app/[org]/admin/groups/page.tsxをuseOrganizationフック使用に更新
+- [x] T171 **[Green]** [US2] グループページがサービス関数にorganization.idを渡すよう更新
+- [x] T172 **[Green]** [US2] テストを実行してT169が通ることを確認
+- [x] T173 **[Refactor]** [US2] グループページをクリーンアップ
 
 #### テストケース2: イベントページが団体コンテキストを使用
 
-- [ ] T174 **[Red]** [US2] テスト記述: イベント管理ページが現在の団体を使用（__tests__/app/[org]/admin/events/page.test.tsx）
-- [ ] T175 **[Green]** [US2] app/[org]/admin/events/page.tsxをorganization.id使用に更新
-- [ ] T176 **[Green]** [US2] テストを実行してT174が通ることを確認
-- [ ] T177 **[Refactor]** [US2] イベント管理ページをクリーンアップ
+- [x] T174 **[Red]** [US2] テスト記述: イベント管理ページが現在の団体を使用（__tests__/app/[org]/admin/events/page.test.tsx）
+- [x] T175 **[Green]** [US2] app/[org]/admin/events/page.tsxをorganization.id使用に更新
+- [x] T176 **[Green]** [US2] テストを実行してT174が通ることを確認
+- [x] T177 **[Refactor]** [US2] イベント管理ページをクリーンアップ
 
 #### テストケース3: イベント詳細ページが団体コンテキストを使用
 
-- [ ] T178 **[Red]** [US2] テスト記述: イベント詳細ページが現在の団体を使用（__tests__/app/[org]/events/[id]/page.test.tsx）
-- [ ] T179 **[Green]** [US2] app/[org]/events/[id]/page.tsxをorganization.id使用に更新
-- [ ] T180 **[Green]** [US2] テストを実行してT178が通ることを確認
-- [ ] T181 **[Refactor]** [US2] イベント詳細ページをクリーンアップ
+- [x] T178 **[Red]** [US2] テスト記述: イベント詳細ページが現在の団体を使用（__tests__/app/[org]/events/[id]/page.test.tsx）
+- [x] T179 **[Green]** [US2] app/[org]/events/[id]/page.tsxをorganization.id使用に更新
+- [x] T180 **[Green]** [US2] テストを実行してT178が通ることを確認
+- [x] T181 **[Refactor]** [US2] イベント詳細ページをクリーンアップ
 
 #### テストケース4: My-registerページが団体コンテキストを使用
 
-- [ ] T182 **[Red]** [US2] テスト記述: My-registerページが現在の団体を使用（__tests__/app/[org]/my-register/page.test.tsx）
-- [ ] T183 **[Green]** [US2] app/[org]/my-register/page.tsxをコンポーネントにorganization.idを渡すよう更新
-- [ ] T184 **[Green]** [US2] テストを実行してT182が通ることを確認
-- [ ] T185 **[Refactor]** [US2] my-registerページをクリーンアップ
+- [x] T182 **[Red]** [US2] テスト記述: My-registerページが現在の団体を使用（__tests__/app/[org]/my-register/page.test.tsx）
+- [x] T183 **[Green]** [US2] app/[org]/my-register/page.tsxをコンポーネントにorganization.idを渡すよう更新
+- [x] T184 **[Green]** [US2] テストを実行してT182が通ることを確認
+- [x] T185 **[Refactor]** [US2] my-registerページをクリーンアップ
 
 ### データ分離の検証
 
 #### テストケース1: 複数団体のデータが分離されている
 
-- [ ] T186 **[Red]** [US2] 統合テスト記述: 2団体作成、各々にデータ追加、分離を検証（__tests__/integration/data-isolation.test.ts）
-- [ ] T187 **[Green]** [US2] 統合テストを実行してデータ分離が動作することを検証
-- [ ] T188 **[Refactor]** [US2] データ分離エッジケーステストを追加
+- [x] T186 **[Red]** [US2] 統合テスト記述: 2団体作成、各々にデータ追加、分離を検証（__tests__/integration/data-isolation.test.ts）
+- [x] T187 **[Green]** [US2] 統合テストを実行してデータ分離が動作することを検証
+- [x] T188 **[Refactor]** [US2] データ分離エッジケーステストを追加
 
 **チェックポイント**: ユーザーストーリー2完了 - 団体間でデータが完全に分離
 
