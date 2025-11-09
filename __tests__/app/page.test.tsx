@@ -192,4 +192,40 @@ describe('Home (Landing) Page', () => {
       });
     });
   });
+
+  describe('Privacy Protection', () => {
+    it('should not display list of organizations for privacy', () => {
+      const mockOrganizations: Organization[] = [
+        { id: 'org1', name: '団体1', description: '', createdAt: '2025-01-01T00:00:00.000Z' },
+        { id: 'org2', name: '団体2', description: '', createdAt: '2025-01-01T00:00:00.000Z' },
+      ];
+
+      // getAllOrganizationsをモックしてデータが存在することを示す
+      const mockGetAllOrganizations = jest.spyOn(organizationService, 'getAllOrganizations');
+      mockGetAllOrganizations.mockReturnValue(mockOrganizations);
+
+      render(<Home />);
+
+      // 団体名が表示されていないことを確認（プライバシー保護）
+      expect(screen.queryByText('団体1')).not.toBeInTheDocument();
+      expect(screen.queryByText('団体2')).not.toBeInTheDocument();
+
+      // 団体一覧のヘッダーも表示されていないことを確認
+      expect(screen.queryByText(/既存の団体/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/団体一覧/)).not.toBeInTheDocument();
+
+      mockGetAllOrganizations.mockRestore();
+    });
+
+    it('should not call getAllOrganizations to prevent data leakage', () => {
+      const mockGetAllOrganizations = jest.spyOn(organizationService, 'getAllOrganizations');
+
+      render(<Home />);
+
+      // getAllOrganizationsが呼ばれていないことを確認
+      expect(mockGetAllOrganizations).not.toHaveBeenCalled();
+
+      mockGetAllOrganizations.mockRestore();
+    });
+  });
 });

@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, useMemo, type ReactNode } from 'react';
+import { notFound } from 'next/navigation';
 import type { Organization } from '@/types';
 import { getOrganizationById } from '@/lib/organization-service';
 
@@ -42,7 +43,8 @@ export function OrganizationProvider({ organizationId, children }: OrganizationP
   }
 
   if (!value) {
-    throw new Error(`団体が見つかりません: ${organizationId}`);
+    // 団体が見つからない場合は404ページを表示
+    notFound();
   }
 
   return (
