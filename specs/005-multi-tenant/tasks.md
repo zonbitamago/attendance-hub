@@ -27,10 +27,10 @@
 
 **目的**: プロジェクトの初期化と基本構造
 
-- [ ] T001 nanoid依存関係をインストール（`npm install nanoid`）
-- [ ] T002 tsconfig.jsonでTypeScript strict modeが有効化されていることを確認
-- [ ] T003 Reactコンテキスト用のcontexts/ディレクトリを作成
-- [ ] T004 ブランチ005-multi-tenantを作成し、gitステータスがクリーンであることを確認
+- [x] T001 nanoid依存関係をインストール（`npm install nanoid`）
+- [x] T002 tsconfig.jsonでTypeScript strict modeが有効化されていることを確認
+- [x] T003 Reactコンテキスト用のcontexts/ディレクトリを作成
+- [x] T004 ブランチ005-multi-tenantを作成し、gitステータスがクリーンであることを確認
 
 ---
 
@@ -42,12 +42,12 @@
 
 ### データモデル更新（型定義）
 
-- [ ] T005 [P] types/index.tsにOrganizationインターフェースを追加（id, name, description?, createdAt）
-- [ ] T006 [P] types/index.tsのEventDateインターフェースにorganizationIdフィールドを追加
-- [ ] T007 [P] types/index.tsのGroupインターフェースにorganizationIdフィールドを追加
-- [ ] T008 [P] types/index.tsのMemberインターフェースにorganizationIdフィールドを追加
-- [ ] T009 [P] types/index.tsのAttendanceインターフェースにorganizationIdフィールドを追加
-- [ ] T010 [P] types/index.tsにCreateOrganizationInputとUpdateOrganizationInput型を追加
+- [x] T005 [P] types/index.tsにOrganizationインターフェースを追加（id, name, description?, createdAt）
+- [x] T006 [P] types/index.tsのEventDateインターフェースにorganizationIdフィールドを追加
+- [x] T007 [P] types/index.tsのGroupインターフェースにorganizationIdフィールドを追加
+- [x] T008 [P] types/index.tsのMemberインターフェースにorganizationIdフィールドを追加
+- [x] T009 [P] types/index.tsのAttendanceインターフェースにorganizationIdフィールドを追加
+- [x] T010 [P] types/index.tsにCreateOrganizationInputとUpdateOrganizationInput型を追加
 
 ### バリデーションスキーマ更新
 
