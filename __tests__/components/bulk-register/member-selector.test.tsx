@@ -33,7 +33,7 @@ describe('MemberSelector', () => {
     it('グループ一覧を表示する', () => {
       const onSelect = jest.fn();
 
-      render(<MemberSelector onSelect={onSelect} />);
+      render(<MemberSelector onSelect={onSelect} organizationId="test-org-id" />);
 
       // グループ選択のラベルが表示される
       expect(screen.getByText('グループを選択')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('MemberSelector', () => {
       const user = userEvent.setup();
       const onSelect = jest.fn();
 
-      render(<MemberSelector onSelect={onSelect} />);
+      render(<MemberSelector onSelect={onSelect} organizationId="test-org-id" />);
 
       const groupSelect = screen.getByRole('combobox', { name: /グループ/i });
 
@@ -66,7 +66,7 @@ describe('MemberSelector', () => {
       const user = userEvent.setup();
       const onSelect = jest.fn();
 
-      render(<MemberSelector onSelect={onSelect} />);
+      render(<MemberSelector onSelect={onSelect} organizationId="test-org-id" />);
 
       const groupSelect = screen.getByRole('combobox', { name: /グループ/i });
 
@@ -87,7 +87,7 @@ describe('MemberSelector', () => {
       const user = userEvent.setup();
       const onSelect = jest.fn();
 
-      render(<MemberSelector onSelect={onSelect} />);
+      render(<MemberSelector onSelect={onSelect} organizationId="test-org-id" />);
 
       // グループを選択
       const groupSelect = screen.getByRole('combobox', { name: /グループ/i });
@@ -110,7 +110,7 @@ describe('MemberSelector', () => {
       const user = userEvent.setup();
       const onSelect = jest.fn();
 
-      render(<MemberSelector onSelect={onSelect} />);
+      render(<MemberSelector onSelect={onSelect} organizationId="test-org-id" />);
 
       // グループを選択
       const groupSelect = screen.getByRole('combobox', { name: /グループ/i });
@@ -130,7 +130,7 @@ describe('MemberSelector', () => {
       const user = userEvent.setup();
       const onSelect = jest.fn();
 
-      render(<MemberSelector onSelect={onSelect} />);
+      render(<MemberSelector onSelect={onSelect} organizationId="test-org-id" />);
 
       // グループを選択
       const groupSelect = screen.getByRole('combobox', { name: /グループ/i });

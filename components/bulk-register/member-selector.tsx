@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { loadGroups, loadMembers } from '@/lib/storage';
-import { DEFAULT_ORGANIZATION_ID } from '@/lib/constants';
 import type { Group, Member } from '@/types';
 
 export interface MemberSelection {
@@ -13,10 +12,10 @@ export interface MemberSelection {
 
 interface MemberSelectorProps {
   onSelect: (selection: MemberSelection) => void;
-  organizationId?: string;
+  organizationId: string;
 }
 
-export function MemberSelector({ onSelect, organizationId = DEFAULT_ORGANIZATION_ID }: MemberSelectorProps) {
+export function MemberSelector({ onSelect, organizationId }: MemberSelectorProps) {
   const [groups, setGroups] = useState<Group[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<string>('');

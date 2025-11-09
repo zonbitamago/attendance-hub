@@ -53,6 +53,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -74,6 +75,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -93,6 +95,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -117,6 +120,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={['event-1', 'event-3']}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -159,6 +163,7 @@ describe('EventList', () => {
           memberId="member-1"
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -190,6 +195,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -210,6 +216,7 @@ describe('EventList', () => {
           onSelectionChange={onSelectionChange}
           eventStatuses={{}}
           onStatusChange={onStatusChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -230,6 +237,7 @@ describe('EventList', () => {
           onSelectionChange={onSelectionChange}
           eventStatuses={{ 'event-1': '◯', 'event-2': '△' }}
           onStatusChange={onStatusChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -252,6 +260,7 @@ describe('EventList', () => {
           onSelectionChange={onSelectionChange}
           eventStatuses={{ 'event-1': '◯' }}
           onStatusChange={onStatusChange}
+          organizationId="test-org-id"
         />
       );
 

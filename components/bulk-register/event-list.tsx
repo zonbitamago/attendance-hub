@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { loadEventDates, loadAttendances } from '@/lib/storage';
-import { DEFAULT_ORGANIZATION_ID } from '@/lib/constants';
 import type { EventDate, Attendance, AttendanceStatus } from '@/types';
 
 interface EventListProps {
@@ -11,7 +10,7 @@ interface EventListProps {
   onSelectionChange: (selectedEventIds: string[]) => void;
   eventStatuses?: Record<string, AttendanceStatus>;
   onStatusChange?: (eventId: string, status: AttendanceStatus) => void;
-  organizationId?: string;
+  organizationId: string;
 }
 
 export function EventList({
@@ -20,7 +19,7 @@ export function EventList({
   onSelectionChange,
   eventStatuses = {},
   onStatusChange,
-  organizationId = DEFAULT_ORGANIZATION_ID
+  organizationId
 }: EventListProps) {
   const [eventDates, setEventDates] = useState<EventDate[]>([]);
   const [attendances, setAttendances] = useState<Attendance[]>([]);
