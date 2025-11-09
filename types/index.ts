@@ -1,9 +1,30 @@
 // 出欠状況の型
 export type AttendanceStatus = '◯' | '△' | '✗';
 
+// 団体（Organization）
+export interface Organization {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+}
+
+// 団体作成の入力型
+export interface CreateOrganizationInput {
+  name: string;
+  description?: string;
+}
+
+// 団体更新の入力型
+export interface UpdateOrganizationInput {
+  name?: string;
+  description?: string;
+}
+
 // イベント日付
 export interface EventDate {
   id: string;
+  organizationId: string;
   date: string; // YYYY-MM-DD形式
   title: string; // "練習", "本番"等
   location?: string; // 場所（任意）
@@ -13,6 +34,7 @@ export interface EventDate {
 // グループ（汎用: 楽器パート、部署、クラス等）
 export interface Group {
   id: string;
+  organizationId: string;
   name: string; // "打", "Cla", "営業部"等
   order: number; // 表示順
   color?: string; // UI表示用の色（任意）
@@ -22,6 +44,7 @@ export interface Group {
 // メンバー（グループ所属者）
 export interface Member {
   id: string;
+  organizationId: string;
   groupId: string;
   name: string;
   createdAt: string;
@@ -30,6 +53,7 @@ export interface Member {
 // 出欠登録
 export interface Attendance {
   id: string;
+  organizationId: string;
   eventDateId: string;
   memberId: string;
   status: AttendanceStatus;

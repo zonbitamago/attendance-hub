@@ -29,7 +29,7 @@ describe('Group Service', () => {
         color: '#FF0000',
       };
 
-      const group = createGroup(input);
+      const group = createGroup('test-org-id', input);
 
       expect(group).toMatchObject({
         name: '打',
@@ -38,7 +38,7 @@ describe('Group Service', () => {
       });
       expect(group.id).toBeDefined();
       expect(group.createdAt).toBeDefined();
-      expect(mockSaveGroups).toHaveBeenCalledWith([group]);
+      expect(mockSaveGroups).toHaveBeenCalledWith('test-org-id', [group]);
     });
 
     it('色なしでグループを作成できる', () => {
@@ -47,7 +47,7 @@ describe('Group Service', () => {
         order: 1,
       };
 
-      const group = createGroup(input);
+      const group = createGroup('test-org-id', input);
 
       expect(group.name).toBe('Cla');
       expect(group.order).toBe(1);
@@ -60,7 +60,7 @@ describe('Group Service', () => {
         order: 0,
       };
 
-      expect(() => createGroup(input)).toThrow();
+      expect(() => createGroup('test-org-id', input)).toThrow();
     });
 
     it('名前が長すぎる場合はエラーをスローする', () => {
@@ -69,7 +69,7 @@ describe('Group Service', () => {
         order: 0,
       };
 
-      expect(() => createGroup(input)).toThrow();
+      expect(() => createGroup('test-org-id', input)).toThrow();
     });
 
     it('無効な色フォーマットの場合はエラーをスローする', () => {
@@ -79,7 +79,7 @@ describe('Group Service', () => {
         color: 'red', // Invalid format
       };
 
-      expect(() => createGroup(input)).toThrow();
+      expect(() => createGroup('test-org-id', input)).toThrow();
     });
 
     it('ストレージが失敗した場合はエラーをスローする', () => {
@@ -90,7 +90,7 @@ describe('Group Service', () => {
         order: 0,
       };
 
-      expect(() => createGroup(input)).toThrow();
+      expect(() => createGroup('test-org-id', input)).toThrow();
     });
   });
 
@@ -99,18 +99,21 @@ describe('Group Service', () => {
       const mockGroups: Group[] = [
         {
           id: '2',
+          organizationId: 'test-org-id',
           name: 'Sax',
           order: 2,
           createdAt: '2025-01-02T00:00:00.000Z',
         },
         {
           id: '1',
+          organizationId: 'test-org-id',
           name: '打',
           order: 0,
           createdAt: '2025-01-01T00:00:00.000Z',
         },
         {
           id: '3',
+          organizationId: 'test-org-id',
           name: 'Cla',
           order: 1,
           createdAt: '2025-01-03T00:00:00.000Z',
@@ -119,7 +122,7 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue(mockGroups);
 
-      const groups = getAllGroups();
+      const groups = getAllGroups('test-org-id');
 
       expect(groups).toHaveLength(3);
       expect(groups[0].name).toBe('打'); // order: 0
@@ -131,7 +134,7 @@ describe('Group Service', () => {
     it('グループが存在しない場合は空配列を返す', () => {
       mockLoadGroups.mockReturnValue([]);
 
-      const groups = getAllGroups();
+      const groups = getAllGroups('test-org-id');
 
       expect(groups).toEqual([]);
     });
@@ -142,12 +145,14 @@ describe('Group Service', () => {
       const mockGroups: Group[] = [
         {
           id: '1',
+          organizationId: 'test-org-id',
           name: '打',
           order: 0,
           createdAt: '2025-01-01T00:00:00.000Z',
         },
         {
           id: '2',
+          organizationId: 'test-org-id',
           name: 'Cla',
           order: 1,
           createdAt: '2025-01-02T00:00:00.000Z',
@@ -156,7 +161,7 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue(mockGroups);
 
-      const group = getGroupById('1');
+      const group = getGroupById('test-org-id', '1');
 
       expect(group).toEqual(mockGroups[0]);
     });
@@ -164,7 +169,7 @@ describe('Group Service', () => {
     it('グループが見つからない場合はnullを返す', () => {
       mockLoadGroups.mockReturnValue([]);
 
-      const group = getGroupById('nonexistent');
+      const group = getGroupById('test-org-id', 'nonexistent');
 
       expect(group).toBeNull();
     });
@@ -174,6 +179,7 @@ describe('Group Service', () => {
     it('既存のグループを更新できる', () => {
       const existingGroup: Group = {
         id: '1',
+        organizationId: 'test-org-id',
         name: 'Old Name',
         order: 0,
         createdAt: '2025-01-01T00:00:00.000Z',
@@ -181,7 +187,7 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue([existingGroup]);
 
-      const updated = updateGroup('1', {
+      const updated = updateGroup('test-org-id', '1', {
         name: 'New Name',
         order: 1,
         color: '#00FF00',
@@ -201,13 +207,14 @@ describe('Group Service', () => {
       mockLoadGroups.mockReturnValue([]);
 
       expect(() =>
-        updateGroup('nonexistent', { name: 'New Name', order: 0 })
+        updateGroup('test-org-id', 'nonexistent', { name: 'New Name', order: 0 })
       ).toThrow();
     });
 
     it('無効な更新データの場合はエラーをスローする', () => {
       const existingGroup: Group = {
         id: '1',
+        organizationId: 'test-org-id',
         name: 'Old Name',
         order: 0,
         createdAt: '2025-01-01T00:00:00.000Z',
@@ -216,7 +223,7 @@ describe('Group Service', () => {
       mockLoadGroups.mockReturnValue([existingGroup]);
 
       expect(() =>
-        updateGroup('1', { name: '', order: 0 })
+        updateGroup('test-org-id', '1', { name: '', order: 0 })
       ).toThrow();
     });
   });
@@ -226,12 +233,14 @@ describe('Group Service', () => {
       const groups: Group[] = [
         {
           id: '1',
+          organizationId: 'test-org-id',
           name: '打',
           order: 0,
           createdAt: '2025-01-01T00:00:00.000Z',
         },
         {
           id: '2',
+          organizationId: 'test-org-id',
           name: 'Cla',
           order: 1,
           createdAt: '2025-01-02T00:00:00.000Z',
@@ -240,16 +249,16 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue(groups);
 
-      const result = deleteGroup('1');
+      const result = deleteGroup('test-org-id', '1');
 
       expect(result).toBe(true);
-      expect(mockSaveGroups).toHaveBeenCalledWith([groups[1]]);
+      expect(mockSaveGroups).toHaveBeenCalledWith('test-org-id', [groups[1]]);
     });
 
     it('グループが見つからない場合はfalseを返す', () => {
       mockLoadGroups.mockReturnValue([]);
 
-      const result = deleteGroup('nonexistent');
+      const result = deleteGroup('test-org-id', 'nonexistent');
 
       expect(result).toBe(false);
       expect(mockSaveGroups).not.toHaveBeenCalled();

@@ -14,6 +14,7 @@ describe('EventList', () => {
   const mockEventDates: EventDate[] = [
     {
       id: 'event-1',
+      organizationId: 'test-org-id',
       date: '2025-01-15',
       title: '定期演奏会',
       location: '市民ホール',
@@ -21,6 +22,7 @@ describe('EventList', () => {
     },
     {
       id: 'event-2',
+      organizationId: 'test-org-id',
       date: '2025-01-22',
       title: '通常練習',
       location: '練習場A',
@@ -28,6 +30,7 @@ describe('EventList', () => {
     },
     {
       id: 'event-3',
+      organizationId: 'test-org-id',
       date: '2025-01-29',
       title: 'アンサンブル練習',
       location: '練習場B',
@@ -50,6 +53,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -71,6 +75,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -90,6 +95,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -114,6 +120,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={['event-1', 'event-3']}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -131,6 +138,7 @@ describe('EventList', () => {
       const mockAttendances: Attendance[] = [
         {
           id: 'att-1',
+          organizationId: 'test-org-id',
           eventDateId: 'event-1',
           memberId: 'member-1',
           status: '◯',
@@ -138,6 +146,7 @@ describe('EventList', () => {
         },
         {
           id: 'att-2',
+          organizationId: 'test-org-id',
           eventDateId: 'event-3',
           memberId: 'member-1',
           status: '✗',
@@ -154,6 +163,7 @@ describe('EventList', () => {
           memberId="member-1"
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -168,6 +178,7 @@ describe('EventList', () => {
       const mockAttendances: Attendance[] = [
         {
           id: 'att-1',
+          organizationId: 'test-org-id',
           eventDateId: 'event-1',
           memberId: 'member-1',
           status: '◯',
@@ -184,6 +195,7 @@ describe('EventList', () => {
           memberId={null}
           selectedEvents={[]}
           onSelectionChange={onSelectionChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -204,6 +216,7 @@ describe('EventList', () => {
           onSelectionChange={onSelectionChange}
           eventStatuses={{}}
           onStatusChange={onStatusChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -224,6 +237,7 @@ describe('EventList', () => {
           onSelectionChange={onSelectionChange}
           eventStatuses={{ 'event-1': '◯', 'event-2': '△' }}
           onStatusChange={onStatusChange}
+          organizationId="test-org-id"
         />
       );
 
@@ -246,6 +260,7 @@ describe('EventList', () => {
           onSelectionChange={onSelectionChange}
           eventStatuses={{ 'event-1': '◯' }}
           onStatusChange={onStatusChange}
+          organizationId="test-org-id"
         />
       );
 

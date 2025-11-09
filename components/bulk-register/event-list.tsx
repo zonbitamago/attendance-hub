@@ -10,6 +10,7 @@ interface EventListProps {
   onSelectionChange: (selectedEventIds: string[]) => void;
   eventStatuses?: Record<string, AttendanceStatus>;
   onStatusChange?: (eventId: string, status: AttendanceStatus) => void;
+  organizationId: string;
 }
 
 export function EventList({
@@ -17,16 +18,17 @@ export function EventList({
   selectedEvents,
   onSelectionChange,
   eventStatuses = {},
-  onStatusChange
+  onStatusChange,
+  organizationId
 }: EventListProps) {
   const [eventDates, setEventDates] = useState<EventDate[]>([]);
   const [attendances, setAttendances] = useState<Attendance[]>([]);
 
   // イベントと出欠情報を読み込み
   useEffect(() => {
-    setEventDates(loadEventDates());
-    setAttendances(loadAttendances());
-  }, []);
+    setEventDates(loadEventDates(organizationId));
+    setAttendances(loadAttendances(organizationId));
+  }, [organizationId]);
 
   // チェックボックスの変更処理
   const handleCheckboxChange = (eventId: string, isChecked: boolean) => {

@@ -1,214 +1,231 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
-import { getAllEventDates } from '@/lib/event-service';
-import { calculateEventTotalSummary } from '@/lib/attendance-service';
+import * as organizationService from '@/lib/organization-service';
+import * as migration from '@/lib/migration';
+import type { Organization } from '@/types';
 
-// Mockモジュール
-jest.mock('@/lib/event-service');
-jest.mock('@/lib/attendance-service');
+// モック
+jest.mock('@/lib/organization-service');
+jest.mock('@/lib/migration');
 
-const mockGetAllEventDates = getAllEventDates as jest.MockedFunction<typeof getAllEventDates>;
-const mockCalculateEventTotalSummary = calculateEventTotalSummary as jest.MockedFunction<
-  typeof calculateEventTotalSummary
+const mockCreateOrganization = organizationService.createOrganization as jest.MockedFunction<
+  typeof organizationService.createOrganization
+>;
+const mockMigrateToMultiTenant = migration.migrateToMultiTenant as jest.MockedFunction<
+  typeof migration.migrateToMultiTenant
 >;
 
-describe('Home（イベント一覧ページ）', () => {
+// useRouterをモック
+const mockPush = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: mockPush,
+  })),
+}));
+
+describe('Home (Landing) Page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // localStorageをクリア
+    localStorage.clear();
+    // デフォルトではマイグレーションなし
+    mockMigrateToMultiTenant.mockReturnValue({ migrated: false });
   });
 
-  describe('イベント一覧の出欠人数表示', () => {
-    it('一覧で各イベントの出欠人数を表示できる', async () => {
-      // Arrange: モックデータの準備
-      const mockEvents = [
-        {
-          id: 'event1',
-          date: '2025-01-15',
-          title: '練習',
-          location: '音楽室',
-          createdAt: '2025-01-01T00:00:00.000Z',
-        },
-        {
-          id: 'event2',
-          date: '2025-01-20',
-          title: '本番',
-          location: 'ホール',
-          createdAt: '2025-01-01T00:00:00.000Z',
-        },
-      ];
+  it('should display landing content with description and create button', () => {
+    render(<Home />);
 
-      mockGetAllEventDates.mockReturnValue(mockEvents);
+    // ページタイトルの確認
+    expect(screen.getByText('Attendance Hub')).toBeInTheDocument();
 
-      // event1の出欠集計: ◯ 5人 △ 3人 ✗ 2人（計10人）
-      mockCalculateEventTotalSummary.mockImplementation((eventDateId: string) => {
-        if (eventDateId === 'event1') {
-          return {
-            totalAttending: 5,
-            totalMaybe: 3,
-            totalNotAttending: 2,
-            totalResponded: 10,
-          };
-        }
-        // event2の出欠集計: ◯ 8人 △ 1人 ✗ 1人（計10人）
-        if (eventDateId === 'event2') {
-          return {
-            totalAttending: 8,
-            totalMaybe: 1,
-            totalNotAttending: 1,
-            totalResponded: 10,
-          };
-        }
-        return {
-          totalAttending: 0,
-          totalMaybe: 0,
-          totalNotAttending: 0,
-          totalResponded: 0,
-        };
-      });
+    // 説明文の確認
+    expect(screen.getByText(/新しい団体を作成/)).toBeInTheDocument();
 
-      // Act: コンポーネントをレンダリング
+    // 作成ボタンの確認
+    expect(screen.getByRole('button', { name: /団体を作成/ })).toBeInTheDocument();
+  });
+
+  it('should create organization on form submission', () => {
+    const mockOrganization: Organization = {
+      id: 'test-org-123',
+      name: 'テスト団体',
+      description: 'テスト説明',
+      createdAt: '2025-01-01T00:00:00.000Z',
+    };
+
+    mockCreateOrganization.mockReturnValue(mockOrganization);
+
+    render(<Home />);
+
+    // フォームに入力
+    const nameInput = screen.getByLabelText('団体名');
+    const descInput = screen.getByLabelText(/説明/);
+    fireEvent.change(nameInput, { target: { value: 'テスト団体' } });
+    fireEvent.change(descInput, { target: { value: 'テスト説明' } });
+
+    // 作成ボタンをクリック
+    const createButton = screen.getByRole('button', { name: /団体を作成/ });
+    fireEvent.click(createButton);
+
+    // createOrganizationが呼ばれたことを確認
+    expect(mockCreateOrganization).toHaveBeenCalledWith({
+      name: 'テスト団体',
+      description: 'テスト説明',
+    });
+  });
+
+  it('should display URL for bookmarking after organization creation', () => {
+    const mockOrganization: Organization = {
+      id: 'test-org-456',
+      name: '新しい団体',
+      description: '',
+      createdAt: '2025-01-01T00:00:00.000Z',
+    };
+
+    mockCreateOrganization.mockReturnValue(mockOrganization);
+
+    // window.location.originをモック
+    delete (window as any).location;
+    (window as any).location = { origin: 'http://localhost:3000' };
+
+    render(<Home />);
+
+    // フォームに入力
+    const nameInput = screen.getByLabelText('団体名');
+    fireEvent.change(nameInput, { target: { value: '新しい団体' } });
+
+    // 作成ボタンをクリック
+    const createButton = screen.getByRole('button', { name: /団体を作成/ });
+    fireEvent.click(createButton);
+
+    // URL表示を確認
+    expect(screen.getByText(/作成されました/)).toBeInTheDocument();
+    expect(screen.getByText(/test-org-456/)).toBeInTheDocument();
+
+    // アクセスボタンがあることを確認
+    expect(screen.getByRole('link', { name: /アクセスする/ })).toHaveAttribute(
+      'href',
+      '/test-org-456'
+    );
+  });
+
+  describe('Migration Integration', () => {
+    it('should call migrateToMultiTenant on mount', async () => {
       render(<Home />);
 
-      // Assert: ローディングが終わるのを待つ
       await waitFor(() => {
-        expect(screen.queryByText('イベント一覧を読み込み中...')).not.toBeInTheDocument();
+        expect(mockMigrateToMultiTenant).toHaveBeenCalledTimes(1);
       });
-
-      // Assert: event1の出欠人数が表示されている
-      expect(screen.getByText(/◯ 5人/)).toBeInTheDocument();
-      expect(screen.getByText(/△ 3人/)).toBeInTheDocument();
-      expect(screen.getAllByText(/✗ 2人/)[0]).toBeInTheDocument();
-
-      // Assert: event2の出欠人数が表示されている
-      expect(screen.getByText(/◯ 8人/)).toBeInTheDocument();
-      expect(screen.getByText(/△ 1人/)).toBeInTheDocument();
-      expect(screen.getAllByText(/✗ 1人/)[0]).toBeInTheDocument();
-
-      // Assert: 両方のイベントで合計10人が表示されている
-      const totalElements = screen.getAllByText(/（計10人）/);
-      expect(totalElements).toHaveLength(2);
     });
 
-    it('出欠登録がない場合は0人を表示する', async () => {
-      // Arrange: モックデータの準備（出欠登録なし）
-      const mockEvents = [
-        {
-          id: 'event1',
-          date: '2025-01-15',
-          title: '練習',
-          location: '音楽室',
-          createdAt: '2025-01-01T00:00:00.000Z',
-        },
-      ];
-
-      mockGetAllEventDates.mockReturnValue(mockEvents);
-
-      // 出欠登録なし: すべて0人
-      mockCalculateEventTotalSummary.mockReturnValue({
-        totalAttending: 0,
-        totalMaybe: 0,
-        totalNotAttending: 0,
-        totalResponded: 0,
+    it('should redirect to default organization when migration succeeds', async () => {
+      mockMigrateToMultiTenant.mockReturnValue({
+        migrated: true,
+        defaultOrgId: 'default-org-123',
       });
 
-      // Act: コンポーネントをレンダリング
       render(<Home />);
 
-      // Assert: ローディングが終わるのを待つ
       await waitFor(() => {
-        expect(screen.queryByText('イベント一覧を読み込み中...')).not.toBeInTheDocument();
+        expect(mockPush).toHaveBeenCalledWith('/default-org-123');
       });
-
-      // Assert: 出欠登録なしの場合「◯ 0人 △ 0人 ✗ 0人（計0人）」が表示されている
-      expect(screen.getByText(/◯ 0人/)).toBeInTheDocument();
-      expect(screen.getByText(/△ 0人/)).toBeInTheDocument();
-      expect(screen.getByText(/✗ 0人/)).toBeInTheDocument();
-      expect(screen.getByText(/（計0人）/)).toBeInTheDocument();
     });
 
-    it('複数のイベントで正しい人数を表示できる', async () => {
-      // Arrange: 複数のイベントをモック
-      const mockEvents = [
-        {
-          id: 'event1',
-          date: '2025-01-15',
-          title: '練習1',
-          createdAt: '2025-01-01T00:00:00.000Z',
-        },
-        {
-          id: 'event2',
-          date: '2025-01-20',
-          title: '本番',
-          createdAt: '2025-01-01T00:00:00.000Z',
-        },
-        {
-          id: 'event3',
-          date: '2025-01-25',
-          title: '練習2',
-          createdAt: '2025-01-01T00:00:00.000Z',
-        },
-      ];
+    it('should not redirect when migration returns migrated: false', async () => {
+      mockMigrateToMultiTenant.mockReturnValue({ migrated: false });
 
-      mockGetAllEventDates.mockReturnValue(mockEvents);
-
-      // 各イベントで異なる出欠集計
-      mockCalculateEventTotalSummary.mockImplementation((eventDateId: string) => {
-        if (eventDateId === 'event1') {
-          return {
-            totalAttending: 10,
-            totalMaybe: 2,
-            totalNotAttending: 3,
-            totalResponded: 15,
-          };
-        }
-        if (eventDateId === 'event2') {
-          return {
-            totalAttending: 12,
-            totalMaybe: 1,
-            totalNotAttending: 2,
-            totalResponded: 15,
-          };
-        }
-        if (eventDateId === 'event3') {
-          return {
-            totalAttending: 8,
-            totalMaybe: 4,
-            totalNotAttending: 3,
-            totalResponded: 15,
-          };
-        }
-        return {
-          totalAttending: 0,
-          totalMaybe: 0,
-          totalNotAttending: 0,
-          totalResponded: 0,
-        };
-      });
-
-      // Act: コンポーネントをレンダリング
       render(<Home />);
 
-      // Assert: ローディングが終わるのを待つ
       await waitFor(() => {
-        expect(screen.queryByText('イベント一覧を読み込み中...')).not.toBeInTheDocument();
+        expect(mockMigrateToMultiTenant).toHaveBeenCalled();
       });
 
-      // Assert: 各イベントが正しい出欠人数を表示している
-      expect(screen.getByText(/◯ 10人/)).toBeInTheDocument();
-      expect(screen.getByText(/△ 2人/)).toBeInTheDocument();
-      expect(screen.getAllByText(/✗ 3人/)[0]).toBeInTheDocument();
+      // リダイレクトされない
+      expect(mockPush).not.toHaveBeenCalled();
+    });
 
-      expect(screen.getByText(/◯ 12人/)).toBeInTheDocument();
-      expect(screen.getAllByText(/△ 1人/)[0]).toBeInTheDocument();
-      expect(screen.getAllByText(/✗ 2人/)[0]).toBeInTheDocument();
+    it('should display error message when migration fails', async () => {
+      mockMigrateToMultiTenant.mockReturnValue({
+        migrated: false,
+        error: 'マイグレーションに失敗しました',
+      });
 
-      expect(screen.getByText(/◯ 8人/)).toBeInTheDocument();
-      expect(screen.getByText(/△ 4人/)).toBeInTheDocument();
-      expect(screen.getAllByText(/✗ 3人/)[1]).toBeInTheDocument();
+      render(<Home />);
 
-      // すべてのイベントの合計が表示されている
-      const totalElements = screen.getAllByText(/（計15人）/);
-      expect(totalElements).toHaveLength(3);
+      await waitFor(() => {
+        expect(screen.getByText(/マイグレーションに失敗しました/)).toBeInTheDocument();
+      });
+    });
+
+    it('should still allow manual organization creation when migration fails', async () => {
+      mockMigrateToMultiTenant.mockReturnValue({
+        migrated: false,
+        error: 'マイグレーションエラー',
+      });
+
+      const mockOrganization: Organization = {
+        id: 'new-org-123',
+        name: '新規団体',
+        description: '',
+        createdAt: '2025-01-01T00:00:00.000Z',
+      };
+
+      mockCreateOrganization.mockReturnValue(mockOrganization);
+
+      render(<Home />);
+
+      // エラーメッセージが表示される
+      await waitFor(() => {
+        expect(screen.getByText(/マイグレーションエラー/)).toBeInTheDocument();
+      });
+
+      // 新規作成フォームが使える
+      const nameInput = screen.getByLabelText('団体名');
+      fireEvent.change(nameInput, { target: { value: '新規団体' } });
+
+      const createButton = screen.getByRole('button', { name: /団体を作成/ });
+      fireEvent.click(createButton);
+
+      expect(mockCreateOrganization).toHaveBeenCalledWith({
+        name: '新規団体',
+        description: '',
+      });
+    });
+  });
+
+  describe('Privacy Protection', () => {
+    it('should not display list of organizations for privacy', () => {
+      const mockOrganizations: Organization[] = [
+        { id: 'org1', name: '団体1', description: '', createdAt: '2025-01-01T00:00:00.000Z' },
+        { id: 'org2', name: '団体2', description: '', createdAt: '2025-01-01T00:00:00.000Z' },
+      ];
+
+      // getAllOrganizationsをモックしてデータが存在することを示す
+      const mockGetAllOrganizations = jest.spyOn(organizationService, 'getAllOrganizations');
+      mockGetAllOrganizations.mockReturnValue(mockOrganizations);
+
+      render(<Home />);
+
+      // 団体名が表示されていないことを確認（プライバシー保護）
+      expect(screen.queryByText('団体1')).not.toBeInTheDocument();
+      expect(screen.queryByText('団体2')).not.toBeInTheDocument();
+
+      // 団体一覧のヘッダーも表示されていないことを確認
+      expect(screen.queryByText(/既存の団体/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/団体一覧/)).not.toBeInTheDocument();
+
+      mockGetAllOrganizations.mockRestore();
+    });
+
+    it('should not call getAllOrganizations to prevent data leakage', () => {
+      const mockGetAllOrganizations = jest.spyOn(organizationService, 'getAllOrganizations');
+
+      render(<Home />);
+
+      // getAllOrganizationsが呼ばれていないことを確認
+      expect(mockGetAllOrganizations).not.toHaveBeenCalled();
+
+      mockGetAllOrganizations.mockRestore();
     });
   });
 });

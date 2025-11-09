@@ -12,9 +12,10 @@ export interface MemberSelection {
 
 interface MemberSelectorProps {
   onSelect: (selection: MemberSelection) => void;
+  organizationId: string;
 }
 
-export function MemberSelector({ onSelect }: MemberSelectorProps) {
+export function MemberSelector({ onSelect, organizationId }: MemberSelectorProps) {
   const [groups, setGroups] = useState<Group[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<string>('');
@@ -24,9 +25,9 @@ export function MemberSelector({ onSelect }: MemberSelectorProps) {
 
   // グループとメンバーを読み込み
   useEffect(() => {
-    setGroups(loadGroups());
-    setMembers(loadMembers());
-  }, []);
+    setGroups(loadGroups(organizationId));
+    setMembers(loadMembers(organizationId));
+  }, [organizationId]);
 
   // グループが選択された時の処理
   const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

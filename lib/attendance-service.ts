@@ -5,21 +5,22 @@ import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
 
 // 出欠登録を作成
-export function createAttendance(input: AttendanceInput): Attendance {
+export function createAttendance(organizationId: string, input: AttendanceInput): Attendance {
   const validated = CreateAttendanceInputSchema.parse(input);
 
   const newAttendance: Attendance = {
     id: crypto.randomUUID(),
+    organizationId,
     eventDateId: validated.eventDateId,
     memberId: validated.memberId,
     status: validated.status,
     createdAt: getCurrentTimestamp(),
   };
 
-  const attendances = loadAttendances();
+  const attendances = loadAttendances(organizationId);
   attendances.push(newAttendance);
 
-  const success = saveAttendances(attendances);
+  const success = saveAttendances(organizationId, attendances);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -28,34 +29,35 @@ export function createAttendance(input: AttendanceInput): Attendance {
 }
 
 // すべての出欠登録を取得
-export function getAllAttendances(): Attendance[] {
-  return loadAttendances();
+export function getAllAttendances(organizationId: string): Attendance[] {
+  return loadAttendances(organizationId);
 }
 
 // イベント日付IDで出欠登録を取得
-export function getAttendancesByEventDateId(eventDateId: string): Attendance[] {
-  const attendances = loadAttendances();
+export function getAttendancesByEventDateId(organizationId: string, eventDateId: string): Attendance[] {
+  const attendances = loadAttendances(organizationId);
   return attendances.filter((attendance) => attendance.eventDateId === eventDateId);
 }
 
 // メンバーIDで出欠登録を取得
-export function getAttendancesByMemberId(memberId: string): Attendance[] {
-  const attendances = loadAttendances();
+export function getAttendancesByMemberId(organizationId: string, memberId: string): Attendance[] {
+  const attendances = loadAttendances(organizationId);
   return attendances.filter((attendance) => attendance.memberId === memberId);
 }
 
 // IDで出欠登録を取得
-export function getAttendanceById(id: string): Attendance | null {
-  const attendances = loadAttendances();
+export function getAttendanceById(organizationId: string, id: string): Attendance | null {
+  const attendances = loadAttendances(organizationId);
   return attendances.find((attendance) => attendance.id === id) || null;
 }
 
 // 出欠登録を更新
 export function updateAttendance(
+  organizationId: string,
   id: string,
   input: Partial<Omit<AttendanceInput, 'eventDateId' | 'memberId'>>
 ): Attendance {
-  const attendances = loadAttendances();
+  const attendances = loadAttendances(organizationId);
   const index = attendances.findIndex((attendance) => attendance.id === id);
 
   if (index === -1) {
@@ -76,7 +78,7 @@ export function updateAttendance(
 
   attendances[index] = updatedAttendance;
 
-  const success = saveAttendances(attendances);
+  const success = saveAttendances(organizationId, attendances);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -85,22 +87,22 @@ export function updateAttendance(
 }
 
 // 出欠登録を削除
-export function deleteAttendance(id: string): boolean {
-  const attendances = loadAttendances();
+export function deleteAttendance(organizationId: string, id: string): boolean {
+  const attendances = loadAttendances(organizationId);
   const filteredAttendances = attendances.filter((attendance) => attendance.id !== id);
 
   if (attendances.length === filteredAttendances.length) {
     return false;
   }
 
-  return saveAttendances(filteredAttendances);
+  return saveAttendances(organizationId, filteredAttendances);
 }
 
 // イベント日付の集計結果をグループ別に計算
-export function calculateEventSummary(eventDateId: string): GroupSummary[] {
-  const attendances = getAttendancesByEventDateId(eventDateId);
-  const groups = loadGroups();
-  const members = loadMembers();
+export function calculateEventSummary(organizationId: string, eventDateId: string): GroupSummary[] {
+  const attendances = getAttendancesByEventDateId(organizationId, eventDateId);
+  const groups = loadGroups(organizationId);
+  const members = loadMembers(organizationId);
 
   // グループごとに集計
   return groups
@@ -126,8 +128,8 @@ export function calculateEventSummary(eventDateId: string): GroupSummary[] {
 }
 
 // イベント全体の人数集計を計算
-export function calculateEventTotalSummary(eventDateId: string): EventTotalSummary {
-  const attendances = getAttendancesByEventDateId(eventDateId);
+export function calculateEventTotalSummary(organizationId: string, eventDateId: string): EventTotalSummary {
+  const attendances = getAttendancesByEventDateId(organizationId, eventDateId);
 
   // NOTE: 現在のデータモデルでは、eventDateIdごとにmemberIdは一意なので重複は発生しない。
   // ただし、将来的にメンバーが複数グループに所属できるようになった場合に備えて、
@@ -157,9 +159,9 @@ export function calculateEventTotalSummary(eventDateId: string): EventTotalSumma
 }
 
 // 出欠登録を作成または更新（upsert）
-export function upsertAttendance(input: AttendanceInput): Attendance {
+export function upsertAttendance(organizationId: string, input: AttendanceInput): Attendance {
   const validated = CreateAttendanceInputSchema.parse(input);
-  const attendances = loadAttendances();
+  const attendances = loadAttendances(organizationId);
 
   // 既存レコードを検索（eventDateId + memberId の複合キーで一意性を保証）
   // 重複がある場合は最新のもの（createdAtが最も新しいもの）を使用
@@ -171,6 +173,7 @@ export function upsertAttendance(input: AttendanceInput): Attendance {
     // 新規作成
     const newAttendance: Attendance = {
       id: crypto.randomUUID(),
+      organizationId,
       eventDateId: validated.eventDateId,
       memberId: validated.memberId,
       status: validated.status,
@@ -179,7 +182,7 @@ export function upsertAttendance(input: AttendanceInput): Attendance {
 
     attendances.push(newAttendance);
 
-    const success = saveAttendances(attendances);
+    const success = saveAttendances(organizationId, attendances);
     if (!success) {
       throw new Error(ErrorMessages.STORAGE_FULL);
     }
@@ -205,7 +208,7 @@ export function upsertAttendance(input: AttendanceInput): Attendance {
 
     filteredAttendances.push(updatedAttendance);
 
-    const success = saveAttendances(filteredAttendances);
+    const success = saveAttendances(organizationId, filteredAttendances);
     if (!success) {
       throw new Error(ErrorMessages.STORAGE_FULL);
     }
@@ -215,7 +218,7 @@ export function upsertAttendance(input: AttendanceInput): Attendance {
 }
 
 // 複数の出欠登録を一括でupsert
-export function upsertBulkAttendances(inputs: BulkAttendanceInput[]): BulkAttendanceResult {
+export function upsertBulkAttendances(organizationId: string, inputs: BulkAttendanceInput[]): BulkAttendanceResult {
   const result: BulkAttendanceResult = {
     success: [],
     updated: [],
@@ -224,12 +227,12 @@ export function upsertBulkAttendances(inputs: BulkAttendanceInput[]): BulkAttend
 
   // 空配列の場合は即座に返す
   if (inputs.length === 0) {
-    loadAttendances(); // 読み込みは実行（テストのためのモック呼び出し）
+    loadAttendances(organizationId); // 読み込みは実行（テストのためのモック呼び出し）
     return result;
   }
 
   // バッチ処理: localStorage読み込みは1回のみ
-  const attendances = loadAttendances();
+  const attendances = loadAttendances(organizationId);
 
   // 各入力を処理
   for (const input of inputs) {
@@ -246,6 +249,7 @@ export function upsertBulkAttendances(inputs: BulkAttendanceInput[]): BulkAttend
         // 新規作成
         const newAttendance: Attendance = {
           id: crypto.randomUUID(),
+          organizationId,
           eventDateId: validated.eventDateId,
           memberId: validated.memberId,
           status: validated.status,
@@ -293,7 +297,7 @@ export function upsertBulkAttendances(inputs: BulkAttendanceInput[]): BulkAttend
   }
 
   // バッチ処理: localStorage書き込みは1回のみ
-  const success = saveAttendances(attendances);
+  const success = saveAttendances(organizationId, attendances);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }

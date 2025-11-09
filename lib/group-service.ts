@@ -5,21 +5,22 @@ import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
 
 // グループを作成
-export function createGroup(input: GroupInput): Group {
+export function createGroup(organizationId: string, input: GroupInput): Group {
   const validated = CreateGroupInputSchema.parse(input);
 
   const newGroup: Group = {
     id: crypto.randomUUID(),
+    organizationId,
     name: validated.name,
     order: validated.order,
     color: validated.color,
     createdAt: getCurrentTimestamp(),
   };
 
-  const groups = loadGroups();
+  const groups = loadGroups(organizationId);
   groups.push(newGroup);
 
-  const success = saveGroups(groups);
+  const success = saveGroups(organizationId, groups);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -28,20 +29,20 @@ export function createGroup(input: GroupInput): Group {
 }
 
 // すべてのグループを取得（order昇順）
-export function getAllGroups(): Group[] {
-  const groups = loadGroups();
+export function getAllGroups(organizationId: string): Group[] {
+  const groups = loadGroups(organizationId);
   return groups.sort((a, b) => a.order - b.order);
 }
 
 // IDでグループを取得
-export function getGroupById(id: string): Group | null {
-  const groups = loadGroups();
+export function getGroupById(organizationId: string, id: string): Group | null {
+  const groups = loadGroups(organizationId);
   return groups.find((group) => group.id === id) || null;
 }
 
 // グループを更新
-export function updateGroup(id: string, input: Partial<GroupInput>): Group {
-  const groups = loadGroups();
+export function updateGroup(organizationId: string, id: string, input: Partial<GroupInput>): Group {
+  const groups = loadGroups(organizationId);
   const index = groups.findIndex((group) => group.id === id);
 
   if (index === -1) {
@@ -64,7 +65,7 @@ export function updateGroup(id: string, input: Partial<GroupInput>): Group {
 
   groups[index] = updatedGroup;
 
-  const success = saveGroups(groups);
+  const success = saveGroups(organizationId, groups);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -73,13 +74,13 @@ export function updateGroup(id: string, input: Partial<GroupInput>): Group {
 }
 
 // グループを削除
-export function deleteGroup(id: string): boolean {
-  const groups = loadGroups();
+export function deleteGroup(organizationId: string, id: string): boolean {
+  const groups = loadGroups(organizationId);
   const filteredGroups = groups.filter((group) => group.id !== id);
 
   if (groups.length === filteredGroups.length) {
     return false;
   }
 
-  return saveGroups(filteredGroups);
+  return saveGroups(organizationId, filteredGroups);
 }

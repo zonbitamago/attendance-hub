@@ -37,7 +37,7 @@ describe('Attendance Service', () => {
         status: '◯' as const,
       };
 
-      const attendance = createAttendance(input);
+      const attendance = createAttendance('test-org-id', input);
 
       expect(attendance).toMatchObject({
         eventDateId: '00000000-0000-0000-0000-000000000001',
@@ -46,7 +46,7 @@ describe('Attendance Service', () => {
       });
       expect(attendance.id).toBeDefined();
       expect(attendance.createdAt).toBeDefined();
-      expect(mockSaveAttendances).toHaveBeenCalledWith([attendance]);
+      expect(mockSaveAttendances).toHaveBeenCalledWith('test-org-id', [attendance]);
     });
 
     it('無効なステータスでエラーをスローする', () => {
@@ -56,7 +56,7 @@ describe('Attendance Service', () => {
         status: 'invalid' as any,
       };
 
-      expect(() => createAttendance(input)).toThrow();
+      expect(() => createAttendance('test-org-id', input)).toThrow();
     });
 
     it('ストレージが失敗した場合はエラーをスローする', () => {
@@ -68,7 +68,7 @@ describe('Attendance Service', () => {
         status: '◯' as const,
       };
 
-      expect(() => createAttendance(input)).toThrow();
+      expect(() => createAttendance('test-org-id', input)).toThrow();
     });
   });
 
@@ -77,6 +77,7 @@ describe('Attendance Service', () => {
       const mockAttendances: Attendance[] = [
         {
           id: '1',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member1',
           status: '◯',
@@ -84,6 +85,7 @@ describe('Attendance Service', () => {
         },
         {
           id: '2',
+          organizationId: 'test-org-id',
           eventDateId: 'event2',
           memberId: 'member2',
           status: '△',
@@ -91,6 +93,7 @@ describe('Attendance Service', () => {
         },
         {
           id: '3',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member3',
           status: '✗',
@@ -100,7 +103,7 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue(mockAttendances);
 
-      const attendances = getAttendancesByEventDateId('event1');
+      const attendances = getAttendancesByEventDateId('test-org-id', 'event1');
 
       expect(attendances).toHaveLength(2);
       expect(attendances[0].eventDateId).toBe('event1');
@@ -110,7 +113,7 @@ describe('Attendance Service', () => {
     it('イベントに出欠情報が存在しない場合は空配列を返す', () => {
       mockLoadAttendances.mockReturnValue([]);
 
-      const attendances = getAttendancesByEventDateId('event1');
+      const attendances = getAttendancesByEventDateId('test-org-id', 'event1');
 
       expect(attendances).toEqual([]);
     });
@@ -121,6 +124,7 @@ describe('Attendance Service', () => {
       const mockAttendances: Attendance[] = [
         {
           id: '1',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member1',
           status: '◯',
@@ -128,6 +132,7 @@ describe('Attendance Service', () => {
         },
         {
           id: '2',
+          organizationId: 'test-org-id',
           eventDateId: 'event2',
           memberId: 'member2',
           status: '△',
@@ -135,6 +140,7 @@ describe('Attendance Service', () => {
         },
         {
           id: '3',
+          organizationId: 'test-org-id',
           eventDateId: 'event3',
           memberId: 'member1',
           status: '✗',
@@ -144,7 +150,7 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue(mockAttendances);
 
-      const attendances = getAttendancesByMemberId('member1');
+      const attendances = getAttendancesByMemberId('test-org-id', 'member1');
 
       expect(attendances).toHaveLength(2);
       expect(attendances[0].memberId).toBe('member1');
@@ -156,6 +162,7 @@ describe('Attendance Service', () => {
     it('既存の出欠ステータスを更新できる', () => {
       const existingAttendance: Attendance = {
         id: '00000000-0000-0000-0000-000000000001',
+        organizationId: 'test-org-id',
         eventDateId: '00000000-0000-0000-0000-000000000011',
         memberId: '00000000-0000-0000-0000-000000000022',
         status: '◯',
@@ -164,7 +171,7 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue([existingAttendance]);
 
-      const updated = updateAttendance('00000000-0000-0000-0000-000000000001', {
+      const updated = updateAttendance('test-org-id', '00000000-0000-0000-0000-000000000001', {
         status: '△',
       });
 
@@ -182,13 +189,14 @@ describe('Attendance Service', () => {
       mockLoadAttendances.mockReturnValue([]);
 
       expect(() =>
-        updateAttendance('nonexistent', { status: '◯' })
+        updateAttendance('test-org-id', 'nonexistent', { status: '◯' })
       ).toThrow();
     });
 
     it('無効な更新データの場合はエラーをスローする', () => {
       const existingAttendance: Attendance = {
         id: '00000000-0000-0000-0000-000000000001',
+        organizationId: 'test-org-id',
         eventDateId: '00000000-0000-0000-0000-000000000011',
         memberId: '00000000-0000-0000-0000-000000000022',
         status: '◯',
@@ -198,7 +206,7 @@ describe('Attendance Service', () => {
       mockLoadAttendances.mockReturnValue([existingAttendance]);
 
       expect(() =>
-        updateAttendance('00000000-0000-0000-0000-000000000001', { status: 'invalid' as any })
+        updateAttendance('test-org-id', '00000000-0000-0000-0000-000000000001', { status: 'invalid' as any })
       ).toThrow();
     });
   });
@@ -208,6 +216,7 @@ describe('Attendance Service', () => {
       const attendances: Attendance[] = [
         {
           id: '1',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member1',
           status: '◯',
@@ -215,6 +224,7 @@ describe('Attendance Service', () => {
         },
         {
           id: '2',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member2',
           status: '△',
@@ -224,16 +234,16 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue(attendances);
 
-      const result = deleteAttendance('1');
+      const result = deleteAttendance('test-org-id', '1');
 
       expect(result).toBe(true);
-      expect(mockSaveAttendances).toHaveBeenCalledWith([attendances[1]]);
+      expect(mockSaveAttendances).toHaveBeenCalledWith('test-org-id', [attendances[1]]);
     });
 
     it('出欠情報が見つからない場合はfalseを返す', () => {
       mockLoadAttendances.mockReturnValue([]);
 
-      const result = deleteAttendance('nonexistent');
+      const result = deleteAttendance('test-org-id', 'nonexistent');
 
       expect(result).toBe(false);
       expect(mockSaveAttendances).not.toHaveBeenCalled();
@@ -245,12 +255,14 @@ describe('Attendance Service', () => {
       const mockGroups: Group[] = [
         {
           id: 'group1',
+          organizationId: 'test-org-id',
           name: '打',
           order: 0,
           createdAt: '2025-01-01T00:00:00.000Z',
         },
         {
           id: 'group2',
+          organizationId: 'test-org-id',
           name: 'Cla',
           order: 1,
           createdAt: '2025-01-01T00:00:00.000Z',
@@ -260,18 +272,21 @@ describe('Attendance Service', () => {
       const mockMembers: Member[] = [
         {
           id: 'member1',
+          organizationId: 'test-org-id',
           groupId: 'group1',
           name: 'Taro',
           createdAt: '2025-01-01T00:00:00.000Z',
         },
         {
           id: 'member2',
+          organizationId: 'test-org-id',
           groupId: 'group1',
           name: 'Jiro',
           createdAt: '2025-01-01T00:00:00.000Z',
         },
         {
           id: 'member3',
+          organizationId: 'test-org-id',
           groupId: 'group2',
           name: 'Hanako',
           createdAt: '2025-01-01T00:00:00.000Z',
@@ -281,6 +296,7 @@ describe('Attendance Service', () => {
       const mockAttendances: Attendance[] = [
         {
           id: '1',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member1',
           status: '◯',
@@ -288,6 +304,7 @@ describe('Attendance Service', () => {
         },
         {
           id: '2',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member2',
           status: '△',
@@ -295,6 +312,7 @@ describe('Attendance Service', () => {
         },
         {
           id: '3',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member3',
           status: '✗',
@@ -306,7 +324,7 @@ describe('Attendance Service', () => {
       mockLoadMembers.mockReturnValue(mockMembers);
       mockLoadAttendances.mockReturnValue(mockAttendances);
 
-      const summaries = calculateEventSummary('event1');
+      const summaries = calculateEventSummary('test-org-id', 'event1');
 
       expect(summaries).toHaveLength(2);
 
@@ -336,7 +354,7 @@ describe('Attendance Service', () => {
       mockLoadMembers.mockReturnValue([]);
       mockLoadAttendances.mockReturnValue([]);
 
-      const summaries = calculateEventSummary('event1');
+      const summaries = calculateEventSummary('test-org-id', 'event1');
 
       expect(summaries).toEqual([]);
     });
@@ -345,12 +363,14 @@ describe('Attendance Service', () => {
       const mockGroups: Group[] = [
         {
           id: 'group1',
+          organizationId: 'test-org-id',
           name: '打',
           order: 0,
           createdAt: '2025-01-01T00:00:00.000Z',
         },
         {
           id: 'group2',
+          organizationId: 'test-org-id',
           name: 'Cla',
           order: 1,
           createdAt: '2025-01-01T00:00:00.000Z',
@@ -360,6 +380,7 @@ describe('Attendance Service', () => {
       const mockMembers: Member[] = [
         {
           id: 'member1',
+          organizationId: 'test-org-id',
           groupId: 'group1',
           name: 'Taro',
           createdAt: '2025-01-01T00:00:00.000Z',
@@ -369,6 +390,7 @@ describe('Attendance Service', () => {
       const mockAttendances: Attendance[] = [
         {
           id: '1',
+          organizationId: 'test-org-id',
           eventDateId: 'event1',
           memberId: 'member1',
           status: '◯',
@@ -380,7 +402,7 @@ describe('Attendance Service', () => {
       mockLoadMembers.mockReturnValue(mockMembers);
       mockLoadAttendances.mockReturnValue(mockAttendances);
 
-      const summaries = calculateEventSummary('event1');
+      const summaries = calculateEventSummary('test-org-id', 'event1');
 
       // Only group1 should be returned (group2 has no attendances)
       expect(summaries).toHaveLength(1);
@@ -394,6 +416,7 @@ describe('Attendance Service', () => {
         const mockAttendances: Attendance[] = [
           {
             id: '1',
+            organizationId: 'test-org-id',
             eventDateId: 'event1',
             memberId: 'member1',
             status: '◯',
@@ -401,6 +424,7 @@ describe('Attendance Service', () => {
           },
           {
             id: '2',
+            organizationId: 'test-org-id',
             eventDateId: 'event1',
             memberId: 'member2',
             status: '◯',
@@ -408,6 +432,7 @@ describe('Attendance Service', () => {
           },
           {
             id: '3',
+            organizationId: 'test-org-id',
             eventDateId: 'event1',
             memberId: 'member3',
             status: '△',
@@ -415,6 +440,7 @@ describe('Attendance Service', () => {
           },
           {
             id: '4',
+            organizationId: 'test-org-id',
             eventDateId: 'event1',
             memberId: 'member4',
             status: '△',
@@ -422,6 +448,7 @@ describe('Attendance Service', () => {
           },
           {
             id: '5',
+            organizationId: 'test-org-id',
             eventDateId: 'event1',
             memberId: 'member5',
             status: '✗',
@@ -431,7 +458,7 @@ describe('Attendance Service', () => {
 
         mockLoadAttendances.mockReturnValue(mockAttendances);
 
-        const result = calculateEventTotalSummary('event1');
+        const result = calculateEventTotalSummary('test-org-id', 'event1');
 
         expect(result).toEqual({
           totalAttending: 2,
@@ -446,7 +473,7 @@ describe('Attendance Service', () => {
       it('出欠情報が存在しない場合はすべて0を返す', () => {
         mockLoadAttendances.mockReturnValue([]);
 
-        const result = calculateEventTotalSummary('event1');
+        const result = calculateEventTotalSummary('test-org-id', 'event1');
 
         expect(result).toEqual({
           totalAttending: 0,
@@ -463,6 +490,7 @@ describe('Attendance Service', () => {
         const mockAttendances: Attendance[] = [
           {
             id: '1',
+            organizationId: 'test-org-id',
             eventDateId: 'event1',
             memberId: 'member1',
             status: '◯',
@@ -470,6 +498,7 @@ describe('Attendance Service', () => {
           },
           {
             id: '2',
+            organizationId: 'test-org-id',
             eventDateId: 'event1',
             memberId: 'member1', // 同じメンバー
             status: '◯',
@@ -477,6 +506,7 @@ describe('Attendance Service', () => {
           },
           {
             id: '3',
+            organizationId: 'test-org-id',
             eventDateId: 'event1',
             memberId: 'member2',
             status: '△',
@@ -486,7 +516,7 @@ describe('Attendance Service', () => {
 
         mockLoadAttendances.mockReturnValue(mockAttendances);
 
-        const result = calculateEventTotalSummary('event1');
+        const result = calculateEventTotalSummary('test-org-id', 'event1');
 
         // member1は2回登録されているが1回のみカウント
         expect(result).toEqual({
@@ -515,7 +545,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertAttendance(input);
+        const result = upsertAttendance('test-org-id', input);
 
         expect(result).toMatchObject({
           eventDateId,
@@ -536,6 +566,7 @@ describe('Attendance Service', () => {
 
         const existingAttendance: Attendance = {
           id: existingAttendanceId,
+          organizationId: 'test-org-id',
           eventDateId,
           memberId,
           status: '◯',
@@ -551,7 +582,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([existingAttendance]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertAttendance(input);
+        const result = upsertAttendance('test-org-id', input);
 
         expect(result).toMatchObject({
           id: existingAttendanceId,
@@ -572,6 +603,7 @@ describe('Attendance Service', () => {
         // 重複レコード（同じeventDateId + memberId）
         const olderDuplicate: Attendance = {
           id: '550e8400-e29b-41d4-a716-446655440003',
+          organizationId: 'test-org-id',
           eventDateId,
           memberId,
           status: '◯',
@@ -580,6 +612,7 @@ describe('Attendance Service', () => {
 
         const newerDuplicate: Attendance = {
           id: '550e8400-e29b-41d4-a716-446655440004',
+          organizationId: 'test-org-id',
           eventDateId,
           memberId,
           status: '△',
@@ -595,7 +628,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([olderDuplicate, newerDuplicate]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertAttendance(input);
+        const result = upsertAttendance('test-org-id', input);
 
         // 最新のレコード（newerDuplicate）が更新される
         expect(result).toMatchObject({
@@ -608,7 +641,7 @@ describe('Attendance Service', () => {
 
         // saveAttendancesが呼ばれたときの引数を検証
         expect(mockSaveAttendances).toHaveBeenCalled();
-        const savedAttendances = mockSaveAttendances.mock.calls[0][0];
+        const savedAttendances = mockSaveAttendances.mock.calls[0][1];
 
         // 保存されたレコードに重複がないことを確認
         const duplicates = savedAttendances.filter(
@@ -645,7 +678,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertBulkAttendances(inputs);
+        const result = upsertBulkAttendances('test-org-id', inputs);
 
         expect(result.success).toHaveLength(3);
         expect(result.updated).toHaveLength(0);
@@ -677,6 +710,7 @@ describe('Attendance Service', () => {
       it('新規レコードはsuccessに、既存レコードはupdatedに格納される', () => {
         const existingAttendance: Attendance = {
           id: '550e8400-e29b-41d4-a716-446655440020',
+          organizationId: 'test-org-id',
           eventDateId: '550e8400-e29b-41d4-a716-446655440001',
           memberId: '550e8400-e29b-41d4-a716-446655440010',
           status: '◯',
@@ -699,7 +733,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([existingAttendance]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertBulkAttendances(inputs);
+        const result = upsertBulkAttendances('test-org-id', inputs);
 
         expect(result.success).toHaveLength(1);
         expect(result.updated).toHaveLength(1);
@@ -749,7 +783,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertBulkAttendances(inputs);
+        const result = upsertBulkAttendances('test-org-id', inputs);
 
         expect(result.success).toHaveLength(2);
         expect(result.updated).toHaveLength(0);
@@ -764,7 +798,7 @@ describe('Attendance Service', () => {
       it('空配列の場合、すべて0件として処理される', () => {
         mockLoadAttendances.mockReturnValue([]);
 
-        const result = upsertBulkAttendances([]);
+        const result = upsertBulkAttendances('test-org-id', []);
 
         expect(result.success).toHaveLength(0);
         expect(result.updated).toHaveLength(0);
