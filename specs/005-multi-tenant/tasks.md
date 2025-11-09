@@ -150,39 +150,39 @@
 
 #### テストケース1: createOrganizationが一意なIDを生成
 
-- [ ] T061 **[Red]** [US1] テスト記述: createOrganizationが10文字のnanoidを生成（__tests__/lib/organization-service.test.ts）
-- [ ] T062 **[Green]** [US1] nanoidを使用したgenerateOrganizationId()でlib/organization-service.tsを作成
-- [ ] T063 **[Green]** [US1] lib/organization-service.tsにcreateOrganization(input: CreateOrganizationInput): Organizationを実装
-- [ ] T064 **[Green]** [US1] organization-serviceテストを実行してT061が通ることを確認
-- [ ] T065 **[Refactor]** [US1] organization-service.ts構造をクリーンアップ
+- [x] T061 **[Red]** [US1] テスト記述: createOrganizationが10文字のnanoidを生成（__tests__/lib/organization-service.test.ts）
+- [x] T062 **[Green]** [US1] nanoidを使用したgenerateOrganizationId()でlib/organization-service.tsを作成
+- [x] T063 **[Green]** [US1] lib/organization-service.tsにcreateOrganization(input: CreateOrganizationInput): Organizationを実装
+- [x] T064 **[Green]** [US1] organization-serviceテストを実行してT061が通ることを確認
+- [x] T065 **[Refactor]** [US1] organization-service.ts構造をクリーンアップ
 
 #### テストケース2: createOrganizationが入力を検証
 
-- [ ] T066 **[Red]** [US1] テスト記述: createOrganizationが無効な名前でエラーをスロー（__tests__/lib/organization-service.test.ts）
-- [ ] T067 **[Green]** [US1] createOrganizationにCreateOrganizationInputSchemaを使用した入力検証を追加
-- [ ] T068 **[Green]** [US1] テストを実行してT066が通ることを確認
-- [ ] T069 **[Refactor]** [US1] 検証エラーメッセージを最適化
+- [x] T066 **[Red]** [US1] テスト記述: createOrganizationが無効な名前でエラーをスロー（__tests__/lib/organization-service.test.ts）
+- [x] T067 **[Green]** [US1] createOrganizationにCreateOrganizationInputSchemaを使用した入力検証を追加
+- [x] T068 **[Green]** [US1] テストを実行してT066が通ることを確認
+- [x] T069 **[Refactor]** [US1] 検証エラーメッセージを最適化
 
 #### テストケース3: createOrganizationがlocalStorageに保存
 
-- [ ] T070 **[Red]** [US1] テスト記述: createOrganizationがlocalStorageに永続化（__tests__/lib/organization-service.test.ts）
-- [ ] T071 **[Green]** [US1] createOrganization実装にsaveOrganizations呼び出しを追加
-- [ ] T072 **[Green]** [US1] テストを実行してT070が通ることを確認
-- [ ] T073 **[Refactor]** [US1] createOrganization実装をレビュー
+- [x] T070 **[Red]** [US1] テスト記述: createOrganizationがlocalStorageに永続化（__tests__/lib/organization-service.test.ts）
+- [x] T071 **[Green]** [US1] createOrganization実装にsaveOrganizations呼び出しを追加
+- [x] T072 **[Green]** [US1] テストを実行してT070が通ることを確認
+- [x] T073 **[Refactor]** [US1] createOrganization実装をレビュー
 
 #### テストケース4: getAllOrganizationsがソート済みリストを返す
 
-- [ ] T074 **[Red]** [US1] テスト記述: getAllOrganizationsがcreatedAt降順でソートされた団体を返す（__tests__/lib/organization-service.test.ts）
-- [ ] T075 **[Green]** [US1] lib/organization-service.tsにgetAllOrganizations(): Organization[]を実装
-- [ ] T076 **[Green]** [US1] テストを実行してT074が通ることを確認
-- [ ] T077 **[Refactor]** [US1] ソートロジックを最適化
+- [x] T074 **[Red]** [US1] テスト記述: getAllOrganizationsがcreatedAt降順でソートされた団体を返す（__tests__/lib/organization-service.test.ts）
+- [x] T075 **[Green]** [US1] lib/organization-service.tsにgetAllOrganizations(): Organization[]を実装
+- [x] T076 **[Green]** [US1] テストを実行してT074が通ることを確認
+- [x] T077 **[Refactor]** [US1] ソートロジックを最適化
 
 #### テストケース5: getOrganizationByIdが正しい団体またはnullを返す
 
-- [ ] T078 **[Red]** [US1] テスト記述: getOrganizationByIdが有効なidで団体、それ以外でnullを返す（__tests__/lib/organization-service.test.ts）
-- [ ] T079 **[Green]** [US1] lib/organization-service.tsにgetOrganizationById(id: string): Organization | nullを実装
-- [ ] T080 **[Green]** [US1] テストを実行してT078が通ることを確認
-- [ ] T081 **[Refactor]** [US1] getOrganizationById実装をクリーンアップ
+- [x] T078 **[Red]** [US1] テスト記述: getOrganizationByIdが有効なidで団体、それ以外でnullを返す（__tests__/lib/organization-service.test.ts）
+- [x] T079 **[Green]** [US1] lib/organization-service.tsにgetOrganizationById(id: string): Organization | nullを実装
+- [x] T080 **[Green]** [US1] テストを実行してT078が通ることを確認
+- [x] T081 **[Refactor]** [US1] getOrganizationById実装をクリーンアップ
 
 ### Organization Context実装
 
