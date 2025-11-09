@@ -1,12 +1,18 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
 import * as organizationService from '@/lib/organization-service';
+import * as migration from '@/lib/migration';
 import type { Organization } from '@/types';
 
 // モック
 jest.mock('@/lib/organization-service');
+jest.mock('@/lib/migration');
+
 const mockCreateOrganization = organizationService.createOrganization as jest.MockedFunction<
   typeof organizationService.createOrganization
+>;
+const mockMigrateToMultiTenant = migration.migrateToMultiTenant as jest.MockedFunction<
+  typeof migration.migrateToMultiTenant
 >;
 
 // useRouterをモック
@@ -22,6 +28,8 @@ describe('Home (Landing) Page', () => {
     jest.clearAllMocks();
     // localStorageをクリア
     localStorage.clear();
+    // デフォルトではマイグレーションなし
+    mockMigrateToMultiTenant.mockReturnValue({ migrated: false });
   });
 
   it('should display landing content with description and create button', () => {
@@ -99,5 +107,89 @@ describe('Home (Landing) Page', () => {
       'href',
       '/test-org-456'
     );
+  });
+
+  describe('Migration Integration', () => {
+    it('should call migrateToMultiTenant on mount', async () => {
+      render(<Home />);
+
+      await waitFor(() => {
+        expect(mockMigrateToMultiTenant).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it('should redirect to default organization when migration succeeds', async () => {
+      mockMigrateToMultiTenant.mockReturnValue({
+        migrated: true,
+        defaultOrgId: 'default-org-123',
+      });
+
+      render(<Home />);
+
+      await waitFor(() => {
+        expect(mockPush).toHaveBeenCalledWith('/default-org-123');
+      });
+    });
+
+    it('should not redirect when migration returns migrated: false', async () => {
+      mockMigrateToMultiTenant.mockReturnValue({ migrated: false });
+
+      render(<Home />);
+
+      await waitFor(() => {
+        expect(mockMigrateToMultiTenant).toHaveBeenCalled();
+      });
+
+      // リダイレクトされない
+      expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    it('should display error message when migration fails', async () => {
+      mockMigrateToMultiTenant.mockReturnValue({
+        migrated: false,
+        error: 'マイグレーションに失敗しました',
+      });
+
+      render(<Home />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/マイグレーションに失敗しました/)).toBeInTheDocument();
+      });
+    });
+
+    it('should still allow manual organization creation when migration fails', async () => {
+      mockMigrateToMultiTenant.mockReturnValue({
+        migrated: false,
+        error: 'マイグレーションエラー',
+      });
+
+      const mockOrganization: Organization = {
+        id: 'new-org-123',
+        name: '新規団体',
+        description: '',
+        createdAt: '2025-01-01T00:00:00.000Z',
+      };
+
+      mockCreateOrganization.mockReturnValue(mockOrganization);
+
+      render(<Home />);
+
+      // エラーメッセージが表示される
+      await waitFor(() => {
+        expect(screen.getByText(/マイグレーションエラー/)).toBeInTheDocument();
+      });
+
+      // 新規作成フォームが使える
+      const nameInput = screen.getByLabelText('団体名');
+      fireEvent.change(nameInput, { target: { value: '新規団体' } });
+
+      const createButton = screen.getByRole('button', { name: /団体を作成/ });
+      fireEvent.click(createButton);
+
+      expect(mockCreateOrganization).toHaveBeenCalledWith({
+        name: '新規団体',
+        description: '',
+      });
+    });
   });
 });

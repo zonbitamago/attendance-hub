@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createOrganization } from '@/lib/organization-service';
+import { migrateToMultiTenant } from '@/lib/migration';
 
 export default function Home() {
   const router = useRouter();
@@ -11,6 +12,21 @@ export default function Home() {
   const [organizationDescription, setOrganizationDescription] = useState('');
   const [error, setError] = useState('');
   const [createdOrganizationId, setCreatedOrganizationId] = useState<string | null>(null);
+  const [migrationError, setMigrationError] = useState('');
+
+  // マイグレーション実行（マウント時に1回だけ）
+  useEffect(() => {
+    const result = migrateToMultiTenant();
+
+    if (result.migrated && result.defaultOrgId) {
+      // マイグレーション成功 → デフォルト団体にリダイレクト
+      router.push(`/${result.defaultOrgId}`);
+    } else if (result.error) {
+      // マイグレーション失敗 → エラー表示
+      setMigrationError(result.error);
+    }
+    // migrated: false の場合は何もしない（新規ユーザー）
+  }, [router]);
 
   const handleCreateOrganization = () => {
     setError('');
@@ -96,9 +112,22 @@ export default function Home() {
             団体を作成すると、専用のURLが発行されます。そのURLをブックマークすることで、いつでも団体の出欠管理にアクセスできます。
           </p>
 
+          {/* マイグレーションエラーメッセージ */}
+          {migrationError && (
+            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+              <p className="text-sm text-yellow-700">
+                <strong>マイグレーション警告: </strong>
+                {migrationError}
+              </p>
+              <p className="text-xs text-yellow-600 mt-1">
+                引き続き新規団体を作成できます。
+              </p>
+            </div>
+          )}
+
           {/* エラーメッセージ */}
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
               <p className="text-sm text-red-600">{error}</p>
             </div>
           )}

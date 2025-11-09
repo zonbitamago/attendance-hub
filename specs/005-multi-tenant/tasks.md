@@ -475,116 +475,116 @@
 
 #### テストケース1: hasLegacyDataがレガシーキーを検出
 
-- [ ] T225 **[Red]** [US4] テスト記述: hasLegacyDataがレガシーキー存在時にtrueを返す（__tests__/lib/migration.test.ts）
-- [ ] T226 **[Green]** [US4] LEGACY_STORAGE_KEYS定数でlib/migration.tsを作成
-- [ ] T227 **[Green]** [US4] lib/migration.tsにhasLegacyData(): booleanを実装
-- [ ] T228 **[Green]** [US4] テストを実行してT225が通ることを確認
-- [ ] T229 **[Refactor]** [US4] hasLegacyData実装をクリーンアップ
+- [x] T225 **[Red]** [US4] テスト記述: hasLegacyDataがレガシーキー存在時にtrueを返す（__tests__/lib/migration.test.ts）
+- [x] T226 **[Green]** [US4] LEGACY_STORAGE_KEYS定数でlib/migration.tsを作成
+- [x] T227 **[Green]** [US4] lib/migration.tsにhasLegacyData(): booleanを実装
+- [x] T228 **[Green]** [US4] テストを実行してT225が通ることを確認
+- [x] T229 **[Refactor]** [US4] hasLegacyData実装をクリーンアップ
 
 #### テストケース2: isMigrationCompletedがフラグをチェック
 
-- [ ] T230 **[Red]** [US4] テスト記述: isMigrationCompletedがフラグ設定時にtrueを返す（__tests__/lib/migration.test.ts）
-- [ ] T231 **[Green]** [US4] lib/migration.tsにisMigrationCompleted(): booleanを実装
-- [ ] T232 **[Green]** [US4] テストを実行してT230が通ることを確認
-- [ ] T233 **[Refactor]** [US4] フラグチェックを最適化
+- [x] T230 **[Red]** [US4] テスト記述: isMigrationCompletedがフラグ設定時にtrueを返す（__tests__/lib/migration.test.ts）
+- [x] T231 **[Green]** [US4] lib/migration.tsにisMigrationCompleted(): booleanを実装
+- [x] T232 **[Green]** [US4] テストを実行してT230が通ることを確認
+- [x] T233 **[Refactor]** [US4] フラグチェックを最適化
 
 #### テストケース3: migrateToMultiTenantがレガシーデータなしでfalseを返す
 
-- [ ] T234 **[Red]** [US4] テスト記述: migrateToMultiTenantがレガシーデータなしで{migrated: false}を返す（__tests__/lib/migration.test.ts）
-- [ ] T235 **[Green]** [US4] lib/migration.tsにmigrateToMultiTenant(): MigrationResultスケルトンを実装
-- [ ] T236 **[Green]** [US4] hasLegacyDataチェックと早期リターンを追加
-- [ ] T237 **[Green]** [US4] テストを実行してT234が通ることを確認
-- [ ] T238 **[Refactor]** [US4] 早期リターンロジックをクリーンアップ
+- [x] T234 **[Red]** [US4] テスト記述: migrateToMultiTenantがレガシーデータなしで{migrated: false}を返す（__tests__/lib/migration.test.ts）
+- [x] T235 **[Green]** [US4] lib/migration.tsにmigrateToMultiTenant(): MigrationResultスケルトンを実装
+- [x] T236 **[Green]** [US4] hasLegacyDataチェックと早期リターンを追加
+- [x] T237 **[Green]** [US4] テストを実行してT234が通ることを確認
+- [x] T238 **[Refactor]** [US4] 早期リターンロジックをクリーンアップ
 
 #### テストケース4: migrateToMultiTenantが完了済みでfalseを返す
 
-- [ ] T239 **[Red]** [US4] テスト記述: migrateToMultiTenantが完了済みならスキップ（__tests__/lib/migration.test.ts）
-- [ ] T240 **[Green]** [US4] migrateToMultiTenantにisMigrationCompletedチェックを追加
-- [ ] T241 **[Green]** [US4] テストを実行してT239が通ることを確認
-- [ ] T242 **[Refactor]** [US4] マイグレーションスキップロジックを最適化
+- [x] T239 **[Red]** [US4] テスト記述: migrateToMultiTenantが完了済みならスキップ（__tests__/lib/migration.test.ts）
+- [x] T240 **[Green]** [US4] migrateToMultiTenantにisMigrationCompletedチェックを追加
+- [x] T241 **[Green]** [US4] テストを実行してT239が通ることを確認
+- [x] T242 **[Refactor]** [US4] マイグレーションスキップロジックを最適化
 
 #### テストケース5: migrateToMultiTenantがデフォルト団体を作成
 
-- [ ] T243 **[Red]** [US4] テスト記述: migrateToMultiTenantがnanoidで「マイ団体」を作成（__tests__/lib/migration.test.ts）
-- [ ] T244 **[Green]** [US4] migrateToMultiTenantにデフォルト団体作成ロジックを追加
-- [ ] T245 **[Green]** [US4] organization-serviceからgenerateOrganizationId()を使用
-- [ ] T246 **[Green]** [US4] テストを実行してT243が通ることを確認
-- [ ] T247 **[Refactor]** [US4] デフォルト団体作成をクリーンアップ
+- [x] T243 **[Red]** [US4] テスト記述: migrateToMultiTenantがnanoidで「マイ団体」を作成（__tests__/lib/migration.test.ts）
+- [x] T244 **[Green]** [US4] migrateToMultiTenantにデフォルト団体作成ロジックを追加
+- [x] T245 **[Green]** [US4] organization-serviceからgenerateOrganizationId()を使用
+- [x] T246 **[Green]** [US4] テストを実行してT243が通ることを確認
+- [x] T247 **[Refactor]** [US4] デフォルト団体作成をクリーンアップ
 
 #### テストケース6: migrateToMultiTenantがイベント日付をマイグレーション
 
-- [ ] T248 **[Red]** [US4] テスト記述: migrateToMultiTenantがイベント日付にorganizationIdを追加（__tests__/lib/migration.test.ts）
-- [ ] T249 **[Green]** [US4] イベント日付マイグレーションロジックを追加（レガシー読込、orgId追加、新規保存）
-- [ ] T250 **[Green]** [US4] マイグレーション成功後のレガシーキー削除を追加
-- [ ] T251 **[Green]** [US4] テストを実行してT248が通ることを確認
-- [ ] T252 **[Refactor]** [US4] イベント日付マイグレーションをクリーンアップ
+- [x] T248 **[Red]** [US4] テスト記述: migrateToMultiTenantがイベント日付にorganizationIdを追加（__tests__/lib/migration.test.ts）
+- [x] T249 **[Green]** [US4] イベント日付マイグレーションロジックを追加（レガシー読込、orgId追加、新規保存）
+- [x] T250 **[Green]** [US4] マイグレーション成功後のレガシーキー削除を追加
+- [x] T251 **[Green]** [US4] テストを実行してT248が通ることを確認
+- [x] T252 **[Refactor]** [US4] イベント日付マイグレーションをクリーンアップ
 
 #### テストケース7: migrateToMultiTenantがグループをマイグレーション
 
-- [ ] T253 **[Red]** [US4] テスト記述: migrateToMultiTenantがグループにorganizationIdを追加（__tests__/lib/migration.test.ts）
-- [ ] T254 **[Green]** [US4] グループマイグレーションロジックを追加（イベントと同パターン）
-- [ ] T255 **[Green]** [US4] テストを実行してT253が通ることを確認
-- [ ] T256 **[Refactor]** [US4] グループマイグレーションをクリーンアップ
+- [x] T253 **[Red]** [US4] テスト記述: migrateToMultiTenantがグループにorganizationIdを追加（__tests__/lib/migration.test.ts）
+- [x] T254 **[Green]** [US4] グループマイグレーションロジックを追加（イベントと同パターン）
+- [x] T255 **[Green]** [US4] テストを実行してT253が通ることを確認
+- [x] T256 **[Refactor]** [US4] グループマイグレーションをクリーンアップ
 
 #### テストケース8: migrateToMultiTenantがメンバーをマイグレーション
 
-- [ ] T257 **[Red]** [US4] テスト記述: migrateToMultiTenantがメンバーにorganizationIdを追加（__tests__/lib/migration.test.ts）
-- [ ] T258 **[Green]** [US4] メンバーマイグレーションロジックを追加
-- [ ] T259 **[Green]** [US4] テストを実行してT257が通ることを確認
-- [ ] T260 **[Refactor]** [US4] メンバーマイグレーションをクリーンアップ
+- [x] T257 **[Red]** [US4] テスト記述: migrateToMultiTenantがメンバーにorganizationIdを追加（__tests__/lib/migration.test.ts）
+- [x] T258 **[Green]** [US4] メンバーマイグレーションロジックを追加
+- [x] T259 **[Green]** [US4] テストを実行してT257が通ることを確認
+- [x] T260 **[Refactor]** [US4] メンバーマイグレーションをクリーンアップ
 
 #### テストケース9: migrateToMultiTenantが出欠記録をマイグレーション
 
-- [ ] T261 **[Red]** [US4] テスト記述: migrateToMultiTenantが出欠記録にorganizationIdを追加（__tests__/lib/migration.test.ts）
-- [ ] T262 **[Green]** [US4] 出欠記録マイグレーションロジックを追加
-- [ ] T263 **[Green]** [US4] テストを実行してT261が通ることを確認
-- [ ] T264 **[Refactor]** [US4] 出欠記録マイグレーションをクリーンアップ
+- [x] T261 **[Red]** [US4] テスト記述: migrateToMultiTenantが出欠記録にorganizationIdを追加（__tests__/lib/migration.test.ts）
+- [x] T262 **[Green]** [US4] 出欠記録マイグレーションロジックを追加
+- [x] T263 **[Green]** [US4] テストを実行してT261が通ることを確認
+- [x] T264 **[Refactor]** [US4] 出欠記録マイグレーションをクリーンアップ
 
 #### テストケース10: migrateToMultiTenantが完了フラグを設定
 
-- [ ] T265 **[Red]** [US4] テスト記述: migrateToMultiTenantがattendance_migration_completedフラグを設定（__tests__/lib/migration.test.ts）
-- [ ] T266 **[Green]** [US4] migrateToMultiTenant末尾に完了フラグ設定を追加
-- [ ] T267 **[Green]** [US4] テストを実行してT265が通ることを確認
-- [ ] T268 **[Refactor]** [US4] migrateToMultiTenantを最終化
+- [x] T265 **[Red]** [US4] テスト記述: migrateToMultiTenantがattendance_migration_completedフラグを設定（__tests__/lib/migration.test.ts）
+- [x] T266 **[Green]** [US4] migrateToMultiTenant末尾に完了フラグ設定を追加
+- [x] T267 **[Green]** [US4] テストを実行してT265が通ることを確認
+- [x] T268 **[Refactor]** [US4] migrateToMultiTenantを最終化
 
 #### テストケース11: migrateToMultiTenantがエラーを処理
 
-- [ ] T269 **[Red]** [US4] テスト記述: migrateToMultiTenantが失敗時にエラーを返す（__tests__/lib/migration.test.ts）
-- [ ] T270 **[Green]** [US4] migrateToMultiTenantにtry-catchエラーハンドリングを追加
-- [ ] T271 **[Green]** [US4] エラー時にレガシーキーが削除されないことを確保（ロールバック安全性）
-- [ ] T272 **[Green]** [US4] テストを実行してT269が通ることを確認
-- [ ] T273 **[Refactor]** [US4] エラーハンドリングを最適化
+- [x] T269 **[Red]** [US4] テスト記述: migrateToMultiTenantが失敗時にエラーを返す（__tests__/lib/migration.test.ts）
+- [x] T270 **[Green]** [US4] migrateToMultiTenantにtry-catchエラーハンドリングを追加
+- [x] T271 **[Green]** [US4] エラー時にレガシーキーが削除されないことを確保（ロールバック安全性）
+- [x] T272 **[Green]** [US4] テストを実行してT269が通ることを確認
+- [x] T273 **[Refactor]** [US4] エラーハンドリングを最適化
 
 ### トップページにマイグレーション統合
 
 #### テストケース1: トップページがマウント時にmigrateToMultiTenantを呼び出す
 
-- [ ] T274 **[Red]** [US4] テスト記述: トップページがuseEffectでmigrateToMultiTenantを呼び出す（__tests__/app/page.test.tsx）
-- [ ] T275 **[Green]** [US4] app/page.tsxにmigrateToMultiTenantを呼び出すuseEffectを追加
-- [ ] T276 **[Green]** [US4] テストを実行してT274が通ることを確認
-- [ ] T277 **[Refactor]** [US4] useEffect依存関係をクリーンアップ
+- [x] T274 **[Red]** [US4] テスト記述: トップページがuseEffectでmigrateToMultiTenantを呼び出す（__tests__/app/page.test.tsx）
+- [x] T275 **[Green]** [US4] app/page.tsxにmigrateToMultiTenantを呼び出すuseEffectを追加
+- [x] T276 **[Green]** [US4] テストを実行してT274が通ることを確認
+- [x] T277 **[Refactor]** [US4] useEffect依存関係をクリーンアップ
 
 #### テストケース2: トップページがマイグレーション後にデフォルト団体にリダイレクト
 
-- [ ] T278 **[Red]** [US4] テスト記述: トップページがマイグレーション時に/{defaultOrgId}/にリダイレクト（__tests__/app/page.test.tsx）
-- [ ] T279 **[Green]** [US4] app/page.tsxにresult.migratedがtrueの時のrouter.pushロジックを追加
-- [ ] T280 **[Green]** [US4] テストを実行してT278が通ることを確認
-- [ ] T281 **[Refactor]** [US4] リダイレクトロジックを最適化
+- [x] T278 **[Red]** [US4] テスト記述: トップページがマイグレーション時に/{defaultOrgId}/にリダイレクト（__tests__/app/page.test.tsx）
+- [x] T279 **[Green]** [US4] app/page.tsxにresult.migratedがtrueの時のrouter.pushロジックを追加
+- [x] T280 **[Green]** [US4] テストを実行してT278が通ることを確認
+- [x] T281 **[Refactor]** [US4] リダイレクトロジックを最適化
 
 #### テストケース3: トップページがマイグレーション失敗時にエラーメッセージを表示
 
-- [ ] T282 **[Red]** [US4] テスト記述: トップページがマイグレーション失敗時にエラーを表示（__tests__/app/page.test.tsx）
-- [ ] T283 **[Green]** [US4] app/page.tsxにエラーハンドリングUIを追加
-- [ ] T284 **[Green]** [US4] テストを実行してT282が通ることを確認
-- [ ] T285 **[Refactor]** [US4] エラーメッセージUXを改善
+- [x] T282 **[Red]** [US4] テスト記述: トップページがマイグレーション失敗時にエラーを表示（__tests__/app/page.test.tsx）
+- [x] T283 **[Green]** [US4] app/page.tsxにエラーハンドリングUIを追加
+- [x] T284 **[Green]** [US4] テストを実行してT282が通ることを確認
+- [x] T285 **[Refactor]** [US4] エラーメッセージUXを改善
 
 ### 統合テスト
 
 #### テストケース1: 完全なマイグレーションワークフロー統合テスト
 
-- [ ] T286 **[Red]** [US4] 統合テスト記述: すべてのデータ型での完全なマイグレーションワークフロー（__tests__/integration/migration.test.ts）
-- [ ] T287 **[Green]** [US4] 統合テストを実行して完全なマイグレーションが動作することを検証
-- [ ] T288 **[Refactor]** [US4] 統合テストにエッジケースを追加
+- [x] T286 **[Red]** [US4] 統合テスト記述: すべてのデータ型での完全なマイグレーションワークフロー（__tests__/integration/migration.test.ts）
+- [x] T287 **[Green]** [US4] 統合テストを実行して完全なマイグレーションが動作することを検証
+- [x] T288 **[Refactor]** [US4] 統合テストにエッジケースを追加
 
 **チェックポイント**: ユーザーストーリー4完了 - レガシーデータマイグレーションが自動で動作
 
