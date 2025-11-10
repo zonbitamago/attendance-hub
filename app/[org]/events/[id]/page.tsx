@@ -14,7 +14,7 @@ import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
 import { GroupAttendanceAccordion } from '@/components/event-detail/group-attendance-accordion';
 import { AttendanceFilters } from '@/components/event-detail/attendance-filters';
-import type { EventDate, GroupSummary, AttendanceFilterStatus } from '@/types';
+import type { EventDate, GroupSummary, AttendanceFilterStatus, AttendanceSortBy } from '@/types';
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -27,6 +27,7 @@ export default function EventDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [filterStatus, setFilterStatus] = useState<AttendanceFilterStatus>('all');
+  const [sortBy, setSortBy] = useState<AttendanceSortBy>('name');
 
   const loadData = () => {
     if (!organization) return;
@@ -146,11 +147,13 @@ export default function EventDetailPage() {
         <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
           <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">グループ別出欠状況</h2>
 
-          {/* フィルタ */}
+          {/* フィルタ・ソート */}
           <div className="mb-4">
             <AttendanceFilters
               filterStatus={filterStatus}
               onFilterChange={setFilterStatus}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
             />
           </div>
 
@@ -184,6 +187,7 @@ export default function EventDetailPage() {
                       isExpanded={expandedGroups.has(summary.groupId)}
                       onToggle={handleToggleGroup}
                       filterStatus={filterStatus}
+                      sortBy={sortBy}
                     />
                   </div>
                 );

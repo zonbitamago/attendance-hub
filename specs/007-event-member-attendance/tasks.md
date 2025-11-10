@@ -255,44 +255,44 @@
 
 #### テストケース1: ソートボタンの表示
 
-- [ ] T087 **[Red]** [US3] テストを書く: ソート切り替えボタンが表示される（__tests__/components/event-detail/attendance-filters.test.tsx）
-- [ ] T088 **[Green]** [US3] ソート部分をAttendanceFiltersに追加（components/event-detail/attendance-filters.tsx）
-- [ ] T089 **[Green]** [US3] T087のテストを実行して成功することを確認
+- [x] T087 **[Red]** [US3] テストを書く: ソート切り替えボタンが表示される（__tests__/components/event-detail/attendance-filters.test.tsx）
+- [x] T088 **[Green]** [US3] ソート部分をAttendanceFiltersに追加（components/event-detail/attendance-filters.tsx）
+- [x] T089 **[Green]** [US3] T087のテストを実行して成功することを確認
 
 #### テストケース2: ソート選択時のコールバック
 
-- [ ] T090 **[Red]** [US3] テストを書く: ソートを変更するとonSortChange()が呼ばれる（__tests__/components/event-detail/attendance-filters.test.tsx）
-- [ ] T091 **[Green]** [US3] onSortChangeコールバックを実装（components/event-detail/attendance-filters.tsx）
-- [ ] T092 **[Green]** [US3] すべてのテスト（T087, T090）が通ることを確認
+- [x] T090 **[Red]** [US3] テストを書く: ソートを変更するとonSortChange()が呼ばれる（__tests__/components/event-detail/attendance-filters.test.tsx）
+- [x] T091 **[Green]** [US3] onSortChangeコールバックを実装（components/event-detail/attendance-filters.tsx）
+- [x] T092 **[Green]** [US3] すべてのテスト（T087, T090）が通ることを確認
 
 ### ソートロジック: MemberAttendanceList
 
 #### テストケース3: 名前順ソート
 
-- [ ] T093 **[Red]** [US3] テストを書く: sortBy='name'の場合、メンバーが名前の昇順で表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T094 **[Green]** [US3] 名前順ソートロジックを実装（components/event-detail/member-attendance-list.tsx）
-- [ ] T095 **[Green]** [US3] T093のテストを実行して成功することを確認
+- [x] T093 **[Red]** [US3] テストを書く: sortBy='name'の場合、メンバーが名前の昇順で表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T094 **[Green]** [US3] 名前順ソートロジックを実装（components/event-detail/member-attendance-list.tsx）
+- [x] T095 **[Green]** [US3] T093のテストを実行して成功することを確認
 
 #### テストケース4: ステータス順ソート
 
-- [ ] T096 **[Red]** [US3] テストを書く: sortBy='status'の場合、メンバーが◯→△→✗→-の順で表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T097 **[Green]** [US3] ステータス順ソートロジックを実装（components/event-detail/member-attendance-list.tsx）
-- [ ] T098 **[Green]** [US3] すべてのテスト（T093, T096）が通ることを確認
-- [ ] T099 **[Refactor]** [US3] ソートロジックを整理
+- [x] T096 **[Red]** [US3] テストを書く: sortBy='status'の場合、メンバーが◯→△→✗→-の順で表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T097 **[Green]** [US3] ステータス順ソートロジックを実装（components/event-detail/member-attendance-list.tsx）
+- [x] T098 **[Green]** [US3] すべてのテスト（T093, T096）が通ることを確認
+- [x] T099 **[Refactor]** [US3] ソートロジックを整理
 
 #### テストケース5: フィルタ後のソート適用
 
-- [ ] T100 **[Red]** [US3] テストを書く: フィルタ適用後もソートが正しく適用される（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T101 **[Green]** [US3] フィルタとソートの組み合わせを確認（components/event-detail/member-attendance-list.tsx）
-- [ ] T102 **[Green]** [US3] すべてのテスト（T093～T100）が通ることを確認
+- [x] T100 **[Red]** [US3] テストを書く: フィルタ適用後もソートが正しく適用される（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T101 **[Green]** [US3] フィルタとソートの組み合わせを確認（components/event-detail/member-attendance-list.tsx）
+- [x] T102 **[Green]** [US3] すべてのテスト（T093～T100）が通ることを確認
 
 ### 統合: イベント詳細ページ
 
-- [ ] T103 [US3] sortBy状態を管理するuseStateを追加（app/[org]/events/[id]/page.tsx）
-- [ ] T104 [US3] MemberAttendanceListにsortByを渡す（app/[org]/events/[id]/page.tsx）
-- [ ] T105 [US3] 手動テスト: ソートボタンで名前順に変更し、五十音順/アルファベット順になることを確認
-- [ ] T106 [US3] 手動テスト: ソートボタンでステータス順に変更し、◯→△→✗→-の順になることを確認
-- [ ] T107 [US3] 手動テスト: フィルタとソートの組み合わせが正しく動作することを確認
+- [x] T103 [US3] sortBy状態を管理するuseStateを追加（app/[org]/events/[id]/page.tsx）
+- [x] T104 [US3] MemberAttendanceListにsortByを渡す（app/[org]/events/[id]/page.tsx）
+- [x] T105 [US3] 手動テスト: ソートボタンで名前順に変更し、五十音順/アルファベット順になることを確認
+- [x] T106 [US3] 手動テスト: ソートボタンでステータス順に変更し、◯→△→✗→-の順になることを確認
+- [x] T107 [US3] 手動テスト: フィルタとソートの組み合わせが正しく動作することを確認
 
 **US3 完了基準**:
 - ✅ ソート切り替えボタンが表示される

@@ -1,7 +1,7 @@
 'use client';
 
 import { MemberAttendanceList } from './member-attendance-list';
-import type { MemberAttendanceDetail, AttendanceFilterStatus } from '@/types';
+import type { MemberAttendanceDetail, AttendanceFilterStatus, AttendanceSortBy } from '@/types';
 
 interface GroupAttendanceAccordionProps {
   /** グループID */
@@ -16,6 +16,8 @@ interface GroupAttendanceAccordionProps {
   onToggle: (groupId: string) => void;
   /** フィルタステータス（デフォルト: 'all'） */
   filterStatus?: AttendanceFilterStatus;
+  /** ソート種類（デフォルト: 'name'） */
+  sortBy?: AttendanceSortBy;
 }
 
 /**
@@ -36,6 +38,7 @@ export function GroupAttendanceAccordion({
   isExpanded,
   onToggle,
   filterStatus = 'all',
+  sortBy = 'name',
 }: GroupAttendanceAccordionProps) {
   const contentId = `accordion-content-${groupId}`;
 
@@ -62,7 +65,7 @@ export function GroupAttendanceAccordion({
 
       {isExpanded && (
         <div id={contentId} className="p-4">
-          <MemberAttendanceList members={members} filterStatus={filterStatus} />
+          <MemberAttendanceList members={members} filterStatus={filterStatus} sortBy={sortBy} />
         </div>
       )}
     </div>
