@@ -200,6 +200,16 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 
 ## 最近の変更
 
+- **2025-11-11**: 007-event-member-attendance フィーチャーを完了
+  - イベント画面 個人別出欠状況表示機能実装
+  - グループ別アコーディオン（展開/折りたたみ）
+  - フィルタ機能（参加/未定/欠席/未登録）
+  - ソート機能（名前順/ステータス順）
+  - 検索機能（部分一致、大文字小文字区別なし）
+  - パフォーマンステスト（100メンバー、200ms以内）
+  - アクセシビリティ対応（ARIA属性、キーボード操作）
+  - レスポンシブデザイン（320px～1024px+）
+  - 233テスト全てpass、ビルド成功
 - **2025-11-09**: 004-bulk-attendance-register フィーチャーを完了
   - 複数イベント一括出欠登録機能実装
   - `/my-register` 新規ページ追加
@@ -268,6 +278,7 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 - localStorage（プロトタイプ用、将来的にSupabase PostgreSQLへ移行予定） (005-multi-tenant)
 - TypeScript 5.9 + Node.js 20.x, 22.x (マトリックステスト) (006-ci-cd-setup)
 - N/A (設定ファイルのみ) (006-ci-cd-setup)
+- TypeScript 5.9 (strict mode必須) + Next.js 16.0.1, React 19.2.0, Tailwind CSS 3.4 (007-event-member-attendance)
 
 ## Recent Changes
 - 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function
