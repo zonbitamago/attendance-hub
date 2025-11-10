@@ -60,7 +60,7 @@ export function GroupAttendanceAccordion({
         onKeyDown={handleKeyDown}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        className="w-full px-4 py-3 text-left font-semibold text-gray-900 bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center"
+        className="w-full px-4 py-3 text-left font-semibold text-gray-900 bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <span>{groupName}</span>
         <span className="text-gray-500">{isExpanded ? '▼' : '▶'}</span>
