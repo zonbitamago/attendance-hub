@@ -8,6 +8,7 @@ import {
   calculateEventTotalSummary,
   upsertAttendance,
   upsertBulkAttendances,
+  getGroupMemberAttendances,
 } from '@/lib/attendance-service';
 import { loadAttendances, saveAttendances, loadGroups, loadMembers } from '@/lib/storage';
 import type { Attendance, Group, Member } from '@/types';
@@ -807,6 +808,381 @@ describe('Attendance Service', () => {
         // 空配列の場合は読み込みは行うが、保存は不要
         expect(mockLoadAttendances).toHaveBeenCalledTimes(1);
         expect(mockSaveAttendances).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  // Feature 007: イベント画面 個人別出欠状況表示機能
+  describe('getGroupMemberAttendances', () => {
+    describe('Test Case 1: 出欠登録済みと未登録のメンバーを正しく返す', () => {
+      it('出欠登録済みと未登録のメンバーを正しく返す', () => {
+        const orgId = 'org-1';
+        const eventDateId = 'event-1';
+        const groupId = 'group-1';
+
+        const mockGroups: Group[] = [
+          {
+            id: groupId,
+            organizationId: orgId,
+            name: '打',
+            order: 0,
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        const mockMembers: Member[] = [
+          {
+            id: 'member-1',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'やまだたろう',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'member-2',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'すずきはなこ',
+            createdAt: '2025-01-02T00:00:00.000Z',
+          },
+        ];
+
+        const mockAttendances: Attendance[] = [
+          {
+            id: 'attendance-1',
+            organizationId: orgId,
+            eventDateId: eventDateId,
+            memberId: 'member-2',
+            status: '◯',
+            createdAt: '2025-01-03T00:00:00.000Z',
+          },
+        ];
+
+        mockLoadGroups.mockReturnValue(mockGroups);
+        mockLoadMembers.mockReturnValue(mockMembers);
+        mockLoadAttendances.mockReturnValue(mockAttendances);
+
+        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+
+        expect(details).toHaveLength(2);
+        expect(details[0].memberName).toBe('すずきはなこ');
+        expect(details[0].status).toBe('◯');
+        expect(details[0].hasRegistered).toBe(true);
+        expect(details[1].memberName).toBe('やまだたろう');
+        expect(details[1].status).toBe(null);
+        expect(details[1].hasRegistered).toBe(false);
+      });
+    });
+
+    describe('Test Case 2: 全員が出欠登録済みの場合', () => {
+      it('全員が出欠登録済みの場合', () => {
+        const orgId = 'org-1';
+        const eventDateId = 'event-1';
+        const groupId = 'group-1';
+
+        const mockGroups: Group[] = [
+          {
+            id: groupId,
+            organizationId: orgId,
+            name: '打',
+            order: 0,
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        const mockMembers: Member[] = [
+          {
+            id: 'member-1',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'やまだたろう',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'member-2',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'すずきはなこ',
+            createdAt: '2025-01-02T00:00:00.000Z',
+          },
+        ];
+
+        const mockAttendances: Attendance[] = [
+          {
+            id: 'attendance-1',
+            organizationId: orgId,
+            eventDateId: eventDateId,
+            memberId: 'member-1',
+            status: '◯',
+            createdAt: '2025-01-03T00:00:00.000Z',
+          },
+          {
+            id: 'attendance-2',
+            organizationId: orgId,
+            eventDateId: eventDateId,
+            memberId: 'member-2',
+            status: '△',
+            createdAt: '2025-01-04T00:00:00.000Z',
+          },
+        ];
+
+        mockLoadGroups.mockReturnValue(mockGroups);
+        mockLoadMembers.mockReturnValue(mockMembers);
+        mockLoadAttendances.mockReturnValue(mockAttendances);
+
+        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+
+        expect(details).toHaveLength(2);
+        expect(details.every((d) => d.hasRegistered)).toBe(true);
+        expect(details[0].memberName).toBe('すずきはなこ');
+        expect(details[0].status).toBe('△');
+        expect(details[1].memberName).toBe('やまだたろう');
+        expect(details[1].status).toBe('◯');
+      });
+    });
+
+    describe('Test Case 3: 全員が未登録の場合', () => {
+      it('全員が未登録の場合', () => {
+        const orgId = 'org-1';
+        const eventDateId = 'event-1';
+        const groupId = 'group-1';
+
+        const mockGroups: Group[] = [
+          {
+            id: groupId,
+            organizationId: orgId,
+            name: '打',
+            order: 0,
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        const mockMembers: Member[] = [
+          {
+            id: 'member-1',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'やまだたろう',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'member-2',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'すずきはなこ',
+            createdAt: '2025-01-02T00:00:00.000Z',
+          },
+        ];
+
+        mockLoadGroups.mockReturnValue(mockGroups);
+        mockLoadMembers.mockReturnValue(mockMembers);
+        mockLoadAttendances.mockReturnValue([]);
+
+        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+
+        expect(details).toHaveLength(2);
+        expect(details.every((d) => !d.hasRegistered)).toBe(true);
+        expect(details.every((d) => d.status === null)).toBe(true);
+      });
+    });
+
+    describe('Test Case 4: グループにメンバーが0人の場合', () => {
+      it('グループにメンバーがいない場合', () => {
+        const orgId = 'org-1';
+        const eventDateId = 'event-1';
+        const groupId = 'group-empty';
+
+        const mockGroups: Group[] = [
+          {
+            id: groupId,
+            organizationId: orgId,
+            name: 'Empty Group',
+            order: 0,
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        mockLoadGroups.mockReturnValue(mockGroups);
+        mockLoadMembers.mockReturnValue([]);
+        mockLoadAttendances.mockReturnValue([]);
+
+        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+
+        expect(details).toHaveLength(0);
+      });
+    });
+
+    describe('Test Case 5: グループが存在しない場合', () => {
+      it('グループが存在しない場合は空配列を返す', () => {
+        const orgId = 'org-1';
+        const eventDateId = 'event-1';
+        const groupId = 'nonexistent-group';
+
+        mockLoadGroups.mockReturnValue([]);
+        mockLoadMembers.mockReturnValue([]);
+        mockLoadAttendances.mockReturnValue([]);
+
+        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+
+        expect(details).toHaveLength(0);
+      });
+    });
+
+    describe('Test Case 6: 名前順ソート（日本語）', () => {
+      it('メンバーが名前の五十音順でソートされる', () => {
+        const orgId = 'org-1';
+        const eventDateId = 'event-1';
+        const groupId = 'group-1';
+
+        const mockGroups: Group[] = [
+          {
+            id: groupId,
+            organizationId: orgId,
+            name: '打',
+            order: 0,
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        const mockMembers: Member[] = [
+          {
+            id: 'member-1',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'たなかみさき',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'member-2',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'いとうけんた',
+            createdAt: '2025-01-02T00:00:00.000Z',
+          },
+          {
+            id: 'member-3',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'さとうじろう',
+            createdAt: '2025-01-03T00:00:00.000Z',
+          },
+        ];
+
+        mockLoadGroups.mockReturnValue(mockGroups);
+        mockLoadMembers.mockReturnValue(mockMembers);
+        mockLoadAttendances.mockReturnValue([]);
+
+        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+
+        expect(details.map((d) => d.memberName)).toEqual([
+          'いとうけんた',
+          'さとうじろう',
+          'たなかみさき',
+        ]);
+      });
+    });
+
+    describe('Test Case 7: 名前順ソート（アルファベット）', () => {
+      it('メンバーが名前のアルファベット順でソートされる', () => {
+        const orgId = 'org-1';
+        const eventDateId = 'event-1';
+        const groupId = 'group-1';
+
+        const mockGroups: Group[] = [
+          {
+            id: groupId,
+            organizationId: orgId,
+            name: 'Band',
+            order: 0,
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        const mockMembers: Member[] = [
+          {
+            id: 'member-1',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'Charlie',
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'member-2',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'Alice',
+            createdAt: '2025-01-02T00:00:00.000Z',
+          },
+          {
+            id: 'member-3',
+            organizationId: orgId,
+            groupId: groupId,
+            name: 'Bob',
+            createdAt: '2025-01-03T00:00:00.000Z',
+          },
+        ];
+
+        mockLoadGroups.mockReturnValue(mockGroups);
+        mockLoadMembers.mockReturnValue(mockMembers);
+        mockLoadAttendances.mockReturnValue([]);
+
+        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+
+        expect(details.map((d) => d.memberName)).toEqual(['Alice', 'Bob', 'Charlie']);
+      });
+    });
+
+    describe('Test Case 8: 大量データ（パフォーマンステスト）', () => {
+      it('100人のメンバーでもパフォーマンスが許容範囲内', () => {
+        const orgId = 'org-1';
+        const eventDateId = 'event-1';
+        const groupId = 'group-1';
+
+        const mockGroups: Group[] = [
+          {
+            id: groupId,
+            organizationId: orgId,
+            name: '大規模グループ',
+            order: 0,
+            createdAt: '2025-01-01T00:00:00.000Z',
+          },
+        ];
+
+        // 100人のメンバーを作成
+        const mockMembers: Member[] = [];
+        const mockAttendances: Attendance[] = [];
+        for (let i = 0; i < 100; i++) {
+          mockMembers.push({
+            id: `member-${i}`,
+            organizationId: orgId,
+            groupId: groupId,
+            name: `メンバー${i}`,
+            createdAt: `2025-01-01T00:00:00.000Z`,
+          });
+
+          // 半数は出欠登録済み
+          if (i % 2 === 0) {
+            mockAttendances.push({
+              id: `attendance-${i}`,
+              organizationId: orgId,
+              eventDateId: eventDateId,
+              memberId: `member-${i}`,
+              status: '◯',
+              createdAt: `2025-01-02T00:00:00.000Z`,
+            });
+          }
+        }
+
+        mockLoadGroups.mockReturnValue(mockGroups);
+        mockLoadMembers.mockReturnValue(mockMembers);
+        mockLoadAttendances.mockReturnValue(mockAttendances);
+
+        const startTime = performance.now();
+        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const endTime = performance.now();
+
+        expect(details).toHaveLength(100);
+        expect(endTime - startTime).toBeLessThan(50); // 50ms以内
       });
     });
   });

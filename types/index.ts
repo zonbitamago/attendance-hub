@@ -99,3 +99,25 @@ export interface BulkAttendanceResult {
     error: string;
   }>;
 }
+
+// メンバー出欠詳細（Feature 007: イベント画面 個人別出欠状況表示機能）
+export interface MemberAttendanceDetail {
+  memberId: string;
+  memberName: string;
+  groupId: string;
+  groupName: string;
+  status: AttendanceStatus | null; // null = 未登録
+  hasRegistered: boolean;
+  memberCreatedAt: string;
+}
+
+// フィルタステータス（Feature 007: イベント画面 個人別出欠状況表示機能）
+export type AttendanceFilterStatus =
+  | 'all'
+  | 'attending'
+  | 'maybe'
+  | 'notAttending'
+  | 'unregistered';
+
+// ソート種類（Feature 007: イベント画面 個人別出欠状況表示機能）
+export type AttendanceSortBy = 'name' | 'status';

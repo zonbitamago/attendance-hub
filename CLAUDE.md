@@ -268,6 +268,7 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 - localStorage（プロトタイプ用、将来的にSupabase PostgreSQLへ移行予定） (005-multi-tenant)
 - TypeScript 5.9 + Node.js 20.x, 22.x (マトリックステスト) (006-ci-cd-setup)
 - N/A (設定ファイルのみ) (006-ci-cd-setup)
+- TypeScript 5.9 (strict mode必須) + Next.js 16.0.1, React 19.2.0, Tailwind CSS 3.4 (007-event-member-attendance)
 
 ## Recent Changes
 - 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function

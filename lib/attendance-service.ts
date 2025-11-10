@@ -1,4 +1,4 @@
-import type { Attendance, GroupSummary, EventTotalSummary, BulkAttendanceInput, BulkAttendanceResult } from '@/types';
+import type { Attendance, GroupSummary, EventTotalSummary, BulkAttendanceInput, BulkAttendanceResult, MemberAttendanceDetail } from '@/types';
 import { loadAttendances, saveAttendances, loadGroups, loadMembers } from './storage';
 import { CreateAttendanceInputSchema, type AttendanceInput } from './validation';
 import { getCurrentTimestamp } from './date-utils';
@@ -303,4 +303,49 @@ export function upsertBulkAttendances(organizationId: string, inputs: BulkAttend
   }
 
   return result;
+}
+
+// Feature 007: イベント画面 個人別出欠状況表示機能
+// グループメンバーの出欠詳細を取得
+export function getGroupMemberAttendances(
+  organizationId: string,
+  eventDateId: string,
+  groupId: string
+): MemberAttendanceDetail[] {
+  // 1. グループを取得
+  const group = loadGroups(organizationId).find((g) => g.id === groupId);
+  if (!group) return [];
+
+  // 2. グループの全メンバーを取得
+  const allMembers = loadMembers(organizationId).filter((m) => m.groupId === groupId);
+
+  // 3. イベントの全出欠レコードを取得
+  const attendances = getAttendancesByEventDateId(organizationId, eventDateId);
+
+  // 4. メンバーIDから出欠レコードへのマップを作成
+  const attendanceMap = new Map<string, Attendance>();
+  for (const att of attendances) {
+    attendanceMap.set(att.memberId, att);
+  }
+
+  // 5. メンバーと出欠レコードを結合
+  const details: MemberAttendanceDetail[] = allMembers.map((member) => {
+    const attendance = attendanceMap.get(member.id);
+    return {
+      memberId: member.id,
+      memberName: member.name,
+      groupId: group.id,
+      groupName: group.name,
+      status: attendance?.status ?? null,
+      hasRegistered: attendance !== undefined,
+      memberCreatedAt: member.createdAt,
+    };
+  });
+
+  // 6. 名前順でソート（五十音順）
+  // NOTE: ひらがな・カタカナはlocaleCompareで正しくソートされます。
+  // 漢字の読みに基づくソートには、ふりがなデータまたは専用ライブラリが必要です。
+  details.sort((a, b) => a.memberName.localeCompare(b.memberName, 'ja'));
+
+  return details;
 }
