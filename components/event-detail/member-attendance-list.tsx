@@ -1,10 +1,12 @@
-import type { MemberAttendanceDetail, AttendanceFilterStatus } from '@/types';
+import type { MemberAttendanceDetail, AttendanceFilterStatus, AttendanceSortBy } from '@/types';
 
 interface MemberAttendanceListProps {
   /** メンバーの出欠詳細リスト */
   members: MemberAttendanceDetail[];
   /** フィルタステータス（デフォルト: 'all'） */
   filterStatus?: AttendanceFilterStatus;
+  /** ソート種類（デフォルト: 'name'） */
+  sortBy?: AttendanceSortBy;
 }
 
 /**
@@ -16,11 +18,13 @@ interface MemberAttendanceListProps {
  *
  * @param props.members - 表示するメンバーの出欠詳細配列
  * @param props.filterStatus - フィルタステータス（'all', 'attending', 'maybe', 'notAttending', 'unregistered'）
+ * @param props.sortBy - ソート種類（'name', 'status'）
  * @returns メンバーリストまたは空の状態メッセージ
  */
 export function MemberAttendanceList({
   members,
-  filterStatus = 'all'
+  filterStatus = 'all',
+  sortBy = 'name'
 }: MemberAttendanceListProps) {
   // フィルタリング処理
   const filteredMembers = members.filter((member) => {
@@ -39,7 +43,26 @@ export function MemberAttendanceList({
         return true;
     }
   });
-  if (filteredMembers.length === 0) {
+
+  // ソート処理
+  const sortedMembers = [...filteredMembers].sort((a, b) => {
+    if (sortBy === 'name') {
+      // 名前順（五十音順/アルファベット順）
+      return a.memberName.localeCompare(b.memberName, 'ja');
+    } else {
+      // ステータス順（◯→△→✗→-）
+      const statusOrder: { [key: string]: number } = {
+        '◯': 0,
+        '△': 1,
+        '✗': 2,
+        '-': 3,
+      };
+      const aOrder = statusOrder[a.status ?? '-'] ?? 999;
+      const bOrder = statusOrder[b.status ?? '-'] ?? 999;
+      return aOrder - bOrder;
+    }
+  });
+  if (sortedMembers.length === 0) {
     return (
       <div className="py-4 text-center text-gray-500">
         メンバーがいません
@@ -49,7 +72,7 @@ export function MemberAttendanceList({
 
   return (
     <ul className="space-y-2">
-      {filteredMembers.map((member) => {
+      {sortedMembers.map((member) => {
         // ステータスに応じた色を設定
         const statusColor = member.status === '◯'
           ? 'text-green-600'

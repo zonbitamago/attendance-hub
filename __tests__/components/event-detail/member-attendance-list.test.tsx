@@ -332,4 +332,100 @@ describe('MemberAttendanceList', () => {
       expect(container.querySelector('ul')).not.toBeInTheDocument();
     });
   });
+
+  describe('Test Case 9: 名前順ソート', () => {
+    it('sortBy="name"の場合、メンバーが名前順（五十音順/アルファベット順）で表示される', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'たなかゆい',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-03T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'いとうけんた',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-3',
+          memberName: 'さとうじろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '✗',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+      ];
+
+      render(<MemberAttendanceList members={mockDetails} sortBy="name" />);
+
+      // メンバーが名前順で表示されること（い→さ→た）
+      const memberNames = screen.getAllByText(/いとうけんた|さとうじろう|たなかゆい/);
+      expect(memberNames).toHaveLength(3);
+      expect(memberNames[0]).toHaveTextContent('いとうけんた');
+      expect(memberNames[1]).toHaveTextContent('さとうじろう');
+      expect(memberNames[2]).toHaveTextContent('たなかゆい');
+    });
+  });
+
+  describe('Test Case 10: ステータス順ソート', () => {
+    it('sortBy="status"の場合、メンバーがステータス順（◯→△→✗→-）で表示される', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'いとうけんた',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'たなかゆい',
+          groupId: 'group-1',
+          groupName: '打',
+          status: null,
+          hasRegistered: false,
+          memberCreatedAt: '2025-01-04T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-3',
+          memberName: 'さとうじろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '✗',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-4',
+          memberName: 'やまだたろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-03T00:00:00.000Z',
+        },
+      ];
+
+      render(<MemberAttendanceList members={mockDetails} sortBy="status" />);
+
+      // メンバーがステータス順で表示されること（◯→△→✗→-）
+      const memberNames = screen.getAllByText(/やまだたろう|いとうけんた|さとうじろう|たなかゆい/);
+      expect(memberNames).toHaveLength(4);
+      expect(memberNames[0]).toHaveTextContent('やまだたろう'); // ◯
+      expect(memberNames[1]).toHaveTextContent('いとうけんた'); // △
+      expect(memberNames[2]).toHaveTextContent('さとうじろう'); // ✗
+      expect(memberNames[3]).toHaveTextContent('たなかゆい'); // -（未登録）
+    });
+  });
 });

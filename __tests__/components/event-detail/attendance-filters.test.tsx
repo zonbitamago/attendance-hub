@@ -65,4 +65,92 @@ describe('AttendanceFilters', () => {
       expect(mockOnFilterChange).toHaveBeenCalledWith('unregistered');
     });
   });
+
+  describe('Test Case 3: ソート切り替えボタンの表示', () => {
+    it('ソート切り替えボタンが表示され、現在のソート種類が表示される', () => {
+      const mockOnFilterChange = jest.fn();
+      const mockOnSortChange = jest.fn();
+
+      render(
+        <AttendanceFilters
+          filterStatus="all"
+          onFilterChange={mockOnFilterChange}
+          sortBy="name"
+          onSortChange={mockOnSortChange}
+        />
+      );
+
+      // ソート切り替えボタンが表示されること
+      const sortButton = screen.getByRole('button', { name: /ソート/i });
+      expect(sortButton).toBeInTheDocument();
+
+      // 現在のソート種類が表示されること（name = 名前順）
+      expect(sortButton).toHaveTextContent('名前順');
+    });
+
+    it('sortBy="status"の場合、「ステータス順」と表示される', () => {
+      const mockOnFilterChange = jest.fn();
+      const mockOnSortChange = jest.fn();
+
+      render(
+        <AttendanceFilters
+          filterStatus="all"
+          onFilterChange={mockOnFilterChange}
+          sortBy="status"
+          onSortChange={mockOnSortChange}
+        />
+      );
+
+      const sortButton = screen.getByRole('button', { name: /ソート/i });
+      expect(sortButton).toHaveTextContent('ステータス順');
+    });
+  });
+
+  describe('Test Case 4: ソート切り替え時のコールバック', () => {
+    it('名前順の状態でボタンをクリックするとステータス順に切り替わる', () => {
+      const mockOnFilterChange = jest.fn();
+      const mockOnSortChange = jest.fn();
+
+      render(
+        <AttendanceFilters
+          filterStatus="all"
+          onFilterChange={mockOnFilterChange}
+          sortBy="name"
+          onSortChange={mockOnSortChange}
+        />
+      );
+
+      const sortButton = screen.getByRole('button', { name: /ソート/i });
+
+      // ボタンをクリック
+      fireEvent.click(sortButton);
+
+      // onSortChangeが'status'で呼ばれること
+      expect(mockOnSortChange).toHaveBeenCalledTimes(1);
+      expect(mockOnSortChange).toHaveBeenCalledWith('status');
+    });
+
+    it('ステータス順の状態でボタンをクリックすると名前順に切り替わる', () => {
+      const mockOnFilterChange = jest.fn();
+      const mockOnSortChange = jest.fn();
+
+      render(
+        <AttendanceFilters
+          filterStatus="all"
+          onFilterChange={mockOnFilterChange}
+          sortBy="status"
+          onSortChange={mockOnSortChange}
+        />
+      );
+
+      const sortButton = screen.getByRole('button', { name: /ソート/i });
+
+      // ボタンをクリック
+      fireEvent.click(sortButton);
+
+      // onSortChangeが'name'で呼ばれること
+      expect(mockOnSortChange).toHaveBeenCalledTimes(1);
+      expect(mockOnSortChange).toHaveBeenCalledWith('name');
+    });
+  });
 });
