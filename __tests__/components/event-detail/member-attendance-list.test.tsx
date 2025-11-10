@@ -300,7 +300,7 @@ describe('MemberAttendanceList', () => {
   });
 
   describe('Test Case 8: フィルタ結果が0件の場合の空メッセージ', () => {
-    it('フィルタを適用して0件になった場合「メンバーがいません」と表示される', () => {
+    it('フィルタを適用して0件になった場合「条件に該当するメンバーがいません」と表示される', () => {
       const mockDetails: MemberAttendanceDetail[] = [
         {
           memberId: 'member-1',
@@ -326,7 +326,7 @@ describe('MemberAttendanceList', () => {
       const { container } = render(<MemberAttendanceList members={mockDetails} filterStatus="unregistered" />);
 
       // 空メッセージが表示されること
-      expect(screen.getByText('メンバーがいません')).toBeInTheDocument();
+      expect(screen.getByText('条件に該当するメンバーがいません')).toBeInTheDocument();
 
       // リストは表示されないこと
       expect(container.querySelector('ul')).not.toBeInTheDocument();
@@ -545,7 +545,7 @@ describe('MemberAttendanceList', () => {
       render(<MemberAttendanceList members={mockDetails} searchQuery="存在しない名前" />);
 
       // 空の状態メッセージが表示されること
-      expect(screen.getByText('メンバーがいません')).toBeInTheDocument();
+      expect(screen.getByText('条件に該当するメンバーがいません')).toBeInTheDocument();
 
       // メンバーは表示されないこと
       expect(screen.queryByText('やまだたろう')).not.toBeInTheDocument();

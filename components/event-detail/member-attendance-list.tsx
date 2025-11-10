@@ -30,6 +30,15 @@ export function MemberAttendanceList({
   sortBy = 'name',
   searchQuery = ''
 }: MemberAttendanceListProps) {
+  // 元のメンバーリストが空の場合は早期リターン
+  if (members.length === 0) {
+    return (
+      <div className="py-4 text-center text-gray-500">
+        メンバーがいません
+      </div>
+    );
+  }
+
   // 検索フィルタリング処理
   const searchedMembers = members.filter((member) => {
     if (!searchQuery) return true;
@@ -72,10 +81,12 @@ export function MemberAttendanceList({
       return aOrder - bOrder;
     }
   });
+
+  // フィルタリング後に0件になった場合
   if (sortedMembers.length === 0) {
     return (
       <div className="py-4 text-center text-gray-500">
-        メンバーがいません
+        条件に該当するメンバーがいません
       </div>
     );
   }
