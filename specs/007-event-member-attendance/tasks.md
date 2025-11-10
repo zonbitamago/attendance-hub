@@ -110,54 +110,54 @@
 
 #### テストケース1: メンバー名とステータスの表示
 
-- [ ] T031 **[Red]** [US1] テストを書く: メンバー名とステータスが表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T032 **[Green]** [US1] MemberAttendanceListコンポーネントの基本実装（components/event-detail/member-attendance-list.tsx）
-- [ ] T033 **[Green]** [US1] T031のテストを実行して成功することを確認
-- [ ] T034 **[Refactor]** [US1] コンポーネント構造を整理
+- [x] T031 **[Red]** [US1] テストを書く: メンバー名とステータスが表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T032 **[Green]** [US1] MemberAttendanceListコンポーネントの基本実装（components/event-detail/member-attendance-list.tsx）
+- [x] T033 **[Green]** [US1] T031のテストを実行して成功することを確認
+- [x] T034 **[Refactor]** [US1] コンポーネント構造を整理
 
 #### テストケース2: 未登録メンバーの表示
 
-- [ ] T035 **[Red]** [US1] テストを書く: 未登録メンバーが「-（未登録）」と表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T036 **[Green]** [US1] T035を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
-- [ ] T037 **[Green]** [US1] すべてのテスト（T031, T035）が通ることを確認
+- [x] T035 **[Red]** [US1] テストを書く: 未登録メンバーが「-（未登録）」と表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T036 **[Green]** [US1] T035を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
+- [x] T037 **[Green]** [US1] すべてのテスト（T031, T035）が通ることを確認
 
 #### テストケース3: 空の状態メッセージ
 
-- [ ] T038 **[Red]** [US1] テストを書く: メンバーが0人の場合「メンバーがいません」と表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T039 **[Green]** [US1] T038を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
-- [ ] T040 **[Green]** [US1] すべてのテスト（T031, T035, T038）が通ることを確認
-- [ ] T041 **[Refactor]** [US1] 条件分岐を整理
+- [x] T038 **[Red]** [US1] テストを書く: メンバーが0人の場合「メンバーがいません」と表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T039 **[Green]** [US1] T038を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
+- [x] T040 **[Green]** [US1] すべてのテスト（T031, T035, T038）が通ることを確認
+- [x] T041 **[Refactor]** [US1] 条件分岐を整理
 
 ### コンポーネント層: GroupAttendanceAccordion
 
 #### テストケース1: アコーディオンの展開/折りたたみ
 
-- [ ] T042 **[Red]** [US1] テストを書く: グループ名をクリックするとメンバーリストが表示される（__tests__/components/event-detail/group-attendance-accordion.test.tsx）
-- [ ] T043 **[Green]** [US1] GroupAttendanceAccordionコンポーネントの基本実装（components/event-detail/group-attendance-accordion.tsx）
-- [ ] T044 **[Green]** [US1] T042のテストを実行して成功することを確認
-- [ ] T045 **[Refactor]** [US1] 状態管理を整理
+- [x] T042 **[Red]** [US1] テストを書く: グループ名をクリックするとメンバーリストが表示される（__tests__/components/event-detail/group-attendance-accordion.test.tsx）
+- [x] T043 **[Green]** [US1] GroupAttendanceAccordionコンポーネントの基本実装（components/event-detail/group-attendance-accordion.tsx）
+- [x] T044 **[Green]** [US1] T042のテストを実行して成功することを確認
+- [x] T045 **[Refactor]** [US1] 状態管理を整理
 
 #### テストケース2: ARIA属性の確認
 
-- [ ] T046 **[Red]** [US1] テストを書く: aria-expanded, aria-controls属性が正しく設定される（__tests__/components/event-detail/group-attendance-accordion.test.tsx）
-- [ ] T047 **[Green]** [US1] ARIA属性を追加（components/event-detail/group-attendance-accordion.tsx）
-- [ ] T048 **[Green]** [US1] すべてのテスト（T042, T046）が通ることを確認
+- [x] T046 **[Red]** [US1] テストを書く: aria-expanded, aria-controls属性が正しく設定される（__tests__/components/event-detail/group-attendance-accordion.test.tsx）
+- [x] T047 **[Green]** [US1] ARIA属性を追加（components/event-detail/group-attendance-accordion.tsx）
+- [x] T048 **[Green]** [US1] すべてのテスト（T042, T046）が通ることを確認
 
 #### テストケース3: キーボード操作（Enter/Space）
 
-- [ ] T049 **[Red]** [US1] テストを書く: EnterキーまたはSpaceキーでアコーディオンが操作できる（__tests__/components/event-detail/group-attendance-accordion.test.tsx）
-- [ ] T050 **[Green]** [US1] キーボードイベントハンドラを実装（components/event-detail/group-attendance-accordion.tsx）
-- [ ] T051 **[Green]** [US1] すべてのテスト（T042, T046, T049）が通ることを確認
-- [ ] T052 **[Refactor]** [US1] イベントハンドラを整理
+- [x] T049 **[Red]** [US1] テストを書く: EnterキーまたはSpaceキーでアコーディオンが操作できる（__tests__/components/event-detail/group-attendance-accordion.test.tsx）
+- [x] T050 **[Green]** [US1] キーボードイベントハンドラを実装（components/event-detail/group-attendance-accordion.tsx）
+- [x] T051 **[Green]** [US1] すべてのテスト（T042, T046, T049）が通ることを確認
+- [x] T052 **[Refactor]** [US1] イベントハンドラを整理
 
 ### 統合: イベント詳細ページ
 
-- [ ] T053 [US1] イベント詳細ページにGroupAttendanceAccordionを統合（app/[org]/events/[id]/page.tsx）
-- [ ] T054 [US1] expandedGroups状態を管理するuseStateを追加（app/[org]/events/[id]/page.tsx）
-- [ ] T055 [US1] getGroupMemberAttendances()を呼び出してデータを取得（app/[org]/events/[id]/page.tsx）
-- [ ] T056 [US1] 手動テスト: ブラウザでアコーディオンの展開/折りたたみを確認
-- [ ] T057 [US1] 手動テスト: メンバー名とステータスが正しく表示されることを確認
-- [ ] T058 [US1] 手動テスト: 未登録メンバーが「-」と表示されることを確認
+- [x] T053 [US1] イベント詳細ページにGroupAttendanceAccordionを統合（app/[org]/events/[id]/page.tsx）
+- [x] T054 [US1] expandedGroups状態を管理するuseStateを追加（app/[org]/events/[id]/page.tsx）
+- [x] T055 [US1] getGroupMemberAttendances()を呼び出してデータを取得（app/[org]/events/[id]/page.tsx）
+- [x] T056 [US1] 手動テスト: ブラウザでアコーディオンの展開/折りたたみを確認
+- [x] T057 [US1] 手動テスト: メンバー名とステータスが正しく表示されることを確認（視認性も改善済み）
+- [x] T058 [US1] 手動テスト: 未登録メンバーが「-」と表示されることを確認（テストで検証済み）
 
 **US1 完了基準**:
 - ✅ グループをクリックすると全メンバーが表示される
