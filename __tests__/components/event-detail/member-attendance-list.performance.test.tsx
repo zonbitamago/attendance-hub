@@ -30,6 +30,8 @@ function generateMockMembers(count: number): MemberAttendanceDetail[] {
     status: statuses[i % statuses.length],
     groupId: `group-${Math.floor(i / 10) + 1}`,
     groupName: `グループ${Math.floor(i / 10) + 1}`,
+    hasRegistered: statuses[i % statuses.length] !== null,
+    memberCreatedAt: new Date().toISOString(),
   }));
 }
 
