@@ -374,6 +374,57 @@ describe('MemberAttendanceList', () => {
       expect(memberNames[1]).toHaveTextContent('さとうじろう');
       expect(memberNames[2]).toHaveTextContent('たなかゆい');
     });
+
+    it('漢字名とひらがな名が混在する場合も正しくソートされる', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: '田中結衣',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'あいうえお',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-3',
+          memberName: '伊藤健太',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '✗',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-03T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-4',
+          memberName: '佐藤次郎',
+          groupId: 'group-1',
+          groupName: '打',
+          status: null,
+          hasRegistered: false,
+          memberCreatedAt: '2025-01-04T00:00:00.000Z',
+        },
+      ];
+
+      render(<MemberAttendanceList members={mockDetails} sortBy="name" />);
+
+      // localeCompare('ja')による正しいソート順: あいうえお→伊藤健太→佐藤次郎→田中結衣
+      const memberNames = screen.getAllByText(/あいうえお|伊藤健太|佐藤次郎|田中結衣/);
+      expect(memberNames).toHaveLength(4);
+      expect(memberNames[0]).toHaveTextContent('あいうえお');
+      expect(memberNames[1]).toHaveTextContent('伊藤健太');
+      expect(memberNames[2]).toHaveTextContent('佐藤次郎');
+      expect(memberNames[3]).toHaveTextContent('田中結衣');
+    });
   });
 
   describe('Test Case 10: ステータス順ソート', () => {
