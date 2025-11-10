@@ -9,22 +9,29 @@ interface AttendanceFiltersProps {
   sortBy?: AttendanceSortBy;
   /** ソート変更時のコールバック */
   onSortChange?: (sortBy: AttendanceSortBy) => void;
+  /** 検索クエリ */
+  searchQuery?: string;
+  /** 検索クエリ変更時のコールバック */
+  onSearchChange?: (query: string) => void;
 }
 
 /**
- * 出欠フィルタ・ソートコンポーネント
+ * 出欠フィルタ・ソート・検索コンポーネント
  *
  * ユーザーが特定の出欠ステータスでメンバーをフィルタリングし、
- * 名前順またはステータス順で並び替えできるUIを提供します。
+ * 名前順またはステータス順で並び替え、
+ * メンバー名で検索できるUIを提供します。
  *
  * @param props - コンポーネントのプロパティ
- * @returns フィルタ・ソートUI
+ * @returns フィルタ・ソート・検索UI
  */
 export function AttendanceFilters({
   filterStatus,
   onFilterChange,
   sortBy = 'name',
   onSortChange,
+  searchQuery = '',
+  onSearchChange,
 }: AttendanceFiltersProps) {
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onFilterChange(event.target.value as AttendanceFilterStatus);
@@ -37,10 +44,33 @@ export function AttendanceFilters({
     }
   };
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (onSearchChange) {
+      onSearchChange(event.target.value);
+    }
+  };
+
   const sortLabel = sortBy === 'name' ? '名前順' : 'ステータス順';
 
   return (
     <div className="flex flex-wrap items-center gap-4">
+      {/* 検索ボックス */}
+      {onSearchChange && (
+        <div className="flex items-center gap-2">
+          <label htmlFor="search-member" className="text-sm font-medium text-gray-700">
+            検索:
+          </label>
+          <input
+            type="text"
+            id="search-member"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="メンバー名で検索"
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+          />
+        </div>
+      )}
+
       {/* フィルタドロップダウン */}
       <div className="flex items-center gap-2">
         <label htmlFor="filter-status" className="text-sm font-medium text-gray-700">

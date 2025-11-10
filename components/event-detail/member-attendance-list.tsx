@@ -7,6 +7,8 @@ interface MemberAttendanceListProps {
   filterStatus?: AttendanceFilterStatus;
   /** ソート種類（デフォルト: 'name'） */
   sortBy?: AttendanceSortBy;
+  /** 検索クエリ（デフォルト: ''） */
+  searchQuery?: string;
 }
 
 /**
@@ -19,15 +21,23 @@ interface MemberAttendanceListProps {
  * @param props.members - 表示するメンバーの出欠詳細配列
  * @param props.filterStatus - フィルタステータス（'all', 'attending', 'maybe', 'notAttending', 'unregistered'）
  * @param props.sortBy - ソート種類（'name', 'status'）
+ * @param props.searchQuery - 検索クエリ（部分一致、大文字小文字区別なし）
  * @returns メンバーリストまたは空の状態メッセージ
  */
 export function MemberAttendanceList({
   members,
   filterStatus = 'all',
-  sortBy = 'name'
+  sortBy = 'name',
+  searchQuery = ''
 }: MemberAttendanceListProps) {
-  // フィルタリング処理
-  const filteredMembers = members.filter((member) => {
+  // 検索フィルタリング処理
+  const searchedMembers = members.filter((member) => {
+    if (!searchQuery) return true;
+    return member.memberName.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
+  // ステータスフィルタリング処理
+  const filteredMembers = searchedMembers.filter((member) => {
     switch (filterStatus) {
       case 'all':
         return true;

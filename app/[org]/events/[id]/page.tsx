@@ -28,6 +28,7 @@ export default function EventDetailPage() {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [filterStatus, setFilterStatus] = useState<AttendanceFilterStatus>('all');
   const [sortBy, setSortBy] = useState<AttendanceSortBy>('name');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const loadData = () => {
     if (!organization) return;
@@ -147,9 +148,11 @@ export default function EventDetailPage() {
         <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
           <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">グループ別出欠状況</h2>
 
-          {/* フィルタ・ソート */}
+          {/* フィルタ・ソート・検索 */}
           <div className="mb-4">
             <AttendanceFilters
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
               filterStatus={filterStatus}
               onFilterChange={setFilterStatus}
               sortBy={sortBy}
@@ -186,6 +189,7 @@ export default function EventDetailPage() {
                       members={members}
                       isExpanded={expandedGroups.has(summary.groupId)}
                       onToggle={handleToggleGroup}
+                      searchQuery={searchQuery}
                       filterStatus={filterStatus}
                       sortBy={sortBy}
                     />

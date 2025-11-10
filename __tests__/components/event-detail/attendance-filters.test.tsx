@@ -153,4 +153,72 @@ describe('AttendanceFilters', () => {
       expect(mockOnSortChange).toHaveBeenCalledWith('name');
     });
   });
+
+  describe('Test Case 5: 検索ボックスの表示', () => {
+    it('検索ボックスが表示され、プレースホルダーテキストが正しい', () => {
+      const mockOnFilterChange = jest.fn();
+      const mockOnSearchChange = jest.fn();
+
+      render(
+        <AttendanceFilters
+          filterStatus="all"
+          onFilterChange={mockOnFilterChange}
+          searchQuery=""
+          onSearchChange={mockOnSearchChange}
+        />
+      );
+
+      // 検索ボックスが表示されること
+      const searchInput = screen.getByRole('textbox', { name: /検索/i });
+      expect(searchInput).toBeInTheDocument();
+
+      // プレースホルダーテキストが正しいこと
+      expect(searchInput).toHaveAttribute('placeholder', 'メンバー名で検索');
+    });
+
+    it('初期値が正しく設定されている', () => {
+      const mockOnFilterChange = jest.fn();
+      const mockOnSearchChange = jest.fn();
+
+      render(
+        <AttendanceFilters
+          filterStatus="all"
+          onFilterChange={mockOnFilterChange}
+          searchQuery="太郎"
+          onSearchChange={mockOnSearchChange}
+        />
+      );
+
+      const searchInput = screen.getByRole('textbox', { name: /検索/i }) as HTMLInputElement;
+      expect(searchInput.value).toBe('太郎');
+    });
+  });
+
+  describe('Test Case 6: 検索入力時のコールバック', () => {
+    it('検索ボックスに入力するとonSearchChange()が呼ばれる', () => {
+      const mockOnFilterChange = jest.fn();
+      const mockOnSearchChange = jest.fn();
+
+      render(
+        <AttendanceFilters
+          filterStatus="all"
+          onFilterChange={mockOnFilterChange}
+          searchQuery=""
+          onSearchChange={mockOnSearchChange}
+        />
+      );
+
+      const searchInput = screen.getByRole('textbox', { name: /検索/i });
+
+      // 「太郎」と入力
+      fireEvent.change(searchInput, { target: { value: '太郎' } });
+      expect(mockOnSearchChange).toHaveBeenCalledTimes(1);
+      expect(mockOnSearchChange).toHaveBeenCalledWith('太郎');
+
+      // 「山田」と入力
+      fireEvent.change(searchInput, { target: { value: '山田' } });
+      expect(mockOnSearchChange).toHaveBeenCalledTimes(2);
+      expect(mockOnSearchChange).toHaveBeenCalledWith('山田');
+    });
+  });
 });

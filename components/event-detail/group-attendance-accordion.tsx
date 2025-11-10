@@ -18,6 +18,8 @@ interface GroupAttendanceAccordionProps {
   filterStatus?: AttendanceFilterStatus;
   /** ソート種類（デフォルト: 'name'） */
   sortBy?: AttendanceSortBy;
+  /** 検索クエリ（デフォルト: ''） */
+  searchQuery?: string;
 }
 
 /**
@@ -39,6 +41,7 @@ export function GroupAttendanceAccordion({
   onToggle,
   filterStatus = 'all',
   sortBy = 'name',
+  searchQuery = '',
 }: GroupAttendanceAccordionProps) {
   const contentId = `accordion-content-${groupId}`;
 
@@ -65,7 +68,12 @@ export function GroupAttendanceAccordion({
 
       {isExpanded && (
         <div id={contentId} className="p-4">
-          <MemberAttendanceList members={members} filterStatus={filterStatus} sortBy={sortBy} />
+          <MemberAttendanceList
+            members={members}
+            filterStatus={filterStatus}
+            sortBy={sortBy}
+            searchQuery={searchQuery}
+          />
         </div>
       )}
     </div>

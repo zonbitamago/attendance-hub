@@ -428,4 +428,127 @@ describe('MemberAttendanceList', () => {
       expect(memberNames[3]).toHaveTextContent('たなかゆい'); // -（未登録）
     });
   });
+
+  describe('Test Case 11: 検索フィルタリング', () => {
+    it('searchQuery=""の場合、全てのメンバーが表示される', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'やまだたろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'すずきはなこ',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+      ];
+
+      render(<MemberAttendanceList members={mockDetails} searchQuery="" />);
+
+      // 全てのメンバーが表示されること
+      expect(screen.getByText('やまだたろう')).toBeInTheDocument();
+      expect(screen.getByText('すずきはなこ')).toBeInTheDocument();
+    });
+
+    it('searchQueryに一致するメンバーのみが表示される（部分一致）', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'やまだたろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'すずきはなこ',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-3',
+          memberName: 'やまもとじろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '✗',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-03T00:00:00.000Z',
+        },
+      ];
+
+      render(<MemberAttendanceList members={mockDetails} searchQuery="やま" />);
+
+      // 「やま」を含むメンバーのみが表示されること
+      expect(screen.getByText('やまだたろう')).toBeInTheDocument();
+      expect(screen.getByText('やまもとじろう')).toBeInTheDocument();
+
+      // 「やま」を含まないメンバーは表示されないこと
+      expect(screen.queryByText('すずきはなこ')).not.toBeInTheDocument();
+    });
+
+    it('searchQueryが大文字小文字を区別せず検索する', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'John Smith',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'jane doe',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+      ];
+
+      render(<MemberAttendanceList members={mockDetails} searchQuery="JOHN" />);
+
+      // 大文字小文字を区別せずに検索されること
+      expect(screen.getByText('John Smith')).toBeInTheDocument();
+      expect(screen.queryByText('jane doe')).not.toBeInTheDocument();
+    });
+
+    it('searchQueryに一致するメンバーがいない場合、空の状態メッセージが表示される', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'やまだたろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+      ];
+
+      render(<MemberAttendanceList members={mockDetails} searchQuery="存在しない名前" />);
+
+      // 空の状態メッセージが表示されること
+      expect(screen.getByText('メンバーがいません')).toBeInTheDocument();
+
+      // メンバーは表示されないこと
+      expect(screen.queryByText('やまだたろう')).not.toBeInTheDocument();
+    });
+  });
 });
