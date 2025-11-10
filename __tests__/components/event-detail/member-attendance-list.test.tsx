@@ -551,4 +551,118 @@ describe('MemberAttendanceList', () => {
       expect(screen.queryByText('やまだたろう')).not.toBeInTheDocument();
     });
   });
+
+  describe('Test Case 12: 検索+フィルタ+ソートの組み合わせ', () => {
+    it('検索→フィルタ→ソートの順で正しく適用される', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'やまだたろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'やまもとはなこ',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-3',
+          memberName: 'すずきじろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-03T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-4',
+          memberName: 'やまぐちゆい',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-04T00:00:00.000Z',
+        },
+      ];
+
+      // 検索: 「やま」を含む → やまだたろう、やまもとはなこ、やまぐちゆい
+      // フィルタ: 参加のみ（◯）→ やまもとはなこ のみ
+      // ソート: 名前順（デフォルト）
+      render(
+        <MemberAttendanceList
+          members={mockDetails}
+          searchQuery="やま"
+          filterStatus="attending"
+          sortBy="name"
+        />
+      );
+
+      // 「やまもとはなこ」のみが表示されること（検索+フィルタ適用）
+      expect(screen.getByText('やまもとはなこ')).toBeInTheDocument();
+
+      // 他のメンバーは表示されないこと
+      expect(screen.queryByText('やまだたろう')).not.toBeInTheDocument(); // 検索はマッチするがフィルタで除外（△）
+      expect(screen.queryByText('すずきじろう')).not.toBeInTheDocument(); // フィルタはマッチするが検索で除外
+      expect(screen.queryByText('やまぐちゆい')).not.toBeInTheDocument(); // 検索はマッチするがフィルタで除外（△）
+    });
+
+    it('検索+フィルタ+ステータス順ソートが正しく動作する', () => {
+      const mockDetails: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'やまだたろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '✗',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'やまもとはなこ',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-3',
+          memberName: 'やまぐちじろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-03T00:00:00.000Z',
+        },
+      ];
+
+      // 検索: 「やま」を含む → 全員（やまだ、やまもと、やまぐち）
+      // フィルタ: すべて
+      // ソート: ステータス順（◯→△→✗）
+      render(
+        <MemberAttendanceList
+          members={mockDetails}
+          searchQuery="やま"
+          filterStatus="all"
+          sortBy="status"
+        />
+      );
+
+      // 全員が表示され、ステータス順になっていること
+      const memberNames = screen.getAllByText(/やまだたろう|やまもとはなこ|やまぐちじろう/);
+      expect(memberNames).toHaveLength(3);
+      expect(memberNames[0]).toHaveTextContent('やまもとはなこ'); // ◯
+      expect(memberNames[1]).toHaveTextContent('やまぐちじろう'); // △
+      expect(memberNames[2]).toHaveTextContent('やまだたろう'); // ✗
+    });
+  });
 });
