@@ -61,6 +61,20 @@ export default function EventDetailPage() {
     return calculateEventTotalSummary(organization.id, eventId);
   }, [event, eventId, organization]);
 
+  // メモ化: グループごとのメンバー出欠データを計算
+  // NOTE: summariesが変更されるたびに全グループのデータを再計算するが、
+  // mapの中で毎回getGroupMemberAttendancesを呼ぶよりもパフォーマンスが良い
+  const groupMembersMap = useMemo(() => {
+    if (!organization) return new Map();
+
+    const membersMap = new Map();
+    summaries.forEach((summary) => {
+      const members = getGroupMemberAttendances(organization.id, eventId, summary.groupId);
+      membersMap.set(summary.groupId, members);
+    });
+    return membersMap;
+  }, [organization, eventId, summaries]);
+
   // アコーディオンのトグルハンドラ
   const handleToggleGroup = (groupId: string) => {
     setExpandedGroups((prev) => {
@@ -165,9 +179,7 @@ export default function EventDetailPage() {
           ) : (
             <div className="space-y-2">
               {summaries.map((summary) => {
-                const members = organization
-                  ? getGroupMemberAttendances(organization.id, eventId, summary.groupId)
-                  : [];
+                const members = groupMembersMap.get(summary.groupId) ?? [];
 
                 return (
                   <div key={summary.groupId}>
