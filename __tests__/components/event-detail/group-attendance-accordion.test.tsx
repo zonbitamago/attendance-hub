@@ -181,4 +181,58 @@ describe('GroupAttendanceAccordion', () => {
       expect(mockOnToggle).toHaveBeenCalledWith('group-1');
     });
   });
+
+  describe('Test Case 4: フィルタ機能の統合', () => {
+    it('filterStatus propがMemberAttendanceListに渡され、フィルタリングが適用される', () => {
+      const mockMembers: MemberAttendanceDetail[] = [
+        {
+          memberId: 'member-1',
+          memberName: 'やまだたろう',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '◯',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-01T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-2',
+          memberName: 'すずきはなこ',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '△',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-02T00:00:00.000Z',
+        },
+        {
+          memberId: 'member-3',
+          memberName: 'さとうけんじ',
+          groupId: 'group-1',
+          groupName: '打',
+          status: '✗',
+          hasRegistered: true,
+          memberCreatedAt: '2025-01-03T00:00:00.000Z',
+        },
+      ];
+
+      const mockOnToggle = jest.fn();
+
+      render(
+        <GroupAttendanceAccordion
+          groupId="group-1"
+          groupName="打"
+          members={mockMembers}
+          isExpanded={true}
+          onToggle={mockOnToggle}
+          filterStatus="attending"
+        />
+      );
+
+      // ◯ステータスのメンバーのみ表示されること
+      expect(screen.getByText('やまだたろう')).toBeInTheDocument();
+
+      // △、✗のメンバーは表示されないこと（フィルタリングされている）
+      expect(screen.queryByText('すずきはなこ')).not.toBeInTheDocument();
+      expect(screen.queryByText('さとうけんじ')).not.toBeInTheDocument();
+    });
+  });
 });

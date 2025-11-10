@@ -1,8 +1,10 @@
-import type { MemberAttendanceDetail } from '@/types';
+import type { MemberAttendanceDetail, AttendanceFilterStatus } from '@/types';
 
 interface MemberAttendanceListProps {
   /** メンバーの出欠詳細リスト */
   members: MemberAttendanceDetail[];
+  /** フィルタステータス（デフォルト: 'all'） */
+  filterStatus?: AttendanceFilterStatus;
 }
 
 /**
@@ -13,10 +15,31 @@ interface MemberAttendanceListProps {
  * - 未登録: - （ハイフン）
  *
  * @param props.members - 表示するメンバーの出欠詳細配列
+ * @param props.filterStatus - フィルタステータス（'all', 'attending', 'maybe', 'notAttending', 'unregistered'）
  * @returns メンバーリストまたは空の状態メッセージ
  */
-export function MemberAttendanceList({ members }: MemberAttendanceListProps) {
-  if (members.length === 0) {
+export function MemberAttendanceList({
+  members,
+  filterStatus = 'all'
+}: MemberAttendanceListProps) {
+  // フィルタリング処理
+  const filteredMembers = members.filter((member) => {
+    switch (filterStatus) {
+      case 'all':
+        return true;
+      case 'attending':
+        return member.status === '◯';
+      case 'maybe':
+        return member.status === '△';
+      case 'notAttending':
+        return member.status === '✗';
+      case 'unregistered':
+        return member.status === null;
+      default:
+        return true;
+    }
+  });
+  if (filteredMembers.length === 0) {
     return (
       <div className="py-4 text-center text-gray-500">
         メンバーがいません
@@ -26,7 +49,7 @@ export function MemberAttendanceList({ members }: MemberAttendanceListProps) {
 
   return (
     <ul className="space-y-2">
-      {members.map((member) => {
+      {filteredMembers.map((member) => {
         // ステータスに応じた色を設定
         const statusColor = member.status === '◯'
           ? 'text-green-600'

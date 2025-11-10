@@ -196,42 +196,42 @@
 
 #### テストケース3: 参加のみフィルタ
 
-- [ ] T066 **[Red]** [US2] テストを書く: filterStatus='attending'の場合、◯ステータスのメンバーのみ表示（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T067 **[Green]** [US2] フィルタロジックをMemberAttendanceListに実装（components/event-detail/member-attendance-list.tsx）
-- [ ] T068 **[Green]** [US2] T066のテストを実行して成功することを確認
+- [x] T066 **[Red]** [US2] テストを書く: filterStatus='attending'の場合、◯ステータスのメンバーのみ表示（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T067 **[Green]** [US2] フィルタロジックをMemberAttendanceListに実装（components/event-detail/member-attendance-list.tsx）
+- [x] T068 **[Green]** [US2] T066のテストを実行して成功することを確認
 
 #### テストケース4: 未定のみフィルタ
 
-- [ ] T069 **[Red]** [US2] テストを書く: filterStatus='maybe'の場合、△ステータスのメンバーのみ表示（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T070 **[Green]** [US2] T069を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
-- [ ] T071 **[Green]** [US2] すべてのテスト（T066, T069）が通ることを確認
+- [x] T069 **[Red]** [US2] テストを書く: filterStatus='maybe'の場合、△ステータスのメンバーのみ表示（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T070 **[Green]** [US2] T069を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
+- [x] T071 **[Green]** [US2] すべてのテスト（T066, T069）が通ることを確認
 
 #### テストケース5: 欠席のみフィルタ
 
-- [ ] T072 **[Red]** [US2] テストを書く: filterStatus='notAttending'の場合、✗ステータスのメンバーのみ表示（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T073 **[Green]** [US2] T072を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
-- [ ] T074 **[Green]** [US2] すべてのテスト（T066, T069, T072）が通ることを確認
+- [x] T072 **[Red]** [US2] テストを書く: filterStatus='notAttending'の場合、✗ステータスのメンバーのみ表示（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T073 **[Green]** [US2] T072を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
+- [x] T074 **[Green]** [US2] すべてのテスト（T066, T069, T072）が通ることを確認
 
 #### テストケース6: 未登録のみフィルタ
 
-- [ ] T075 **[Red]** [US2] テストを書く: filterStatus='unregistered'の場合、status=nullのメンバーのみ表示（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T076 **[Green]** [US2] T075を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
-- [ ] T077 **[Green]** [US2] すべてのテスト（T066, T069, T072, T075）が通ることを確認
-- [ ] T078 **[Refactor]** [US2] フィルタロジックを整理
+- [x] T075 **[Red]** [US2] テストを書く: filterStatus='unregistered'の場合、status=nullのメンバーのみ表示（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T076 **[Green]** [US2] T075を通すように実装を拡張（components/event-detail/member-attendance-list.tsx）
+- [x] T077 **[Green]** [US2] すべてのテスト（T066, T069, T072, T075）が通ることを確認
+- [x] T078 **[Refactor]** [US2] フィルタロジックを整理
 
 #### テストケース7: フィルタ適用で0件の場合のメッセージ
 
-- [ ] T079 **[Red]** [US2] テストを書く: フィルタ適用で表示メンバーが0件の場合、適切なメッセージが表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
-- [ ] T080 **[Green]** [US2] 空の状態メッセージを実装（components/event-detail/member-attendance-list.tsx）
-- [ ] T081 **[Green]** [US2] すべてのテスト（T066～T079）が通ることを確認
+- [x] T079 **[Red]** [US2] テストを書く: フィルタ適用で表示メンバーが0件の場合、適切なメッセージが表示される（__tests__/components/event-detail/member-attendance-list.test.tsx）
+- [x] T080 **[Green]** [US2] 空の状態メッセージを実装（components/event-detail/member-attendance-list.tsx）
+- [x] T081 **[Green]** [US2] すべてのテスト（T066～T079）が通ることを確認
 
 ### 統合: イベント詳細ページ
 
-- [ ] T082 [US2] AttendanceFiltersコンポーネントをイベント詳細ページに追加（app/[org]/events/[id]/page.tsx）
-- [ ] T083 [US2] filterStatus状態を管理するuseStateを追加（app/[org]/events/[id]/page.tsx）
-- [ ] T084 [US2] MemberAttendanceListにfilterStatusを渡す（app/[org]/events/[id]/page.tsx）
-- [ ] T085 [US2] 手動テスト: フィルタドロップダウンで「参加のみ」を選択し、◯のみ表示されることを確認
-- [ ] T086 [US2] 手動テスト: すべてのフィルタオプション（△/✗/-）が正しく動作することを確認
+- [x] T082 [US2] AttendanceFiltersコンポーネントをイベント詳細ページに追加（app/[org]/events/[id]/page.tsx）
+- [x] T083 [US2] filterStatus状態を管理するuseStateを追加（app/[org]/events/[id]/page.tsx）
+- [x] T084 [US2] MemberAttendanceListにfilterStatusを渡す（app/[org]/events/[id]/page.tsx）
+- [x] T085 [US2] 手動テスト: フィルタドロップダウンで「参加のみ」を選択し、◯のみ表示されることを確認
+- [x] T086 [US2] 手動テスト: すべてのフィルタオプション（△/✗/-）が正しく動作することを確認
 
 **US2 完了基準**:
 - ✅ フィルタドロップダウンが表示される
