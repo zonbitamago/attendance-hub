@@ -152,16 +152,16 @@
 - [x] T049 [US4] エラーハンドリングのテスト（createEventDate失敗、updateEventDate失敗、deleteEventDate失敗、組織情報なし）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）→ 完了：5テスト追加（エラーハンドリングカテゴリ）✅
 - [x] T050 [US4] イベント管理ページのカバレッジを測定し、80%以上を確認する（`npm test admin/events/page -- --coverage`）→ 完了：93.82% statements, 74.07% branches, 100% functions ✅
 
-### Bulk Register Tests
+### Bulk Register Tests ✅ 完了
 
-- [ ] T051 [P] [US4] 一括出欠登録ページのテストファイルを作成し、基本表示テスト（ページタイトル、MemberSelector、メンバー未選択時はEventList非表示）を実装する（__tests__/app/[org]/my-register/page.test.tsx）
-- [ ] T052 [US4] メンバー選択のテスト（メンバー選択時にEventList表示、memberSelectionステート保存）を実装する（__tests__/app/[org]/my-register/page.test.tsx）
-- [ ] T053 [US4] イベント選択のテスト（イベント選択時に選択一覧追加、デフォルトステータス「◯」、選択解除で削除）を実装する（__tests__/app/[org]/my-register/page.test.tsx）
-- [ ] T054 [US4] イベントステータス変更のテスト（個別イベントステータス変更、eventStatusesステート保存）を実装する（__tests__/app/[org]/my-register/page.test.tsx）
-- [ ] T055 [US4] 一括登録処理のテスト（有効入力で実行、新規メンバー作成、upsertBulkAttendances呼び出し、成功メッセージ、更新件数表示、1秒後リダイレクト、失敗件数表示）を実装する（__tests__/app/[org]/my-register/page.test.tsx）
-- [ ] T056 [US4] バリデーションのテスト（メンバー未選択時エラー、イベント未選択時エラー、組織情報なし時エラー）を実装する（__tests__/app/[org]/my-register/page.test.tsx）
-- [ ] T057 [US4] UI状態管理のテスト（送信中ボタン無効化、ボタンテキスト「登録中...」、イベント選択数表示）を実装する（__tests__/app/[org]/my-register/page.test.tsx）
-- [ ] T058 [US4] 一括出欠登録ページのカバレッジを測定し、80%以上を確認する（`npm test my-register/page -- --coverage`）
+- [x] T051 [P] [US4] 一括出欠登録ページのテストファイルを作成し、基本表示テスト（ページタイトル、MemberSelector、メンバー未選択時はEventList非表示）を実装する（__tests__/app/[org]/my-register/page.test.tsx）→ 完了：4テスト追加（基本表示カテゴリ）✅
+- [x] T052 [US4] メンバー選択のテスト（メンバー選択時にEventList表示、memberSelectionステート保存）を実装する（__tests__/app/[org]/my-register/page.test.tsx）→ 完了：2テスト追加（メンバー選択カテゴリ）✅
+- [x] T053 [US4] イベント選択のテスト（イベント選択時に選択一覧追加、デフォルトステータス「◯」、選択解除で削除）を実装する（__tests__/app/[org]/my-register/page.test.tsx）→ 完了：2テスト追加（イベント選択カテゴリ）✅
+- [x] T054 [US4] イベントステータス変更のテスト（個別イベントステータス変更、eventStatusesステート保存）を実装する（__tests__/app/[org]/my-register/page.test.tsx）→ 完了：1テスト追加（イベントステータス変更カテゴリ）✅
+- [x] T055 [US4] 一括登録処理のテスト（有効入力で実行、新規メンバー作成、upsertBulkAttendances呼び出し、成功メッセージ、更新件数表示、1秒後リダイレクト、失敗件数表示）を実装する（__tests__/app/[org]/my-register/page.test.tsx）→ 完了：5テスト追加（一括登録処理カテゴリ）✅
+- [x] T056 [US4] バリデーションのテスト（メンバー未選択時エラー、イベント未選択時エラー、組織情報なし時エラー）を実装する（__tests__/app/[org]/my-register/page.test.tsx）→ 完了：2テスト追加（バリデーションカテゴリ）✅
+- [x] T057 [US4] UI状態管理のテスト（送信中ボタン無効化、ボタンテキスト「登録中...」、イベント選択数表示）を実装する（__tests__/app/[org]/my-register/page.test.tsx）→ 完了：3テスト追加（UI状態管理カテゴリ）✅
+- [x] T058 [US4] 一括出欠登録ページのカバレッジを測定し、80%以上を確認する（`npm test my-register/page -- --coverage`）→ 完了：95.31% statements, 78.26% branches, 100% functions, 95.16% lines ✅
 
 ### Phase 4 Verification
 
