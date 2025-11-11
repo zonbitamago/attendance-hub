@@ -100,8 +100,8 @@
 | **Node.js Matrix** | 20.x, 22.x | 複数バージョンでの互換性テスト |
 
 - **自動チェック**: 型チェック、リント、テスト（カバレッジ測定付き）、ビルド検証
-- **カバレッジ閾値**: branches: 30%、functions: 50%、lines: 45%、statements: 45%
-- **テスト数**: 187テスト
+- **カバレッジ閾値**: branches: 30%、functions: 50%、lines: 45%、statements: 45%（達成状況: 84.82%/74.71%/84.77%/85.51%）
+- **テスト数**: 411テスト（26スイート）
 
 ### 2.2 アーキテクチャ概要
 
@@ -1173,30 +1173,45 @@ try {
 
 ### 8.2 テストカバレッジ
 
-**現在のテスト状況:**
-- **テストスイート数:** 14
-- **テストケース数:** 199
+**現在のテスト状況（v2.2）:**
+- **テストスイート数:** 26
+- **テストケース数:** 411
 - **合格率:** 100%
+- **カバレッジ:** Statements: 84.82%, Branches: 74.71%, Functions: 84.77%, Lines: 85.51%
 
 **テスト対象:**
-- **サービス層:**
-  - `lib/storage.test.ts` - localStorageのCRUD
-  - `lib/organization-service.test.ts` - 団体サービス（New! v2.0）
-  - `lib/migration.test.ts` - マイグレーション処理（New! v2.0）
-  - `lib/group-service.test.ts` - グループサービス
-  - `lib/attendance-service.test.ts` - 出欠サービス
-- **ページコンポーネント:**
-  - `app/page.test.tsx` - ランディングページ
-  - `app/[org]/page.test.tsx` - イベント一覧ページ
-  - `app/[org]/events/[id]/page.test.tsx` - イベント詳細ページ
-  - `app/[org]/admin/events/page.test.tsx` - 管理画面イベントページ
-  - `app/[org]/my-register/page.test.tsx` - 一括出欠登録ページ
-- **コンテキスト:**
-  - `contexts/organization-context.test.tsx` - 団体コンテキスト（New! v2.0）
-- **統合テスト:**
-  - `__tests__/integration/data-isolation.test.ts` - データ分離検証（New! v2.0）
-  - `__tests__/integration/migration.test.ts` - マイグレーション統合（New! v2.0）
-  - `__tests__/integration/url-bookmark.test.ts` - URLブックマーク（New! v2.0）
+- **ユーティリティ・サービス層（70テスト）:**
+  - `lib/date-utils.test.ts` - 日付フォーマット、相対日付、バリデーション (94.44%カバレッジ)
+  - `lib/error-utils.test.ts` - エラーメッセージ処理、Zodエラー変換 (100%カバレッジ)
+  - `lib/storage.test.ts` - localStorageのCRUD（団体スコープ対応）
+  - `lib/organization-service.test.ts` - 団体CRUD操作、ID生成 (100%カバレッジ)
+  - `lib/group-service.test.ts` - グループCRUD操作 (97.61%カバレッジ)
+  - `lib/member-service.test.ts` - メンバー作成
+  - `lib/event-service.test.ts` - イベントCRUD操作
+  - `lib/attendance-service.test.ts` - 出欠登録・更新・一括登録 (94.8%カバレッジ)
+  - `lib/migration.test.ts` - レガシーデータ自動移行 (96.22%カバレッジ)
+  - `lib/validation.test.ts` - Zodスキーマ
+- **ページコンポーネント（106テスト）:**
+  - `app/page.test.tsx` - ランディングページ、団体作成
+  - `app/[org]/page.test.tsx` - 団体トップ、イベント一覧、出欠集計
+  - `app/[org]/events/[id]/page.test.tsx` - イベント詳細、個人別出欠表示 (17テスト、98.36%カバレッジ)
+  - `app/[org]/events/[id]/register/page.test.tsx` - 出欠登録フォーム (21テスト、92.77%カバレッジ)
+  - `app/[org]/my-register/page.test.tsx` - 複数イベント一括登録 (19テスト、95.31%カバレッジ)
+  - `app/[org]/admin/groups/page.test.tsx` - グループ管理、色選択 (23テスト、94.2%カバレッジ)
+  - `app/[org]/admin/events/page.test.tsx` - イベント管理、日付選択、useMemoメモ化 (26テスト、93.82%カバレッジ)
+  - `app/[org]/admin/organizations/page.test.tsx` - 団体情報編集・削除
+- **UIコンポーネント（35テスト）:**
+  - `components/bulk-register/member-selector.test.tsx` - メンバー選択 (100%カバレッジ)
+  - `components/bulk-register/event-list.test.tsx` - イベント一覧 (91.66%カバレッジ)
+  - `components/event-detail/attendance-filters.test.tsx` - フィルタ・ソート・検索 (100%カバレッジ)
+  - `components/event-detail/group-attendance-accordion.test.tsx` - グループ別アコーディオン (100%カバレッジ)
+  - `components/event-detail/member-attendance-list.test.tsx` - メンバー出欠リスト (95.83%カバレッジ)
+  - `components/event-detail/member-attendance-list.performance.test.tsx` - パフォーマンステスト（100メンバー、200ms以内）
+- **統合テスト・コンテキスト（15テスト）:**
+  - `contexts/organization-context.test.tsx` - 団体コンテキスト
+  - `__tests__/integration/data-isolation.test.ts` - データ分離検証
+  - `__tests__/integration/migration.test.ts` - マイグレーション統合
+  - `__tests__/integration/url-bookmark.test.ts` - URLブックマーク
 
 ### 8.3 テストケース分類
 
@@ -1531,6 +1546,7 @@ chore: ビルド・設定変更
 | 2025-11-08 | 1.0.0 | 初版作成 |
 | 2025-11-09 | 2.0.0 | マルチテナント対応（005-multi-tenant実装完了）<br>- Organization エンティティ追加<br>- 団体専用URL発行機能<br>- データ分離・プライバシー保護<br>- レガシーデータ自動マイグレーション<br>- OrganizationContext 実装<br>- テスト: 56 → 199 (143件追加) |
 | 2025-11-09 | 2.1.0 | CI/CDパイプライン設定（006-ci-cd-setup実装完了）<br>- GitHub Actions CI/CDワークフロー追加<br>- Jestカバレッジ監視（branches: 30%、functions: 50%、lines: 45%、statements: 45%）<br>- Node.js 20.x/22.xマトリックステスト<br>- 自動チェック: 型チェック、リント、テスト、ビルド<br>- テスト: 199 → 187（正確な数に修正） |
+| 2025-11-12 | 2.2.0 | テストカバレッジ拡張（008-test-coverage-expansion実装完了）<br>- ユーティリティ関数テスト追加（date-utils, error-utils: 70テスト、94-100%カバレッジ）<br>- ページコンポーネントテスト拡充（register, event-detail, admin pages: 106テスト、92-98%カバレッジ）<br>- UIコンポーネントテスト追加（bulk-register, event-detail: 35テスト、91-100%カバレッジ）<br>- 全体カバレッジ向上: statements 84.82%, branches 74.71%, functions 84.77%, lines 85.51%<br>- テスト: 234 → 411 (177件追加、26スイート)<br>- カバレッジ閾値を大幅に上回る品質達成 |
 
 ---
 
