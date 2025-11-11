@@ -125,7 +125,7 @@ describe('イベント管理ページ', () => {
   describe('基本表示', () => {
     test('ローディング中はLoadingSpinnerが表示される', () => {
       mockUseOrganization.mockReturnValue({
-        organization: null,
+        organization: null as any,
         isLoading: true,
       });
 
@@ -479,7 +479,7 @@ describe('イベント管理ページ', () => {
 
     test('組織情報がない場合はローディング状態が表示される', () => {
       mockUseOrganization.mockReturnValue({
-        organization: null,
+        organization: null as any,
         isLoading: false,
       });
 

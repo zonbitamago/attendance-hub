@@ -76,8 +76,8 @@ describe('出欠登録ページ', () => {
   };
 
   const mockGroups = [
-    { id: 'group-1', organizationId: 'test-org-123', name: '打', color: '#FF0000', order: 1 },
-    { id: 'group-2', organizationId: 'test-org-123', name: '投', color: '#00FF00', order: 2 },
+    { id: 'group-1', organizationId: 'test-org-123', name: '打', color: '#FF0000', order: 1, createdAt: '2025-01-01T00:00:00.000Z' },
+    { id: 'group-2', organizationId: 'test-org-123', name: '投', color: '#00FF00', order: 2, createdAt: '2025-01-01T00:00:00.000Z' },
   ];
 
   const mockMembers = [
@@ -128,7 +128,7 @@ describe('出欠登録ページ', () => {
   describe('基本表示', () => {
     test('ローディング中はLoadingSpinnerが表示される', () => {
       mockUseOrganization.mockReturnValue({
-        organization: null,
+        organization: null as any,
         isLoading: true,
       });
 
@@ -249,19 +249,19 @@ describe('出欠登録ページ', () => {
     });
 
     test('3つのステータスボタンが表示される', () => {
-      expect(screen.getByRole('button', { name: /◯.*参加/s })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /△.*未定/s })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /✗.*欠席/s })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /◯[\s\S]*参加/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /△[\s\S]*未定/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /✗[\s\S]*欠席/ })).toBeInTheDocument();
     });
 
     test('デフォルトは「◯」が選択されている', () => {
-      const attendingButton = screen.getByRole('button', { name: /◯.*参加/s });
+      const attendingButton = screen.getByRole('button', { name: /◯[\s\S]*参加/ });
       expect(attendingButton).toHaveClass('border-green-500');
     });
 
     test('ステータスボタンをクリックすると選択状態が変わる', () => {
-      const maybeButton = screen.getByRole('button', { name: /△.*未定/s });
-      const notAttendingButton = screen.getByRole('button', { name: /✗.*欠席/s });
+      const maybeButton = screen.getByRole('button', { name: /△[\s\S]*未定/ });
+      const notAttendingButton = screen.getByRole('button', { name: /✗[\s\S]*欠席/ });
 
       fireEvent.click(maybeButton);
       expect(maybeButton).toHaveClass('border-yellow-500');
@@ -328,7 +328,7 @@ describe('出欠登録ページ', () => {
       fireEvent.change(newMemberInput, { target: { value: '新メンバー' } });
 
       // ステータス選択
-      const maybeButton = screen.getByRole('button', { name: /△.*未定/s });
+      const maybeButton = screen.getByRole('button', { name: /△[\s\S]*未定/ });
       fireEvent.click(maybeButton);
 
       // 送信
@@ -410,7 +410,7 @@ describe('出欠登録ページ', () => {
   describe('エラーハンドリング', () => {
     test('組織情報がない場合はエラーが表示される', async () => {
       mockUseOrganization.mockReturnValue({
-        organization: null,
+        organization: null as any,
         isLoading: false,
       });
 

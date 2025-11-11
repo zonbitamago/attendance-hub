@@ -102,6 +102,24 @@ describe('一括出欠登録ページ', () => {
     createdAt: '2025-01-01T00:00:00.000Z',
   };
 
+  const mockAttendance1 = {
+    id: 'att-1',
+    organizationId: 'test-org-123',
+    eventDateId: 'event-1',
+    memberId: 'member-1',
+    status: '◯' as const,
+    createdAt: '2025-01-01T00:00:00.000Z',
+  };
+
+  const mockAttendance2 = {
+    id: 'att-2',
+    organizationId: 'test-org-123',
+    eventDateId: 'event-2',
+    memberId: 'member-1',
+    status: '◯' as const,
+    createdAt: '2025-01-01T00:00:00.000Z',
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
@@ -126,7 +144,7 @@ describe('一括出欠登録ページ', () => {
     });
 
     mockUpsertBulkAttendances.mockReturnValue({
-      success: ['att-1', 'att-2'],
+      success: [mockAttendance1, mockAttendance2],
       updated: [],
       failed: [],
     });
@@ -301,8 +319,8 @@ describe('一括出欠登録ページ', () => {
 
     test('更新件数がある場合はメッセージに含まれる', async () => {
       mockUpsertBulkAttendances.mockReturnValue({
-        success: ['att-1'],
-        updated: ['att-2'],
+        success: [mockAttendance1],
+        updated: [mockAttendance2],
         failed: [],
       });
 
@@ -324,9 +342,9 @@ describe('一括出欠登録ページ', () => {
 
     test('失敗件数がある場合はメッセージに含まれる', async () => {
       mockUpsertBulkAttendances.mockReturnValue({
-        success: ['att-1'],
+        success: [mockAttendance1],
         updated: [],
-        failed: ['event-2'],
+        failed: [{ input: { eventDateId: 'event-2', memberId: 'member-1', status: '◯' }, error: 'Failed to register' }],
       });
 
       render(<MyRegisterPage />);

@@ -84,20 +84,29 @@ describe('イベント詳細ページ', () => {
 
   const mockGroupMembers = [
     {
+      groupId: 'group-1',
+      groupName: '打',
       memberId: 'member-1',
       memberName: '山田太郎',
+      memberCreatedAt: '2025-01-01T00:00:00.000Z',
       status: '◯' as const,
       hasRegistered: true,
     },
     {
+      groupId: 'group-1',
+      groupName: '打',
       memberId: 'member-2',
       memberName: '佐藤花子',
+      memberCreatedAt: '2025-01-02T00:00:00.000Z',
       status: '△' as const,
       hasRegistered: true,
     },
     {
+      groupId: 'group-1',
+      groupName: '打',
       memberId: 'member-3',
       memberName: '鈴木一郎',
+      memberCreatedAt: '2025-01-03T00:00:00.000Z',
       status: null,
       hasRegistered: false,
     },
@@ -135,7 +144,7 @@ describe('イベント詳細ページ', () => {
   describe('基本表示', () => {
     test('ローディング中はLoadingSpinnerが表示される', () => {
       mockUseOrganization.mockReturnValue({
-        organization: null,
+        organization: null as any,
         isLoading: true,
       });
 
@@ -311,7 +320,7 @@ describe('イベント詳細ページ', () => {
   describe('エラーハンドリング', () => {
     test('組織情報がない場合は何も表示されない', () => {
       mockUseOrganization.mockReturnValue({
-        organization: null,
+        organization: null as any,
         isLoading: false,
       });
 
