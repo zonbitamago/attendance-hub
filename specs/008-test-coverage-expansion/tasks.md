@@ -78,28 +78,29 @@
 - ✅ 推定35-45の新規テスト追加 → 実際70テスト追加
 - ✅ 既存234テスト全てがpass → 304テスト全てpass
 
-## Phase 2: US2 - 出欠登録ページの統合テスト
+## Phase 2: US2 - 出欠登録ページの統合テスト ✅ 完了
 
 **User Story 2 (Priority P1)**: 開発者が出欠登録フォームのロジックを変更する際、ユーザーが正しく出欠を登録できること、バリデーションが機能すること、エラーケースが適切に処理されることを自動的に検証できる。
 
 **Independent Test**: 出欠登録ページのコンポーネントテストを実行し、フォーム操作からデータ作成までの全フローが正常に動作することを検証できる。モックを使用してサービス層から独立してテスト可能。
 
-- [ ] T017 [US2] 出欠登録ページのテストファイルを作成し、共通モック（useRouter、useParams、useOrganization、サービス層）を設定する（__tests__/app/[org]/events/[id]/register/page.test.tsx）
-- [ ] T018 [US2] 基本表示のテスト（イベント情報表示、LoadingSpinner、イベント不在時のリダイレクト、グループ0件時のメッセージ）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）
-- [ ] T019 [US2] グループ選択のテスト（グループ一覧表示、選択時のメンバー一覧読み込み、未選択時の動作）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）
-- [ ] T020 [US2] メンバー選択のテスト（既存メンバー一覧、既存選択時の新規入力無効化、新規入力時の既存選択無効化）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）
-- [ ] T021 [US2] 出欠ステータス選択のテスト（3つのボタン表示、クリック時の選択状態変更、デフォルト「◯」）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）
-- [ ] T022 [US2] フォーム送信のテスト（既存メンバーで登録、新規メンバーで登録、成功時のリダイレクト、二重送信防止）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）
-- [ ] T023 [US2] バリデーションエラーのテスト（グループ未選択、メンバー未選択かつ新規名前未入力）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）
-- [ ] T024 [US2] エラーハンドリングのテスト（createMember失敗、createAttendance失敗、組織情報なし）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）
-- [ ] T025 [US2] 出欠登録ページのカバレッジを測定し、80%以上を確認する（`npm test register/page -- --coverage`）
-- [ ] T026 [US2] Phase 2の全テストと既存234テストがpassすることを確認する（`npm test`）
+- [x] T017 [US2] 出欠登録ページのテストファイルを作成し、共通モック（useRouter、useParams、useOrganization、サービス層）を設定する（__tests__/app/[org]/events/[id]/register/page.test.tsx）→ 完了
+- [x] T018 [US2] 基本表示のテスト（イベント情報表示、LoadingSpinner、イベント不在時のリダイレクト、グループ0件時のメッセージ）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）→ 5テスト追加
+- [x] T019 [US2] グループ選択のテスト（グループ一覧表示、選択時のメンバー一覧読み込み、未選択時の動作）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）→ 3テスト追加
+- [x] T020 [US2] メンバー選択のテスト（既存メンバー一覧、既存選択時の新規入力無効化、新規入力時の既存選択無効化）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）→ 2テスト追加
+- [x] T021 [US2] 出欠ステータス選択のテスト（3つのボタン表示、クリック時の選択状態変更、デフォルト「◯」）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）→ 3テスト追加
+- [x] T022 [US2] フォーム送信のテスト（既存メンバーで登録、新規メンバーで登録、成功時のリダイレクト、二重送信防止）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）→ 3テスト追加
+- [x] T023 [US2] バリデーションエラーのテスト（グループ未選択、メンバー未選択かつ新規名前未入力）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）→ 2テスト追加
+- [x] T024 [US2] エラーハンドリングのテスト（createMember失敗、createAttendance失敗、組織情報なし）を実装する（__tests__/app/[org]/events/[id]/register/page.test.tsx）→ 3テスト追加
+- [x] T025 [US2] 出欠登録ページのカバレッジを測定し、80%以上を確認する（`npm test register/page -- --coverage`）→ 92.77%達成 ✅
+- [x] T026 [US2] Phase 2の全テストと既存234テストがpassすることを確認する（`npm test`）→ 325テスト全てpass（304 + 21新規）✅
 
 **Phase 2 Independent Test Criteria**:
-- ✅ 出欠登録ページの全フロー（グループ選択、メンバー選択/新規作成、ステータス選択、送信、エラーハンドリング）がテストされている
-- ✅ カバレッジが80%以上
-- ✅ 推定20-25の新規テスト追加
-- ✅ 既存234テスト全てがpass
+
+- ✅ 出欠登録ページの全フロー（グループ選択、メンバー選択/新規作成、ステータス選択、送信、エラーハンドリング）がテストされている（21テスト）
+- ✅ カバレッジが80%以上（register/page.tsx: 92.77%）
+- ✅ 推定20-25の新規テスト追加 → 実際21テスト追加
+- ✅ 既存234テスト全てがpass → 325テスト全てpass
 
 ## Phase 3: US3 - イベント詳細ページの統合テスト
 
