@@ -141,16 +141,16 @@
 - [x] T041 [US4] エラーハンドリングのテスト（createGroup失敗、updateGroup失敗、deleteGroup失敗、組織情報なし）を実装する（__tests__/app/[org]/admin/groups/page.test.tsx）→ 完了：4テスト追加（エラーハンドリングカテゴリ）✅
 - [x] T042 [US4] グループ管理ページのカバレッジを測定し、80%以上を確認する（`npm test admin/groups/page -- --coverage`）→ 完了：94.2% statements, 75% branches, 100% functions ✅
 
-### Events Admin Tests
+### Events Admin Tests ✅ 完了
 
-- [ ] T043 [P] [US4] イベント管理ページのテストファイルを作成し、基本表示テスト（ページタイトル、ローディング、イベント0件時のメッセージ）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）
-- [ ] T044 [US4] イベント一覧表示のテスト（タイトル、日付、場所、出欠人数表示、編集・削除ボタン）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）
-- [ ] T045 [US4] イベント新規作成のテスト（フォーム入力、作成ボタン、HTML5バリデーション、場所任意、作成成功後のフォームクリア）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）
-- [ ] T046 [US4] イベント編集のテスト（編集ボタン、フォームへの既存データ入力、タイトル変更、更新ボタン、キャンセル）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）
-- [ ] T047 [US4] イベント削除のテスト（削除ボタン、確認ダイアログ、確認後のdeleteEventDate呼び出し、キャンセル時）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）
-- [ ] T048 [US4] useMemoによる出欠集計のテスト（eventSummaries計算、メモ化動作）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）
-- [ ] T049 [US4] エラーハンドリングのテスト（createEventDate失敗、updateEventDate失敗、deleteEventDate失敗、組織情報なし）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）
-- [ ] T050 [US4] イベント管理ページのカバレッジを測定し、80%以上を確認する（`npm test admin/events/page -- --coverage`）
+- [x] T043 [P] [US4] イベント管理ページのテストファイルを作成し、基本表示テスト（ページタイトル、ローディング、イベント0件時のメッセージ）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）→ 完了：4テスト追加（基本表示カテゴリ）✅
+- [x] T044 [US4] イベント一覧表示のテスト（タイトル、日付、場所、出欠人数表示、編集・削除ボタン）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）→ 完了：4テスト追加（イベント一覧表示カテゴリ）✅
+- [x] T045 [US4] イベント新規作成のテスト（フォーム入力、作成ボタン、HTML5バリデーション、場所任意、作成成功後のフォームクリア）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）→ 完了：4テスト追加（イベント作成カテゴリ）✅
+- [x] T046 [US4] イベント編集のテスト（編集ボタン、フォームへの既存データ入力、タイトル変更、更新ボタン、キャンセル）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）→ 完了：5テスト追加（イベント編集カテゴリ）✅
+- [x] T047 [US4] イベント削除のテスト（削除ボタン、確認ダイアログ、確認後のdeleteEventDate呼び出し、キャンセル時）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）→ 完了：3テスト追加（イベント削除カテゴリ）✅
+- [x] T048 [US4] useMemoによる出欠集計のテスト（eventSummaries計算、メモ化動作）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）→ 完了：1テスト追加（useMemoメモ化カテゴリ）✅
+- [x] T049 [US4] エラーハンドリングのテスト（createEventDate失敗、updateEventDate失敗、deleteEventDate失敗、組織情報なし）を実装する（__tests__/app/[org]/admin/events/page.test.tsx）→ 完了：5テスト追加（エラーハンドリングカテゴリ）✅
+- [x] T050 [US4] イベント管理ページのカバレッジを測定し、80%以上を確認する（`npm test admin/events/page -- --coverage`）→ 完了：93.82% statements, 74.07% branches, 100% functions ✅
 
 ### Bulk Register Tests
 
