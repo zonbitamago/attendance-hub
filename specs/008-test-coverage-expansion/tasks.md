@@ -163,9 +163,9 @@
 - [x] T057 [US4] UI状態管理のテスト（送信中ボタン無効化、ボタンテキスト「登録中...」、イベント選択数表示）を実装する（__tests__/app/[org]/my-register/page.test.tsx）→ 完了：3テスト追加（UI状態管理カテゴリ）✅
 - [x] T058 [US4] 一括出欠登録ページのカバレッジを測定し、80%以上を確認する（`npm test my-register/page -- --coverage`）→ 完了：95.31% statements, 78.26% branches, 100% functions, 95.16% lines ✅
 
-### Phase 4 Verification
+### Phase 4 Verification ✅ 完了
 
-- [ ] T059 [US4] Phase 4の全テストと既存234テストがpassすることを確認する（`npm test`）
+- [x] T059 [US4] Phase 4の全テストと既存234テストがpassすることを確認する（`npm test`）→ 完了：411テスト全てpass (234 + 177新規) ✅
 
 **Phase 4 Independent Test Criteria**:
 - ✅ 3つの管理画面（グループ管理、イベント管理、一括出欠登録）の全CRUD操作がテストされている
