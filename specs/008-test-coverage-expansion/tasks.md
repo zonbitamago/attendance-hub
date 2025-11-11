@@ -28,19 +28,20 @@
 - **Estimated New Tests**: 115-150テスト
 - **Target Coverage**: 47.98% → 70%以上
 
-## Phase 0: Investigation & Baseline
+## Phase 0: Investigation & Baseline ✅ 完了
 
 このフェーズでは既存のテストパターンを分析し、カバレッジのベースラインを測定します。
 
-- [ ] T001 既存テストパターンを分析し、モック戦略とアサーションスタイルを文書化する（__tests__/app/page.test.tsx、__tests__/components/event-detail/member-attendance-list.test.tsx、__tests__/lib/attendance-service.test.tsを参照）
-- [ ] T002 現在のカバレッジベースラインを測定する（`npm test -- --coverage`を実行し、結果をスクリーンショットまたはテキストで保存）
+- [x] T001 既存テストパターンを分析し、モック戦略とアサーションスタイルを文書化する（__tests__/app/page.test.tsx、__tests__/components/event-detail/member-attendance-list.test.tsx、__tests__/lib/attendance-service.test.tsを参照）→ existing-test-patterns.md作成
+- [x] T002 現在のカバレッジベースラインを測定する（`npm test -- --coverage`を実行し、結果をスクリーンショットまたはテキストで保存）→ coverage-baseline.md作成
 
 **Phase 0 完了基準**:
-- ✅ 既存テストパターンが文書化されている
-- ✅ 現在のカバレッジ（47.98%）が確認されている
+
+- ✅ 既存テストパターンが文書化されている（existing-test-patterns.md）
+- ✅ 現在のカバレッジ（47.98%）が確認されている（coverage-baseline.md）
 - ✅ モック戦略（useRouter、useParams、useOrganization、サービス層）が明確になっている
 
-## Phase 1: US1 - ユーティリティ関数の完全テストカバレッジ
+## Phase 1: US1 - ユーティリティ関数の完全テストカバレッジ ✅ 完了
 
 **User Story 1 (Priority P1)**: 開発者が日付フォーマットやエラーハンドリングのユーティリティ関数を変更する際、既存の機能が破壊されていないことを自動的に検証できる。
 
@@ -48,33 +49,34 @@
 
 ### Date Utils Tests
 
-- [ ] T003 [P] [US1] date-utils.tsのテストファイルを作成し、formatDate関数の正常系テストを実装する（__tests__/lib/date-utils.test.ts）
-- [ ] T004 [US1] formatDate関数の異常系テスト（null、undefined、無効な日付）を追加する（__tests__/lib/date-utils.test.ts）
-- [ ] T005 [P] [US1] formatShortDate、formatLongDate、formatTime関数のテストを実装する（__tests__/lib/date-utils.test.ts）
-- [ ] T006 [US1] getCurrentTimestamp関数のテストをjest.useFakeTimersを使用して実装する（__tests__/lib/date-utils.test.ts）
-- [ ] T007 [US1] formatRelativeTime関数の全エッジケース（たった今、N分前、N時間前、N日前、8日以上）をテストする（__tests__/lib/date-utils.test.ts）
-- [ ] T008 [US1] date-utils.tsのカバレッジを測定し、90%以上を確認する（`npm test date-utils -- --coverage`）
+- [x] T003 [P] [US1] date-utils.tsのテストファイルを作成し、formatDate関数の正常系テストを実装する（__tests__/lib/date-utils.test.ts）→ 5テスト追加
+- [x] T004 [US1] formatDate関数の異常系テスト（null、undefined、無効な日付）を追加する（__tests__/lib/date-utils.test.ts）→ T003に含む
+- [x] T005 [P] [US1] formatShortDate、formatLongDate、formatTime関数のテストを実装する（__tests__/lib/date-utils.test.ts）→ 13テスト追加
+- [x] T006 [US1] getCurrentTimestamp関数のテストをjest.useFakeTimersを使用して実装する（__tests__/lib/date-utils.test.ts）→ 4テスト追加
+- [x] T007 [US1] formatRelativeTime関数の全エッジケース（たった今、N分前、N時間前、N日前、8日以上）をテストする（__tests__/lib/date-utils.test.ts）→ 7テスト追加
+- [x] T008 [US1] date-utils.tsのカバレッジを測定し、90%以上を確認する（`npm test date-utils -- --coverage`）→ 94.44%達成 ✅
 
 ### Error Utils Tests
 
-- [ ] T009 [P] [US1] error-utils.tsのテストファイルを作成し、AppErrorクラスのテストを実装する（__tests__/lib/error-utils.test.ts）
-- [ ] T010 [US1] formatZodError関数のテスト（複数エラー、フィールドパス付きエラー）を実装する（__tests__/lib/error-utils.test.ts）
-- [ ] T011 [P] [US1] getErrorMessage、getErrorMessages関数のテスト（ZodError、AppError、通常のError、不明なエラー）を実装する（__tests__/lib/error-utils.test.ts）
-- [ ] T012 [US1] tryCatch、tryCatchSync関数のテスト（成功ケース、失敗ケース、console.errorスパイ）を実装する（__tests__/lib/error-utils.test.ts）
-- [ ] T013 [US1] successMessage関数とErrorMessagesオブジェクトのテストを実装する（__tests__/lib/error-utils.test.ts）
-- [ ] T014 [US1] error-utils.tsのカバレッジを測定し、90%以上を確認する（`npm test error-utils -- --coverage`）
+- [x] T009 [P] [US1] error-utils.tsのテストファイルを作成し、AppErrorクラスのテストを実装する（__tests__/lib/error-utils.test.ts）→ 4テスト追加
+- [x] T010 [US1] formatZodError関数のテスト（複数エラー、フィールドパス付きエラー）を実装する（__tests__/lib/error-utils.test.ts）→ 4テスト追加
+- [x] T011 [P] [US1] getErrorMessage、getErrorMessages関数のテスト（ZodError、AppError、通常のError、不明なエラー）を実装する（__tests__/lib/error-utils.test.ts）→ 13テスト追加
+- [x] T012 [US1] tryCatch、tryCatchSync関数のテスト（成功ケース、失敗ケース、console.errorスパイ）を実装する（__tests__/lib/error-utils.test.ts）→ 12テスト追加
+- [x] T013 [US1] successMessage関数とErrorMessagesオブジェクトのテストを実装する（__tests__/lib/error-utils.test.ts）→ 9テスト追加
+- [x] T014 [US1] error-utils.tsのカバレッジを測定し、90%以上を確認する（`npm test error-utils -- --coverage`）→ 100%達成 ✅
 
 ### Phase 1 Verification
 
-- [ ] T015 [US1] Phase 1の全テストを実行し、新規テストがpassすることを確認する（`npm test date-utils error-utils`）
-- [ ] T016 [US1] 既存の234テストがpassすることを確認する（`npm test`）
+- [x] T015 [US1] Phase 1の全テストを実行し、新規テストがpassすることを確認する（`npm test date-utils error-utils`）→ 70テスト全てpass ✅
+- [x] T016 [US1] 既存の234テストがpassすることを確認する（`npm test`）→ 304テスト全てpass（234既存 + 70新規）✅
 
 **Phase 1 Independent Test Criteria**:
-- ✅ date-utils.tsの全6関数がテストされている
-- ✅ error-utils.tsの全関数がテストされている
-- ✅ 両ファイルのカバレッジが90%以上
-- ✅ 推定35-45の新規テスト追加
-- ✅ 既存234テスト全てがpass
+
+- ✅ date-utils.tsの全6関数がテストされている（29テスト）
+- ✅ error-utils.tsの全関数がテストされている（41テスト）
+- ✅ 両ファイルのカバレッジが90%以上（date-utils: 94.44%, error-utils: 100%）
+- ✅ 推定35-45の新規テスト追加 → 実際70テスト追加
+- ✅ 既存234テスト全てがpass → 304テスト全てpass
 
 ## Phase 2: US2 - 出欠登録ページの統合テスト
 
