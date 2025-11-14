@@ -281,6 +281,8 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 - TypeScript 5.9 (strict mode必須) + Next.js 16.0.1, React 19.2.0, Tailwind CSS 3.4 (007-event-member-attendance)
 - TypeScript 5.9（strict mode必須） + Jest 29、@testing-library/react 14、@testing-library/jest-dom (008-test-coverage-expansion)
 - N/A（テストフィーチャー、既存のlocalStorageストレージを使用） (008-test-coverage-expansion)
+- TypeScript 5.9（strict mode必須） + Next.js 16.0.1, React 19.2.0, @supabase/supabase-js（最新安定版）, Zod（既存） (009-supabase-migration)
+- Supabase PostgreSQL（無料プラン: 500MB ストレージ、50,000 月間アクティブユーザー） (009-supabase-migration)
 
 ## Recent Changes
 - 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function
