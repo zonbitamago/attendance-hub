@@ -1,11 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import { OrganizationProvider, useOrganization } from '@/contexts/organization-context';
 import * as organizationService from '@/lib/organization-service';
+import * as supabaseStorage from '@/lib/supabase-storage';
 import * as nextNavigation from 'next/navigation';
 import type { Organization } from '@/types';
 
 // モック
+jest.mock('@/lib/supabase/client', () => ({
+  supabase: {
+    from: jest.fn(),
+    rpc: jest.fn(),
+  },
+}));
 jest.mock('@/lib/organization-service');
+jest.mock('@/lib/supabase-storage');
 jest.mock('next/navigation', () => ({
   notFound: jest.fn(),
 }));
@@ -94,6 +102,41 @@ describe('OrganizationContext', () => {
 
       expect(screen.getByTestId('org-name')).toHaveTextContent('コンテキストテスト');
       expect(screen.getByTestId('is-loading')).toHaveTextContent('false');
+    });
+  });
+
+  // ==========================================================================
+  // Cycle 2: OrganizationContext Integration with RLS (T073-T075)
+  // Phase 4: US2 - RLS Implementation
+  // ==========================================================================
+
+  describe('RLS Integration', () => {
+    const mockSetOrganizationContext = supabaseStorage.setOrganizationContext as jest.MockedFunction<
+      typeof supabaseStorage.setOrganizationContext
+    >;
+
+    beforeEach(() => {
+      mockSetOrganizationContext.mockResolvedValue(true);
+    });
+
+    it('should call setOrganizationContext when provider is mounted', async () => {
+      const testOrg: Organization = {
+        id: 'test-org-3',
+        name: 'RLSテスト団体',
+        description: '',
+        createdAt: '2025-01-01T00:00:00.000Z',
+      };
+
+      mockGetOrganizationById.mockReturnValue(testOrg);
+
+      render(
+        <OrganizationProvider organizationId="test-org-3">
+          <TestComponent />
+        </OrganizationProvider>
+      );
+
+      // setOrganizationContextが組織IDで呼び出されることを検証
+      expect(mockSetOrganizationContext).toHaveBeenCalledWith('test-org-3');
     });
   });
 });

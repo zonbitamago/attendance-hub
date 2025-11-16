@@ -5,6 +5,13 @@ import * as nextNavigation from 'next/navigation';
 import type { Organization } from '@/types';
 
 // Mockモジュール
+jest.mock('@/lib/supabase/client', () => ({
+  supabase: {
+    from: jest.fn(),
+    rpc: jest.fn(),
+  },
+}));
+jest.mock('@/lib/supabase-storage');
 jest.mock('@/lib/organization-service');
 jest.mock('next/navigation', () => ({
   notFound: jest.fn(),

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, useMemo, type ReactNode
 import { notFound } from 'next/navigation';
 import type { Organization } from '@/types';
 import { getOrganizationById } from '@/lib/organization-service';
+import { setOrganizationContext } from '@/lib/supabase-storage';
 
 interface OrganizationContextValue {
   organization: Organization;
@@ -22,6 +23,9 @@ export function OrganizationProvider({ organizationId, children }: OrganizationP
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // RLS: Supabaseに組織コンテキストを設定
+    setOrganizationContext(organizationId);
+
     const org = getOrganizationById(organizationId);
     setOrganization(org);
     setIsLoading(false);

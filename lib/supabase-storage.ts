@@ -214,4 +214,19 @@ export async function clearOrganizationData(organizationId: string): Promise<boo
   return true;
 }
 
-// TODO: 各関数を実装（TDDサイクルで段階的に実装）
+/**
+ * 組織コンテキストを設定（RLS用）
+ * @param organizationId 組織ID
+ * @returns 成功した場合 true、失敗した場合 false
+ */
+export async function setOrganizationContext(organizationId: string): Promise<boolean> {
+  const { error } = await supabase
+    .rpc('set_current_organization', { org_id: organizationId });
+
+  if (error) {
+    console.error('Failed to set organization context:', error);
+    return false;
+  }
+
+  return true;
+}

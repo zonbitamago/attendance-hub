@@ -243,17 +243,17 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 ### Tasks
 
 **準備**
-- [ ] T069 [US2] RLSポリシーがSupabaseに正しく適用されているか確認（Supabase Dashboard）
+- [X] T069 [US2] RLSポリシーがSupabaseに正しく適用されているか確認（Phase 2で完了）
 
 **Cycle 1: setOrganizationContext 関数**
-- [ ] T070 [Red] [US2] setOrganizationContextのテストを作成（失敗するテスト）
-- [ ] T071 [Green] [US2] lib/supabase-storage.ts に setOrganizationContext 関数を実装（current_setting設定）
-- [ ] T072 [Refactor] [US2] テスト実行・確認、コード改善
+- [X] T070 [Red] [US2] setOrganizationContextのテストを作成（失敗するテスト）
+- [X] T071 [Green] [US2] lib/supabase-storage.ts に setOrganizationContext 関数を実装（current_setting設定）
+- [X] T072 [Refactor] [US2] テスト実行・確認、コード改善
 
 **Cycle 2: OrganizationContext統合**
-- [ ] T073 [Red] [US2] OrganizationContextのテストを作成（setOrganizationContext呼び出しテスト）
-- [ ] T074 [Green] [US2] contexts/organization-context.tsx を修正（setOrganizationContextを呼び出す）
-- [ ] T075 [Refactor] [US2] テスト実行・確認、コード改善
+- [X] T073 [Red] [US2] OrganizationContextのテストを作成（setOrganizationContext呼び出しテスト）
+- [X] T074 [Green] [US2] contexts/organization-context.tsx を修正（setOrganizationContextを呼び出す）
+- [X] T075 [Refactor] [US2] テスト実行・確認、コード改善
 
 **Cycle 3: 団体別データ分離テスト（organizations）**
 - [ ] T076 [Red] [US2] 団体A/Bでorganizationsデータ分離のテストを作成

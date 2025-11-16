@@ -601,4 +601,47 @@ describe('Supabase Storage Layer', () => {
       // 実環境では1000+レコードのクエリが500ms以内で完了することが期待される
     });
   });
+
+  // ==========================================================================
+  // Cycle 1: setOrganizationContext (T070-T072)
+  // Phase 4: US2 - RLS Implementation
+  // ==========================================================================
+
+  describe('setOrganizationContext', () => {
+    it('組織コンテキストを正しく設定できる', async () => {
+      const organizationId = 'testorg001';
+
+      const mockRpc = jest.fn().mockResolvedValue({
+        data: null,
+        error: null,
+      });
+
+      (supabase.rpc as jest.Mock) = mockRpc;
+
+      const { setOrganizationContext } = await import('@/lib/supabase-storage');
+      const result = await setOrganizationContext(organizationId);
+
+      expect(result).toBe(true);
+      expect(mockRpc).toHaveBeenCalledWith('set_current_organization', { org_id: organizationId });
+    });
+
+    it('RPC呼び出しに失敗した場合falseを返す', async () => {
+      const organizationId = 'testorg001';
+
+      const mockRpc = jest.fn().mockResolvedValue({
+        data: null,
+        error: {
+          message: 'RPC call failed',
+          code: 'PGRST202',
+        },
+      });
+
+      (supabase.rpc as jest.Mock) = mockRpc;
+
+      const { setOrganizationContext } = await import('@/lib/supabase-storage');
+      const result = await setOrganizationContext(organizationId);
+
+      expect(result).toBe(false);
+    });
+  });
 });
