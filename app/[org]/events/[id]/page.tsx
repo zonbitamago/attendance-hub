@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getEventDateById } from '@/lib/event-service';
@@ -14,7 +14,14 @@ import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
 import { GroupAttendanceAccordion } from '@/components/event-detail/group-attendance-accordion';
 import { AttendanceFilters } from '@/components/event-detail/attendance-filters';
-import type { EventDate, GroupSummary, AttendanceFilterStatus, AttendanceSortBy } from '@/types';
+import type {
+  EventDate,
+  GroupSummary,
+  AttendanceFilterStatus,
+  AttendanceSortBy,
+  EventTotalSummary,
+  GroupMemberAttendance,
+} from '@/types';
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -25,54 +32,109 @@ export default function EventDetailPage() {
   const [event, setEvent] = useState<EventDate | null>(null);
   const [summaries, setSummaries] = useState<GroupSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<Error | null>(null);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [filterStatus, setFilterStatus] = useState<AttendanceFilterStatus>('all');
   const [sortBy, setSortBy] = useState<AttendanceSortBy>('name');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const loadData = () => {
-    if (!organization) return;
-    try {
-      const foundEvent = getEventDateById(organization.id, eventId);
-      if (!foundEvent) {
-        router.push(`/${params.org as string}`);
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadData = async () => {
+      if (!organization) return;
+
+      try {
+        setIsLoading(true);
+        setLoadError(null);
+
+        const foundEvent = await getEventDateById(organization.id, eventId);
+        if (!foundEvent) {
+          router.push(`/${params.org as string}`);
+          return;
+        }
+
+        const eventSummaries = await calculateEventSummary(organization.id, eventId);
+
+        if (isMounted) {
+          setEvent(foundEvent);
+          setSummaries(eventSummaries);
+        }
+      } catch (error) {
+        console.error('Failed to load event:', error);
+        if (isMounted) {
+          setLoadError(error instanceof Error ? error : new Error('Unknown error'));
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [organization, eventId, params.org, router]);
+
+  // イベント全体の出欠集計を非同期で計算
+  const [totalSummary, setTotalSummary] = useState<EventTotalSummary | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadTotalSummary = async () => {
+      if (!event || !organization) {
+        setTotalSummary(null);
         return;
       }
 
-      const eventSummaries = calculateEventSummary(organization.id, eventId);
-      setEvent(foundEvent);
-      setSummaries(eventSummaries);
-    } catch (error) {
-      console.error('Failed to load event:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      const summary = await calculateEventTotalSummary(organization.id, eventId);
 
-  useEffect(() => {
-    loadData();
-  }, [eventId, router]);
+      if (isMounted) {
+        setTotalSummary(summary);
+      }
+    };
 
-  // メモ化: イベント全体の出欠集計を計算
-  // NOTE: eventIdだけでなくeventも依存配列に含める必要がある
-  // eventが読み込まれるまでcalculateEventTotalSummaryを実行すべきでないため
-  const totalSummary = useMemo(() => {
-    if (!event || !organization) return null;
-    return calculateEventTotalSummary(organization.id, eventId);
+    loadTotalSummary();
+
+    return () => {
+      isMounted = false;
+    };
   }, [event, eventId, organization]);
 
-  // メモ化: グループごとのメンバー出欠データを計算
-  // NOTE: summariesが変更されるたびに全グループのデータを再計算するが、
-  // mapの中で毎回getGroupMemberAttendancesを呼ぶよりもパフォーマンスが良い
-  const groupMembersMap = useMemo(() => {
-    if (!organization) return new Map();
+  // グループごとのメンバー出欠データを非同期で計算
+  const [groupMembersMap, setGroupMembersMap] = useState<Map<string, GroupMemberAttendance[]>>(
+    new Map()
+  );
 
-    const membersMap = new Map();
-    summaries.forEach((summary) => {
-      const members = getGroupMemberAttendances(organization.id, eventId, summary.groupId);
-      membersMap.set(summary.groupId, members);
-    });
-    return membersMap;
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadGroupMembers = async () => {
+      if (!organization || summaries.length === 0) {
+        setGroupMembersMap(new Map());
+        return;
+      }
+
+      const membersMap = new Map<string, GroupMemberAttendance[]>();
+      for (const summary of summaries) {
+        const members = await getGroupMemberAttendances(organization.id, eventId, summary.groupId);
+        membersMap.set(summary.groupId, members);
+      }
+
+      if (isMounted) {
+        setGroupMembersMap(membersMap);
+      }
+    };
+
+    loadGroupMembers();
+
+    return () => {
+      isMounted = false;
+    };
   }, [organization, eventId, summaries]);
 
   // アコーディオンのトグルハンドラ
@@ -92,6 +154,16 @@ export default function EventDetailPage() {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
         <LoadingSpinner message="イベント情報を読み込み中..." />
+      </main>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">エラーが発生しました: {loadError.message}</p>
+        </div>
       </main>
     );
   }
