@@ -11,6 +11,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.81.1",
     "autoprefixer": "^10.4.21",
     "date-fns": "^4.1.0",
     "nanoid": "^5.1.6",

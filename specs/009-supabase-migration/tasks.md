@@ -80,16 +80,16 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 
 ### Tasks
 
-- [ ] T001 Supabaseアカウント作成と新規プロジェクト作成（quickstart.md Step 1参照）
-- [ ] T002 Supabase API認証情報（URL, API Key）を取得して保存
-- [ ] T003 [P] .env.local ファイルを作成し、Supabase接続情報を設定
-- [ ] T004 [P] .env.example ファイルを作成（テンプレート）
-- [ ] T005 [P] .gitignore に .env*.local が含まれていることを確認
-- [ ] T006 @supabase/supabase-js をインストール（npm install @supabase/supabase-js）
-- [ ] T007 [P] package.json に @supabase/supabase-js が追加されたことを確認
-- [ ] T008 [P] lib/supabase/ ディレクトリを作成
-- [ ] T009 [P] supabase/ ディレクトリを作成（マイグレーションファイル用）
-- [ ] T010 [P] __tests__/__mocks__/@supabase/ ディレクトリを作成
+- [X] T001 Supabaseアカウント作成と新規プロジェクト作成（quickstart.md Step 1参照）
+- [X] T002 Supabase API認証情報（URL, API Key）を取得して保存
+- [X] T003 [P] .env.local ファイルを作成し、Supabase接続情報を設定
+- [X] T004 [P] .env.example ファイルを作成（テンプレート）
+- [X] T005 [P] .gitignore に .env*.local が含まれていることを確認
+- [X] T006 @supabase/supabase-js をインストール（npm install @supabase/supabase-js）
+- [X] T007 [P] package.json に @supabase/supabase-js が追加されたことを確認
+- [X] T008 [P] lib/supabase/ ディレクトリを作成
+- [X] T009 [P] supabase/ ディレクトリを作成（マイグレーションファイル用）
+- [X] T010 [P] __tests__/__mocks__/@supabase/ ディレクトリを作成
 
 **Verification**: 環境変数が正しく読み込まれ、依存関係がインストールされている
 
@@ -105,16 +105,16 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 
 ### Tasks
 
-- [ ] T011 [P] [FOUNDATIONAL] contracts/database-schema.sql の内容をSupabase SQL Editorで実行（5テーブル作成）
-- [ ] T012 [P] [FOUNDATIONAL] contracts/rls-policies.sql の内容をSupabase SQL Editorで実行（RLS有効化）
-- [ ] T013 [P] [FOUNDATIONAL] contracts/indexes.sql の内容をSupabase SQL Editorで実行（パフォーマンス最適化）
-- [ ] T014 [FOUNDATIONAL] Supabase Dashboardでテーブル作成を確認（organizations, event_dates, groups, members, attendances）
-- [ ] T015 [FOUNDATIONAL] lib/supabase/client.ts を作成（Supabase Client初期化、createClient使用）
-- [ ] T016 [FOUNDATIONAL] Supabase Client接続テストをブラウザコンソールで実行（空のクエリ）
-- [ ] T017 [P] [FOUNDATIONAL] __tests__/__mocks__/@supabase/supabase-js.ts を作成（Supabase Clientモック）
-- [ ] T018 [P] [FOUNDATIONAL] lib/supabase/database.types.ts のプレースホルダーを作成（後でSupabase CLIで自動生成）
-- [ ] T019 [FOUNDATIONAL] 開発用テストデータを投入（quickstart.md Step 6参照、団体・グループ・メンバー・イベント）
-- [ ] T020 [FOUNDATIONAL] Supabase Dashboardでテストデータを確認
+- [X] T011 [P] [FOUNDATIONAL] contracts/database-schema.sql の内容をSupabase SQL Editorで実行（5テーブル作成）
+- [X] T012 [P] [FOUNDATIONAL] contracts/rls-policies.sql の内容をSupabase SQL Editorで実行（RLS有効化）
+- [X] T013 [P] [FOUNDATIONAL] contracts/indexes.sql の内容をSupabase SQL Editorで実行（パフォーマンス最適化）
+- [X] T014 [FOUNDATIONAL] Supabase Dashboardでテーブル作成を確認（organizations, event_dates, groups, members, attendances）
+- [X] T015 [FOUNDATIONAL] lib/supabase/client.ts を作成（Supabase Client初期化、createClient使用）
+- [X] T016 [FOUNDATIONAL] Supabase Client接続テストをブラウザコンソールで実行（空のクエリ）
+- [X] T017 [P] [FOUNDATIONAL] __tests__/__mocks__/@supabase/supabase-js.ts を作成（Supabase Clientモック）
+- [X] T018 [P] [FOUNDATIONAL] lib/supabase/database.types.ts のプレースホルダーを作成（後でSupabase CLIで自動生成）
+- [X] T019 [FOUNDATIONAL] 開発用テストデータを投入（quickstart.md Step 6参照、団体・グループ・メンバー・イベント）
+- [X] T020 [FOUNDATIONAL] Supabase Dashboardでテストデータを確認
 
 **Verification**: データベーススキーマが正しく適用され、Supabase Clientが接続できる
 

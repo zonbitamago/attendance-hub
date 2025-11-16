@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Misc
+.DS_Store
+*.min.js
+*.min.css
+
+# IDE
+.vscode/
+.idea/
+
+# Specs (documentation, not code)
+specs/
