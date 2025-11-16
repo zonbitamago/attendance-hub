@@ -324,13 +324,13 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 ### Tasks
 
 **準備**
-- [ ] T103 [US3] サービス層の非同期化戦略を確認（plan.md R3参照）
+- [X] T103 [US3] サービス層の非同期化戦略を確認（plan.md R3参照）
 
 **Cycle 1: organization-service**
-- [ ] T104 [Red] [US3] __tests__/lib/organization-service.test.ts を async 対応に更新
-- [ ] T105 [Red] [US3] テスト実行して失敗確認
-- [ ] T106 [Green] [US3] lib/organization-service.ts を async/await に変更
-- [ ] T107 [Refactor] [US3] テスト実行・確認、コード改善
+- [X] T104 [Red] [US3] __tests__/lib/organization-service.test.ts を async 対応に更新
+- [X] T105 [Red] [US3] テスト実行して失敗確認
+- [X] T106 [Green] [US3] lib/organization-service.ts を async/await に変更
+- [X] T107 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 2: event-service**
 - [ ] T108 [Red] [US3] __tests__/lib/event-service.test.ts を async 対応に更新

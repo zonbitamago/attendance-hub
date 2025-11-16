@@ -9,7 +9,7 @@ export function generateOrganizationId(): string {
 }
 
 // 新しい団体を作成
-export function createOrganization(input: CreateOrganizationInput): Organization {
+export async function createOrganization(input: CreateOrganizationInput): Promise<Organization> {
   // 入力検証
   const validatedInput = CreateOrganizationInputSchema.parse(input);
 
@@ -37,7 +37,7 @@ export function createOrganization(input: CreateOrganizationInput): Organization
 }
 
 // すべての団体を取得（createdAt降順でソート）
-export function getAllOrganizations(): Organization[] {
+export async function getAllOrganizations(): Promise<Organization[]> {
   const organizations = loadOrganizations();
 
   // createdAt降順でソート（新しい順）
@@ -47,13 +47,13 @@ export function getAllOrganizations(): Organization[] {
 }
 
 // IDで団体を取得
-export function getOrganizationById(id: string): Organization | null {
+export async function getOrganizationById(id: string): Promise<Organization | null> {
   const organizations = loadOrganizations();
   return organizations.find((org) => org.id === id) || null;
 }
 
 // 団体を更新
-export function updateOrganization(id: string, input: UpdateOrganizationInput): Organization {
+export async function updateOrganization(id: string, input: UpdateOrganizationInput): Promise<Organization> {
   // 入力検証
   const validatedInput = UpdateOrganizationInputSchema.parse(input);
 
@@ -83,7 +83,7 @@ export function updateOrganization(id: string, input: UpdateOrganizationInput): 
 }
 
 // 団体を削除（カスケード削除）
-export function deleteOrganization(id: string): void {
+export async function deleteOrganization(id: string): Promise<void> {
   // すべての団体を読み込み
   const organizations = loadOrganizations();
 
