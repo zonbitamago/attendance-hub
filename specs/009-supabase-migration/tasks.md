@@ -628,10 +628,10 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [x] T215 [Polish] 全テスト最終実行、100% pass確認（467テスト全てpass）
 - [x] T216 [Polish] カバレッジ最終確認（85%以上）（90.17%達成）
 
-**Cycle 5: Git commit & PR**
-- [ ] T217 [Polish] Git commit（日本語または英語のコミットメッセージ）
-- [ ] T218 [Polish] GitHub Pull Request作成（日本語でSummary作成）
-- [ ] T219 [Polish] CI/CDチェック完了確認
+**Cycle 5: Git commit & PR** 🚧
+- [x] T217 [Polish] Git commit（日本語コミットメッセージ、commit b27dd19）
+- [x] T218 [Polish] GitHub Pull Request作成（PR #9: https://github.com/zonbitamago/attendance-hub/pull/9）
+- [ ] T219 [Polish] CI/CDチェック完了確認（実行中: test(20.x), test(22.x) pending）
 - [ ] T220 [Polish] PRマージ
 
 **Verification**: 全ドキュメントが更新され、全チェックがpassし、PRがマージ可能（5サイクル完了）
