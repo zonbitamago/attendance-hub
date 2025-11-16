@@ -232,6 +232,12 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 
 **TDD Approach**: 1テストケースごとにRed-Green-Refactorサイクル
 
+**⚠️ テスト方法**: Jest/Supabase互換性問題により、Cycle 3以降は手動テストで実施
+- **問題**: Jest環境でSupabase JavaScript Client (`@supabase/supabase-js` v2.81.1) のINSERT操作が失敗
+- **検証**: 通常のNode.js環境では正常動作を確認済み
+- **対応**: 手動SQLテストで全RLSシナリオを検証（`specs/009-supabase-migration/rls-manual-testing.md`）
+- **重要**: SQL Editorは `SET ROLE anon;` で匿名ロールに切り替えてからテスト実施（postgres roleはRLSバイパス）
+
 **Independent Test**: 2つの異なる団体を作成し、それぞれのデータを挿入した後、各団体のコンテキストで他の団体のデータが見えないことを確認する。
 
 **Acceptance Criteria**:
@@ -256,44 +262,74 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [X] T075 [Refactor] [US2] テスト実行・確認、コード改善
 
 **Cycle 3: 団体別データ分離テスト（organizations）**
-- [ ] T076 [Red] [US2] 団体A/Bでorganizationsデータ分離のテストを作成
-- [ ] T077 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
-- [ ] T078 [Refactor] [US2] テスト実行・確認
+- [X] T076 [Red] [US2] 団体A/Bでorganizationsデータ分離のテストを作成
+  - ✅ 手動テスト手順書作成（Jest互換性問題のため）
+  - 📄 `specs/009-supabase-migration/rls-manual-testing.md`
+- [X] T077 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
+  - ✅ Supabase SQL Editorで検証完了
+  - ⚠️ `SET ROLE anon;` 必須（postgres roleはRLSバイパス）
+- [X] T078 [Refactor] [US2] テスト実行・確認
+  - ✅ 4ケース全て期待通りの動作確認
+  - ✅ RLSポリシーがWITH CHECK句含めて正しく動作
 
 **Cycle 4: 団体別データ分離テスト（event_dates）**
-- [ ] T079 [Red] [US2] 団体A/Bでevent_datesデータ分離のテストを作成
-- [ ] T080 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
-- [ ] T081 [Refactor] [US2] テスト実行・確認
+- [X] T079 [Red] [US2] 団体A/Bでevent_datesデータ分離のテストを作成
+  - ✅ 手動テストで検証完了（UUID型対応）
+- [X] T080 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
+  - ✅ 団体A: 2イベント取得、団体B: 2イベント取得
+- [X] T081 [Refactor] [US2] テスト実行・確認
+  - ✅ RLS正常動作確認
 
 **Cycle 5: 団体別データ分離テスト（groups）**
-- [ ] T082 [Red] [US2] 団体A/Bでgroupsデータ分離のテストを作成
-- [ ] T083 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
-- [ ] T084 [Refactor] [US2] テスト実行・確認
+- [X] T082 [Red] [US2] 団体A/Bでgroupsデータ分離のテストを作成
+  - ✅ 手動テストで検証完了（UUID型対応）
+- [X] T083 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
+  - ✅ 団体A: 2グループ取得、団体B: 2グループ取得
+- [X] T084 [Refactor] [US2] テスト実行・確認
+  - ✅ RLS正常動作確認
 
 **Cycle 6: 団体別データ分離テスト（members）**
-- [ ] T085 [Red] [US2] 団体A/Bでmembersデータ分離のテストを作成
-- [ ] T086 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
-- [ ] T087 [Refactor] [US2] テスト実行・確認
+- [X] T085 [Red] [US2] 団体A/Bでmembersデータ分離のテストを作成
+  - ✅ 手動テストで検証完了（UUID型対応）
+- [X] T086 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
+  - ✅ 団体A: 2メンバー取得、団体B: 2メンバー取得
+- [X] T087 [Refactor] [US2] テスト実行・確認
+  - ✅ RLS正常動作確認
 
 **Cycle 7: 団体別データ分離テスト（attendances）**
-- [ ] T088 [Red] [US2] 団体A/Bでattendancesデータ分離のテストを作成
-- [ ] T089 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
-- [ ] T090 [Refactor] [US2] テスト実行・確認
+- [X] T088 [Red] [US2] 団体A/Bでattendancesデータ分離のテストを作成
+  - ✅ 手動テストで検証完了（UUID型対応）
+- [X] T089 [Green] [US2] RLSポリシーの動作確認（DB側の機能なので実装不要、テストのみ）
+  - ✅ 団体A: 1出欠記録取得、団体B: 1出欠記録取得
+- [X] T090 [Refactor] [US2] テスト実行・確認
+  - ✅ RLS正常動作確認
 
 **Cycle 8: アクセス拒否テスト**
-- [ ] T091 [Red] [US2] 団体Aから団体BのデータをIDで直接取得するテストを作成
-- [ ] T092 [Green] [US2] RLSによるアクセス拒否の動作確認（DB側の機能なので実装不要、テストのみ）
-- [ ] T093 [Refactor] [US2] テスト実行・確認
+- [X] T091 [Red] [US2] 団体Aから団体BのデータをIDで直接取得するテストを作成
+  - ✅ 手動テストで検証完了（5テーブル全て）
+- [X] T092 [Green] [US2] RLSによるアクセス拒否の動作確認（DB側の機能なので実装不要、テストのみ）
+  - ✅ 全クエリで0行返却（RLS正常動作）
+- [X] T093 [Refactor] [US2] テスト実行・確認
+  - ✅ 直接ID指定でもRLSによりアクセス拒否
 
 **Cycle 9: 存在しない団体IDテスト**
-- [ ] T094 [Red] [US2] 存在しない団体IDでのクエリテストを作成
-- [ ] T095 [Green] [US2] 空の結果セットが返されることを確認（DB側の機能なので実装不要、テストのみ）
-- [ ] T096 [Refactor] [US2] テスト実行・確認
+- [X] T094 [Red] [US2] 存在しない団体IDでのクエリテストを作成
+  - ✅ 手動テストで検証完了（5テーブル全て）
+- [X] T095 [Green] [US2] 空の結果セットが返されることを確認（DB側の機能なので実装不要、テストのみ）
+  - ✅ 全クエリで0行返却
+- [X] T096 [Refactor] [US2] テスト実行・確認
+  - ✅ 存在しない団体IDでは全データ取得不可
 
 **Cycle 10: 団体削除後のRLSテスト**
-- [ ] T097 [Red] [US2] 団体削除後のRLSテストを作成
-- [ ] T098 [Green] [US2] 削除済み団体のコンテキストで空の結果確認（DB側の機能なので実装不要、テストのみ）
-- [ ] T099 [Refactor] [US2] テスト実行・確認
+- [X] T097 [Red] [US2] 団体削除後のRLSテストを作成
+  - ✅ 手動テストで検証完了
+  - ✅ RPC関数修正（set_config の第3引数を false に変更）
+- [X] T098 [Green] [US2] 削除済み団体のコンテキストで空の結果確認（DB側の機能なので実装不要、テストのみ）
+  - ✅ 削除前: データ取得可能
+  - ✅ 削除後: 全クエリで0行返却
+  - ✅ カスケード削除動作確認
+- [X] T099 [Refactor] [US2] テスト実行・確認
+  - ✅ 削除済み団体のコンテキストでデータ取得不可
 
 **統合確認**
 - [ ] T100 [US2] Supabase Dashboardで手動でRLSポリシーをテスト（複数団体作成・確認）

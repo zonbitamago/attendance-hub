@@ -14,7 +14,8 @@ ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can access their organization"
 ON organizations
 FOR ALL
-USING (id = current_setting('app.current_organization_id', true));
+USING (id = current_setting('app.current_organization_id', true))
+WITH CHECK (id = current_setting('app.current_organization_id', true));
 
 COMMENT ON POLICY "Users can access their organization" ON organizations IS
 '現在の団体コンテキストでアクセス制御。将来的には認証ユーザーIDと紐付け。';
@@ -28,7 +29,8 @@ ALTER TABLE event_dates ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can access their organization''s events"
 ON event_dates
 FOR ALL
-USING (organization_id = current_setting('app.current_organization_id', true));
+USING (organization_id = current_setting('app.current_organization_id', true))
+WITH CHECK (organization_id = current_setting('app.current_organization_id', true));
 
 COMMENT ON POLICY "Users can access their organization''s events" ON event_dates IS
 '団体IDベースのアクセス制御。該当する団体のイベントのみアクセス可能。';
@@ -42,7 +44,8 @@ ALTER TABLE groups ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can access their organization''s groups"
 ON groups
 FOR ALL
-USING (organization_id = current_setting('app.current_organization_id', true));
+USING (organization_id = current_setting('app.current_organization_id', true))
+WITH CHECK (organization_id = current_setting('app.current_organization_id', true));
 
 COMMENT ON POLICY "Users can access their organization''s groups" ON groups IS
 '団体IDベースのアクセス制御。該当する団体のグループのみアクセス可能。';
@@ -56,7 +59,8 @@ ALTER TABLE members ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can access their organization''s members"
 ON members
 FOR ALL
-USING (organization_id = current_setting('app.current_organization_id', true));
+USING (organization_id = current_setting('app.current_organization_id', true))
+WITH CHECK (organization_id = current_setting('app.current_organization_id', true));
 
 COMMENT ON POLICY "Users can access their organization''s members" ON members IS
 '団体IDベースのアクセス制御。該当する団体のメンバーのみアクセス可能。';
@@ -70,7 +74,8 @@ ALTER TABLE attendances ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can access their organization''s attendances"
 ON attendances
 FOR ALL
-USING (organization_id = current_setting('app.current_organization_id', true));
+USING (organization_id = current_setting('app.current_organization_id', true))
+WITH CHECK (organization_id = current_setting('app.current_organization_id', true));
 
 COMMENT ON POLICY "Users can access their organization''s attendances" ON attendances IS
 '団体IDベースのアクセス制御。該当する団体の出欠記録のみアクセス可能。';

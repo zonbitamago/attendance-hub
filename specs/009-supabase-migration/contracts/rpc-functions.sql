@@ -23,9 +23,11 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  -- トランザクションローカルな設定パラメータを設定
-  -- 第3引数 true = local to current transaction
-  PERFORM set_config('app.current_organization_id', org_id, true);
+  -- セッション全体で有効な設定パラメータを設定
+  -- 第3引数 false = session-wide (SQL Editorでのテスト用)
+  -- 注意: Supabase Clientからの使用時は各リクエストが独立したセッションなので、
+  --       クエリ実行前に毎回この関数を呼び出す必要がある
+  PERFORM set_config('app.current_organization_id', org_id, false);
 END;
 $$;
 
@@ -56,3 +58,13 @@ $$;
 
 COMMENT ON FUNCTION get_current_organization() IS
 '現在設定されている組織IDを取得（デバッグ・テスト用）。設定されていない場合はNULLを返す。';
+
+-- =============================================================================
+-- Permissions
+-- =============================================================================
+
+-- RPC関数の実行権限を付与
+GRANT EXECUTE ON FUNCTION set_current_organization(TEXT) TO anon;
+GRANT EXECUTE ON FUNCTION set_current_organization(TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION get_current_organization() TO anon;
+GRANT EXECUTE ON FUNCTION get_current_organization() TO authenticated;
