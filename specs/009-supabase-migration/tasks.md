@@ -175,24 +175,24 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [X] T041 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 7: loadMembers**
-- [ ] T042 [Red] [US1] loadMembersのテストを作成（失敗するテスト）
-- [ ] T043 [Green] [US1] loadMembersを実装（テストを通す最小限の実装）
-- [ ] T044 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T042 [Red] [US1] loadMembersのテストを作成（失敗するテスト）
+- [X] T043 [Green] [US1] loadMembersを実装（テストを通す最小限の実装）
+- [X] T044 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 8: saveMembers**
-- [ ] T045 [Red] [US1] saveMembersのテストを作成（失敗するテスト）
-- [ ] T046 [Green] [US1] saveMembersを実装（テストを通す最小限の実装）
-- [ ] T047 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T045 [Red] [US1] saveMembersのテストを作成（失敗するテスト）
+- [X] T046 [Green] [US1] saveMembersを実装（テストを通す最小限の実装）
+- [X] T047 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 9: loadAttendances**
-- [ ] T048 [Red] [US1] loadAttendancesのテストを作成（失敗するテスト）
-- [ ] T049 [Green] [US1] loadAttendancesを実装（テストを通す最小限の実装）
-- [ ] T050 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T048 [Red] [US1] loadAttendancesのテストを作成（失敗するテスト）
+- [X] T049 [Green] [US1] loadAttendancesを実装（テストを通す最小限の実装）
+- [X] T050 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 10: saveAttendances**
-- [ ] T051 [Red] [US1] saveAttendancesのテストを作成（失敗するテスト）
-- [ ] T052 [Green] [US1] saveAttendancesを実装（テストを通す最小限の実装）
-- [ ] T053 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T051 [Red] [US1] saveAttendancesのテストを作成（失敗するテスト）
+- [X] T052 [Green] [US1] saveAttendancesを実装（テストを通す最小限の実装）
+- [X] T053 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 11: clearOrganizationData**
 - [ ] T054 [Red] [US1] clearOrganizationDataのテストを作成（失敗するテスト）

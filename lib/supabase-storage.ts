@@ -121,4 +121,78 @@ export async function saveGroups(group: Group): Promise<boolean> {
   return true;
 }
 
+/**
+ * メンバーデータを取得
+ * @param organizationId 組織ID
+ * @returns メンバーの配列
+ */
+export async function loadMembers(organizationId: string): Promise<Member[]> {
+  const { data, error } = await supabase
+    .from('members')
+    .select('*')
+    .eq('organization_id', organizationId);
+
+  if (error) {
+    console.error('Failed to load members:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * メンバーデータを保存（upsert）
+ * @param member メンバーオブジェクト
+ * @returns 成功した場合 true、失敗した場合 false
+ */
+export async function saveMembers(member: Member): Promise<boolean> {
+  const { error } = await supabase
+    .from('members')
+    .upsert(member);
+
+  if (error) {
+    console.error('Failed to save member:', error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * 出欠データを取得
+ * @param organizationId 組織ID
+ * @returns 出欠の配列
+ */
+export async function loadAttendances(organizationId: string): Promise<Attendance[]> {
+  const { data, error } = await supabase
+    .from('attendances')
+    .select('*')
+    .eq('organization_id', organizationId);
+
+  if (error) {
+    console.error('Failed to load attendances:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * 出欠データを保存（upsert）
+ * @param attendance 出欠オブジェクト
+ * @returns 成功した場合 true、失敗した場合 false
+ */
+export async function saveAttendances(attendance: Attendance): Promise<boolean> {
+  const { error } = await supabase
+    .from('attendances')
+    .upsert(attendance);
+
+  if (error) {
+    console.error('Failed to save attendance:', error);
+    return false;
+  }
+
+  return true;
+}
+
 // TODO: 各関数を実装（TDDサイクルで段階的に実装）

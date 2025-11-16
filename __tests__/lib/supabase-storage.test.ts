@@ -6,7 +6,7 @@
  */
 
 import type { Organization, EventDate, Group, Member, Attendance } from '@/types';
-import { loadOrganizations, saveOrganizations, loadEventDates, saveEventDates, loadGroups, saveGroups } from '@/lib/supabase-storage';
+import { loadOrganizations, saveOrganizations, loadEventDates, saveEventDates, loadGroups, saveGroups, loadMembers, saveMembers, loadAttendances, saveAttendances } from '@/lib/supabase-storage';
 import { supabase } from '@/lib/supabase/client';
 
 // Supabaseクライアントをモック
@@ -246,11 +246,156 @@ describe('Supabase Storage Layer', () => {
   });
 
   describe('Members', () => {
-    // Cycle 7-8: loadMembers, saveMembers
+    // Cycle 7: loadMembers
+    describe('loadMembers', () => {
+      it('指定されたorganizationIdのメンバーを全て取得できる', async () => {
+        // モックデータ
+        const mockMembers: Member[] = [
+          {
+            id: 'member001',
+            organizationId: 'testorg001',
+            groupId: 'group001',
+            name: 'Member A',
+          },
+          {
+            id: 'member002',
+            organizationId: 'testorg001',
+            groupId: 'group001',
+            name: 'Member B',
+          },
+        ];
+
+        // Supabaseのモックレスポンスを設定
+        const mockSelect = jest.fn().mockReturnThis();
+        const mockEq = jest.fn().mockResolvedValue({
+          data: mockMembers,
+          error: null,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          select: mockSelect,
+          eq: mockEq,
+        });
+
+        // テスト実行
+        const result = await loadMembers('testorg001');
+
+        // 検証
+        expect(result).toEqual(mockMembers);
+        expect(supabase.from).toHaveBeenCalledWith('members');
+        expect(mockSelect).toHaveBeenCalledWith('*');
+        expect(mockEq).toHaveBeenCalledWith('organization_id', 'testorg001');
+      });
+    });
+
+    // Cycle 8: saveMembers
+    describe('saveMembers', () => {
+      it('メンバーデータを保存できる（upsert）', async () => {
+        // モックデータ
+        const member: Member = {
+          id: 'member003',
+          organizationId: 'testorg001',
+          groupId: 'group002',
+          name: 'New Member',
+        };
+
+        // Supabaseのモックレスポンスを設定
+        const mockUpsert = jest.fn().mockResolvedValue({
+          data: member,
+          error: null,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          upsert: mockUpsert,
+        });
+
+        // テスト実行
+        const result = await saveMembers(member);
+
+        // 検証
+        expect(result).toBe(true);
+        expect(supabase.from).toHaveBeenCalledWith('members');
+        expect(mockUpsert).toHaveBeenCalledWith(member);
+      });
+    });
   });
 
   describe('Attendances', () => {
-    // Cycle 9-10: loadAttendances, saveAttendances
+    // Cycle 9: loadAttendances
+    describe('loadAttendances', () => {
+      it('指定されたorganizationIdの出欠を全て取得できる', async () => {
+        // モックデータ
+        const mockAttendances: Attendance[] = [
+          {
+            id: 'attendance001',
+            organizationId: 'testorg001',
+            eventDateId: 'event001',
+            memberId: 'member001',
+            status: '◯',
+          },
+          {
+            id: 'attendance002',
+            organizationId: 'testorg001',
+            eventDateId: 'event001',
+            memberId: 'member002',
+            status: '△',
+          },
+        ];
+
+        // Supabaseのモックレスポンスを設定
+        const mockSelect = jest.fn().mockReturnThis();
+        const mockEq = jest.fn().mockResolvedValue({
+          data: mockAttendances,
+          error: null,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          select: mockSelect,
+          eq: mockEq,
+        });
+
+        // テスト実行
+        const result = await loadAttendances('testorg001');
+
+        // 検証
+        expect(result).toEqual(mockAttendances);
+        expect(supabase.from).toHaveBeenCalledWith('attendances');
+        expect(mockSelect).toHaveBeenCalledWith('*');
+        expect(mockEq).toHaveBeenCalledWith('organization_id', 'testorg001');
+      });
+    });
+
+    // Cycle 10: saveAttendances
+    describe('saveAttendances', () => {
+      it('出欠データを保存できる（upsert）', async () => {
+        // モックデータ
+        const attendance: Attendance = {
+          id: 'attendance003',
+          organizationId: 'testorg001',
+          eventDateId: 'event002',
+          memberId: 'member003',
+          status: '✗',
+        };
+
+        // Supabaseのモックレスポンスを設定
+        const mockUpsert = jest.fn().mockResolvedValue({
+          data: attendance,
+          error: null,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          upsert: mockUpsert,
+        });
+
+        // テスト実行
+        const result = await saveAttendances(attendance);
+
+        // 検証
+        expect(result).toBe(true);
+        expect(supabase.from).toHaveBeenCalledWith('attendances');
+        expect(mockUpsert).toHaveBeenCalledWith(attendance);
+      });
+    });
   });
 
   describe('Utilities', () => {
