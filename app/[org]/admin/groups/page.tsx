@@ -15,28 +15,47 @@ export default function AdminGroupsPage() {
   const { organization } = useOrganization();
   const [groups, setGroups] = useState<Group[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [editingGroup, setEditingGroup] = useState<Group | null>(null);
   const [formData, setFormData] = useState({ name: '', order: 0, color: '' });
   const [error, setError] = useState('');
 
-  const loadData = () => {
-    if (!organization) return;
-    try {
-      const allGroups = getAllGroups(organization.id);
-      setGroups(allGroups);
-    } catch (error) {
-      console.error('Failed to load groups:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadData();
-  }, []);
+    let isMounted = true;
 
-  const handleSubmit = (e: React.FormEvent) => {
+    const loadData = async () => {
+      if (!organization) return;
+
+      try {
+        setIsLoading(true);
+        setLoadError(null);
+        const allGroups = await getAllGroups(organization.id);
+
+        if (isMounted) {
+          setGroups(allGroups);
+        }
+      } catch (err) {
+        console.error('Failed to load groups:', err);
+        if (isMounted) {
+          setLoadError(err instanceof Error ? err : new Error('Unknown error'));
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [organization, reloadKey]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -48,14 +67,14 @@ export default function AdminGroupsPage() {
     try {
       if (editingGroup) {
         // 更新
-        updateGroup(organization.id, editingGroup.id, {
+        await updateGroup(organization.id, editingGroup.id, {
           name: formData.name,
           order: formData.order,
           color: formData.color || undefined,
         });
       } else {
         // 新規作成
-        createGroup(organization.id, {
+        await createGroup(organization.id, {
           name: formData.name,
           order: formData.order,
           color: formData.color || undefined,
@@ -64,7 +83,7 @@ export default function AdminGroupsPage() {
       setFormData({ name: '', order: 0, color: '' });
       setEditingGroup(null);
       setIsEditing(false);
-      loadData();
+      setReloadKey((prev) => prev + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : '保存に失敗しました');
     }
@@ -81,7 +100,7 @@ export default function AdminGroupsPage() {
     setError('');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('このグループを削除しますか?\n\n※ このグループに所属するメンバーと出欠登録も削除されます。')) {
       return;
     }
@@ -92,8 +111,8 @@ export default function AdminGroupsPage() {
     }
 
     try {
-      deleteGroup(organization.id, id);
-      loadData();
+      await deleteGroup(organization.id, id);
+      setReloadKey((prev) => prev + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : '削除に失敗しました');
     }
@@ -110,6 +129,16 @@ export default function AdminGroupsPage() {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
         <LoadingSpinner message="グループ情報を読み込み中..." />
+      </main>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">エラーが発生しました: {loadError.message}</p>
+        </div>
       </main>
     );
   }
