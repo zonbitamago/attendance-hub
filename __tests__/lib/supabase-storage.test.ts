@@ -430,14 +430,175 @@ describe('Supabase Storage Layer', () => {
     });
 
     // Cycle 12: エラーハンドリング
+    describe('Error Handling', () => {
+      it('Supabaseエラー時にfalseを返す（loadOrganizations）', async () => {
+        const mockError = {
+          message: 'Database connection failed',
+          code: 'PGRST301',
+        };
+
+        // エラーを返すモックを設定
+        const mockSelect = jest.fn().mockReturnThis();
+        const mockEq = jest.fn().mockReturnThis();
+        const mockSingle = jest.fn().mockResolvedValue({
+          data: null,
+          error: mockError,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          select: mockSelect,
+          eq: mockEq,
+          single: mockSingle,
+        });
+
+        // テスト実行
+        const result = await loadOrganizations('testorg001');
+
+        // 検証：エラー時はnullを返す
+        expect(result).toBeNull();
+      });
+
+      it('Supabaseエラー時にfalseを返す（saveOrganizations）', async () => {
+        const mockError = {
+          message: 'Permission denied',
+          code: '42501',
+        };
+
+        const organization: Organization = {
+          id: 'testorg001',
+          name: 'Test Org',
+          description: 'Test',
+        };
+
+        // エラーを返すモックを設定
+        const mockUpsert = jest.fn().mockResolvedValue({
+          data: null,
+          error: mockError,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          upsert: mockUpsert,
+        });
+
+        // テスト実行
+        const result = await saveOrganizations(organization);
+
+        // 検証：エラー時はfalseを返す
+        expect(result).toBe(false);
+      });
+    });
   });
 
   describe('Database Constraints', () => {
     // Cycle 13: カスケード削除
+    describe('Cascade Delete', () => {
+      it('組織を削除するとDB側でカスケード削除が実行される（仕様確認）', async () => {
+        // この機能はDB側（ON DELETE CASCADE）で実装されているため、
+        // ユニットテストでは clearOrganizationData が正しく呼ばれることのみ確認
+        const organizationId = 'testorg001';
+
+        const mockEq = jest.fn().mockResolvedValue({
+          data: null,
+          error: null,
+        });
+
+        const mockDelete = jest.fn().mockReturnValue({
+          eq: mockEq,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          delete: mockDelete,
+        });
+
+        const result = await clearOrganizationData(organizationId);
+
+        // 検証: 組織削除が実行されること
+        expect(result).toBe(true);
+        expect(supabase.from).toHaveBeenCalledWith('organizations');
+        expect(mockDelete).toHaveBeenCalled();
+        expect(mockEq).toHaveBeenCalledWith('id', organizationId);
+
+        // 注記: 実際のカスケード削除（event_dates, groups, members, attendances）は
+        // データベース側のON DELETE CASCADE制約により自動実行される
+        // 統合テストで実際のDB接続による検証が必要
+      });
+    });
+
     // Cycle 14: 一意制約
+    describe('Unique Constraint', () => {
+      it('同じ(event_date_id, member_id)の出欠を2回保存するとupsertにより更新される（仕様確認）', async () => {
+        // attendancesテーブルには(event_date_id, member_id)の一意制約があるが、
+        // upsertを使用しているため、同じ組み合わせの場合は更新される
+        const attendance: Attendance = {
+          id: 'attendance001',
+          organizationId: 'testorg001',
+          eventDateId: 'event001',
+          memberId: 'member001',
+          status: '◯',
+        };
+
+        const mockUpsert = jest.fn().mockResolvedValue({
+          data: attendance,
+          error: null,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          upsert: mockUpsert,
+        });
+
+        // 1回目の保存
+        const result1 = await saveAttendances(attendance);
+        expect(result1).toBe(true);
+
+        // 2回目の保存（statusを変更）
+        const updatedAttendance = { ...attendance, status: '△' as const };
+        const result2 = await saveAttendances(updatedAttendance);
+        expect(result2).toBe(true);
+
+        // upsertが2回呼ばれたことを確認
+        expect(mockUpsert).toHaveBeenCalledTimes(2);
+
+        // 注記: 実際の一意制約とupsertの動作は統合テストで確認が必要
+        // データベース側で(event_date_id, member_id)の一意制約が設定されている
+      });
+    });
   });
 
   describe('Performance', () => {
     // Cycle 15: パフォーマンステスト
+    it('大量データの読み込みが適切なパフォーマンスで実行される（仕様確認）', async () => {
+      // 1000件のメンバーデータをモック
+      const mockMembers: Member[] = Array.from({ length: 1000 }, (_, i) => ({
+        id: `member${i.toString().padStart(4, '0')}`,
+        organizationId: 'testorg001',
+        groupId: `group${(i % 10).toString().padStart(2, '0')}`,
+        name: `Member ${i}`,
+      }));
+
+      const mockSelect = jest.fn().mockReturnThis();
+      const mockEq = jest.fn().mockResolvedValue({
+        data: mockMembers,
+        error: null,
+      });
+
+      (supabase.from as jest.Mock).mockReturnValue({
+        select: mockSelect,
+        eq: mockEq,
+      });
+
+      // パフォーマンス計測
+      const startTime = performance.now();
+      const result = await loadMembers('testorg001');
+      const endTime = performance.now();
+      const duration = endTime - startTime;
+
+      // 検証
+      expect(result).toHaveLength(1000);
+      expect(duration).toBeLessThan(500); // 500ms以内
+
+      // 注記: これはモックを使用したユニットテストのため、
+      // 実際のデータベースパフォーマンスは統合テストで検証が必要
+      // 実環境では1000+レコードのクエリが500ms以内で完了することが期待される
+    });
   });
 });
