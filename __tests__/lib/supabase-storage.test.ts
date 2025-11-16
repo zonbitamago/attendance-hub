@@ -27,6 +27,7 @@ describe('Supabase Storage Layer', () => {
           id: 'testorg001',
           name: 'Test Organization',
           description: 'Test Description',
+          createdAt: '2025-01-01T00:00:00.000Z',
         };
 
         // Supabaseのモックレスポンスを設定
@@ -66,6 +67,7 @@ describe('Supabase Storage Layer', () => {
           id: 'testorg002',
           name: 'New Organization',
           description: 'New Description',
+          createdAt: '2025-01-01T00:00:00.000Z',
         };
 
         // Supabaseのモックレスポンスを設定
@@ -101,6 +103,7 @@ describe('Supabase Storage Layer', () => {
             date: '2025-11-20',
             title: 'Test Event 1',
             location: 'Location 1',
+            createdAt: '2025-01-01T00:00:00.000Z',
           },
           {
             id: 'event002',
@@ -108,6 +111,7 @@ describe('Supabase Storage Layer', () => {
             date: '2025-11-21',
             title: 'Test Event 2',
             location: 'Location 2',
+            createdAt: '2025-01-01T00:00:00.000Z',
           },
         ];
 
@@ -144,6 +148,7 @@ describe('Supabase Storage Layer', () => {
           date: '2025-11-22',
           title: 'New Event',
           location: 'New Location',
+          createdAt: '2025-01-01T00:00:00.000Z',
         };
 
         // Supabaseのモックレスポンスを設定
@@ -179,6 +184,7 @@ describe('Supabase Storage Layer', () => {
             name: 'Group A',
             order: 1,
             color: '#FF0000',
+            createdAt: '2025-01-01T00:00:00.000Z',
           },
           {
             id: 'group002',
@@ -186,6 +192,7 @@ describe('Supabase Storage Layer', () => {
             name: 'Group B',
             order: 2,
             color: '#00FF00',
+            createdAt: '2025-01-01T00:00:00.000Z',
           },
         ];
 
@@ -222,6 +229,7 @@ describe('Supabase Storage Layer', () => {
           name: 'New Group',
           order: 3,
           color: '#0000FF',
+          createdAt: '2025-01-01T00:00:00.000Z',
         };
 
         // Supabaseのモックレスポンスを設定
@@ -256,12 +264,14 @@ describe('Supabase Storage Layer', () => {
             organizationId: 'testorg001',
             groupId: 'group001',
             name: 'Member A',
+            createdAt: '2025-01-01T00:00:00.000Z',
           },
           {
             id: 'member002',
             organizationId: 'testorg001',
             groupId: 'group001',
             name: 'Member B',
+            createdAt: '2025-01-01T00:00:00.000Z',
           },
         ];
 
@@ -297,6 +307,7 @@ describe('Supabase Storage Layer', () => {
           organizationId: 'testorg001',
           groupId: 'group002',
           name: 'New Member',
+          createdAt: '2025-01-01T00:00:00.000Z',
         };
 
         // Supabaseのモックレスポンスを設定
@@ -332,6 +343,7 @@ describe('Supabase Storage Layer', () => {
             eventDateId: 'event001',
             memberId: 'member001',
             status: '◯',
+            createdAt: '2025-01-01T00:00:00.000Z',
           },
           {
             id: 'attendance002',
@@ -339,6 +351,7 @@ describe('Supabase Storage Layer', () => {
             eventDateId: 'event001',
             memberId: 'member002',
             status: '△',
+            createdAt: '2025-01-01T00:00:00.000Z',
           },
         ];
 
@@ -375,6 +388,7 @@ describe('Supabase Storage Layer', () => {
           eventDateId: 'event002',
           memberId: 'member003',
           status: '✗',
+          createdAt: '2025-01-01T00:00:00.000Z',
         };
 
         // Supabaseのモックレスポンスを設定
@@ -468,6 +482,7 @@ describe('Supabase Storage Layer', () => {
           id: 'testorg001',
           name: 'Test Org',
           description: 'Test',
+          createdAt: '2025-01-01T00:00:00.000Z',
         };
 
         // エラーを返すモックを設定
@@ -535,6 +550,7 @@ describe('Supabase Storage Layer', () => {
           eventDateId: 'event001',
           memberId: 'member001',
           status: '◯',
+          createdAt: '2025-01-01T00:00:00.000Z',
         };
 
         const mockUpsert = jest.fn().mockResolvedValue({
@@ -573,6 +589,7 @@ describe('Supabase Storage Layer', () => {
         organizationId: 'testorg001',
         groupId: `group${(i % 10).toString().padStart(2, '0')}`,
         name: `Member ${i}`,
+        createdAt: '2025-01-01T00:00:00.000Z',
       }));
 
       const mockSelect = jest.fn().mockReturnThis();

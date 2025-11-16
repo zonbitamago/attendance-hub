@@ -35,6 +35,7 @@ jest.mock('@/lib/group-service');
 jest.mock('@/lib/member-service');
 jest.mock('@/lib/attendance-service');
 jest.mock('next/link', () => {
+  // eslint-disable-next-line react/display-name
   return ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
   };
@@ -141,6 +142,7 @@ describe('出欠登録ページ', () => {
       mockUseOrganization.mockReturnValue({
         organization: null as any,
         isLoading: true,
+        error: null,
       });
 
       render(<RegisterAttendancePage />);
@@ -193,10 +195,8 @@ describe('出欠登録ページ', () => {
     test('イベント詳細に戻るリンクが表示される', async () => {
       render(<RegisterAttendancePage />);
 
-      const link = screen.getByRole('link', { name: /イベント詳細に戻る/ });
-      await waitFor(() => {
-        expect(link).toHaveAttribute('href', '/test-org-123/events/event-123');
-      });
+      const link = await screen.findByRole('link', { name: /イベント詳細に戻る/ });
+      expect(link).toHaveAttribute('href', '/test-org-123/events/event-123');
     });
   });
 
@@ -204,31 +204,25 @@ describe('出欠登録ページ', () => {
     test('グループ一覧が表示される', async () => {
       render(<RegisterAttendancePage />);
 
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
-      await waitFor(() => {
-        expect(groupSelect).toBeInTheDocument();
-      });
-      await waitFor(() => {
-        expect(screen.getByRole('option', { name: '打' })).toBeInTheDocument();
-      });
-      await waitFor(() => {
-        expect(screen.getByRole('option', { name: '投' })).toBeInTheDocument();
-      });
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
+      expect(groupSelect).toBeInTheDocument();
+      expect(await screen.findByRole('option', { name: '打' })).toBeInTheDocument();
+      expect(await screen.findByRole('option', { name: '投' })).toBeInTheDocument();
     });
 
     test('グループを選択するとメンバー一覧が読み込まれる', async () => {
       render(<RegisterAttendancePage />);
 
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
       await waitFor(() => {
         expect(mockGetMembersByGroupId).toHaveBeenCalledWith('test-org-123', 'group-1');
       });
 
-      expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-      expect(screen.getByRole('option', { name: '山田太郎' })).toBeInTheDocument();
-      expect(screen.getByRole('option', { name: '佐藤花子' })).toBeInTheDocument();
+      expect(await screen.findByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
+      expect(await screen.findByRole('option', { name: '山田太郎' })).toBeInTheDocument();
+      expect(await screen.findByRole('option', { name: '佐藤花子' })).toBeInTheDocument();
     });
 
     test('グループ未選択の場合はメンバー選択が表示されない', async () => {
@@ -244,17 +238,16 @@ describe('出欠登録ページ', () => {
     beforeEach(async () => {
       render(<RegisterAttendancePage />);
 
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
-      await waitFor(() => {
-        expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-      });
+      // メンバー一覧の読み込みを待つ
+      await screen.findByLabelText(/既存のメンバーから選択/);
     });
 
     test('既存メンバーを選択すると新規入力が無効化される', async () => {
-      const memberSelect = screen.getByLabelText(/既存のメンバーから選択/);
-      const newMemberInput = screen.getByLabelText(/または新しい名前を入力/);
+      const memberSelect = await screen.findByLabelText(/既存のメンバーから選択/);
+      const newMemberInput = await screen.findByLabelText(/または新しい名前を入力/);
 
       fireEvent.change(memberSelect, { target: { value: 'member-1' } });
 
@@ -262,8 +255,8 @@ describe('出欠登録ページ', () => {
     });
 
     test('新規名前を入力すると既存選択が無効化される', async () => {
-      const memberSelect = screen.getByLabelText(/既存のメンバーから選択/);
-      const newMemberInput = screen.getByLabelText(/または新しい名前を入力/);
+      const memberSelect = await screen.findByLabelText(/既存のメンバーから選択/);
+      const newMemberInput = await screen.findByLabelText(/または新しい名前を入力/);
 
       fireEvent.change(newMemberInput, { target: { value: '新メンバー' } });
 
@@ -275,12 +268,10 @@ describe('出欠登録ページ', () => {
     beforeEach(async () => {
       render(<RegisterAttendancePage />);
 
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
-      await waitFor(() => {
-        expect(screen.getByText(/3\. 出欠状況を選択/)).toBeInTheDocument();
-      });
+      await screen.findByText(/3\. 出欠状況を選択/);
     });
 
     test('3つのステータスボタンが表示される', async () => {
@@ -311,15 +302,11 @@ describe('出欠登録ページ', () => {
       render(<RegisterAttendancePage />);
 
       // グループ選択
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
-      await waitFor(() => {
-        expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-      });
-
-      // メンバー選択
-      const memberSelect = screen.getByLabelText(/既存のメンバーから選択/);
+      // メンバー一覧の読み込みを待つ
+      const memberSelect = await screen.findByLabelText(/既存のメンバーから選択/);
       fireEvent.change(memberSelect, { target: { value: 'member-1' } });
 
       // ステータス選択（デフォルトは◯）
@@ -351,15 +338,11 @@ describe('出欠登録ページ', () => {
       render(<RegisterAttendancePage />);
 
       // グループ選択
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
-      await waitFor(() => {
-        expect(screen.getByLabelText(/または新しい名前を入力/)).toBeInTheDocument();
-      });
-
-      // 新規メンバー名入力
-      const newMemberInput = screen.getByLabelText(/または新しい名前を入力/);
+      // 新規メンバー名入力フィールドの読み込みを待つ
+      const newMemberInput = await screen.findByLabelText(/または新しい名前を入力/);
       fireEvent.change(newMemberInput, { target: { value: '新メンバー' } });
 
       // ステータス選択
@@ -390,15 +373,11 @@ describe('出欠登録ページ', () => {
       render(<RegisterAttendancePage />);
 
       // グループ選択
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
-      await waitFor(() => {
-        expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-      });
-
-      // メンバー選択
-      const memberSelect = screen.getByLabelText(/既存のメンバーから選択/);
+      // メンバー一覧の読み込みを待つ
+      const memberSelect = await screen.findByLabelText(/既存のメンバーから選択/);
       fireEvent.change(memberSelect, { target: { value: 'member-1' } });
 
       // 送信
@@ -415,22 +394,20 @@ describe('出欠登録ページ', () => {
     test('グループ未選択の場合はエラーが表示される', async () => {
       render(<RegisterAttendancePage />);
 
-      const submitButton = screen.getByRole('button', { name: /登録する/ });
-      await waitFor(() => {
-        expect(submitButton).toBeDisabled(); // グループ未選択時は送信ボタンが無効
-      });
+      // データのロード完了を待ってから送信ボタンを探す
+      const submitButton = await screen.findByRole('button', { name: /登録する/ });
+      expect(submitButton).toBeDisabled(); // グループ未選択時は送信ボタンが無効
     });
 
     test('メンバー未選択かつ新規名前未入力の場合はエラーが表示される', async () => {
       render(<RegisterAttendancePage />);
 
       // グループ選択
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
-      await waitFor(() => {
-        expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-      });
+      // メンバー選択フィールドの表示を待つ
+      await screen.findByLabelText(/既存のメンバーから選択/);
 
       // メンバー未選択のまま送信
       const submitButton = screen.getByRole('button', { name: /登録する/ });
@@ -469,15 +446,11 @@ describe('出欠登録ページ', () => {
       render(<RegisterAttendancePage />);
 
       // グループ選択
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
-      await waitFor(() => {
-        expect(screen.getByLabelText(/または新しい名前を入力/)).toBeInTheDocument();
-      });
-
-      // 新規メンバー名入力
-      const newMemberInput = screen.getByLabelText(/または新しい名前を入力/);
+      // 新規メンバー名入力フィールドの読み込みを待つ
+      const newMemberInput = await screen.findByLabelText(/または新しい名前を入力/);
       fireEvent.change(newMemberInput, { target: { value: '新メンバー' } });
 
       // 送信
@@ -499,15 +472,11 @@ describe('出欠登録ページ', () => {
       render(<RegisterAttendancePage />);
 
       // グループ選択
-      const groupSelect = screen.getByLabelText(/1\. グループを選択/);
+      const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
 
-      await waitFor(() => {
-        expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-      });
-
-      // メンバー選択
-      const memberSelect = screen.getByLabelText(/既存のメンバーから選択/);
+      // メンバー一覧の読み込みを待つ
+      const memberSelect = await screen.findByLabelText(/既存のメンバーから選択/);
       fireEvent.change(memberSelect, { target: { value: 'member-1' } });
 
       // 送信
@@ -519,6 +488,21 @@ describe('出欠登録ページ', () => {
       });
 
       expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    test('イベントデータの読み込みに失敗した場合はエラーメッセージが表示される', async () => {
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+      mockGetEventDateById.mockRejectedValue(new Error('データの読み込みに失敗しました'));
+
+      render(<RegisterAttendancePage />);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/読み込み中/)).not.toBeInTheDocument();
+        expect(screen.getByText(/エラーが発生しました/)).toBeInTheDocument();
+        expect(screen.getByText(/データの読み込みに失敗しました/)).toBeInTheDocument();
+      });
+
+      consoleError.mockRestore();
     });
   });
 });

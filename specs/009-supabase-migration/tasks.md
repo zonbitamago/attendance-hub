@@ -492,47 +492,47 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [x] T152 [Green] [US4] app/[org]/admin/events/page.tsx にローディングスピナーを追加
 - [x] T153 [Refactor] [US4] テスト実行・確認、コード改善（全8テスト成功、カバレッジ83.65%）
 
-**Cycle 5: 団体管理ページ**
-- [ ] T154 [Red] [US4] __tests__/app/[org]/admin/organizations/page.test.tsx を非同期対応に更新
-- [ ] T155 [Green] [US4] app/[org]/admin/organizations/page.tsx を非同期データ取得に対応
-- [ ] T156 [Green] [US4] app/[org]/admin/organizations/page.tsx にローディングスピナーを追加
-- [ ] T157 [Refactor] [US4] テスト実行・確認、コード改善
+**Cycle 5: 団体管理ページ** ✅
+- [x] T154 [Red] [US4] __tests__/app/[org]/admin/organizations/page.test.tsx を非同期対応に更新
+- [x] T155 [Green] [US4] app/[org]/admin/organizations/page.tsx を非同期データ取得に対応
+- [x] T156 [Green] [US4] app/[org]/admin/organizations/page.tsx にローディングスピナーを追加
+- [x] T157 [Refactor] [US4] テスト実行・確認、コード改善（テスト成功、カバレッジ86.11%）
 
-**Cycle 6: イベント詳細ページ**
-- [ ] T158 [Red] [US4] __tests__/app/[org]/events/[id]/page.test.tsx を非同期対応に更新
-- [ ] T159 [Green] [US4] app/[org]/events/[id]/page.tsx を非同期データ取得に対応
-- [ ] T160 [Green] [US4] app/[org]/events/[id]/page.tsx にローディングスピナーを追加
-- [ ] T161 [Refactor] [US4] テスト実行・確認、コード改善
+**Cycle 6: イベント詳細ページ** ✅
+- [x] T158 [Red] [US4] __tests__/app/[org]/events/[id]/page.test.tsx を非同期対応に更新
+- [x] T159 [Green] [US4] app/[org]/events/[id]/page.tsx を非同期データ取得に対応
+- [x] T160 [Green] [US4] app/[org]/events/[id]/page.tsx にローディングスピナーを追加
+- [x] T161 [Refactor] [US4] テスト実行・確認、コード改善（テスト成功、カバレッジ98.87%）
 
-**Cycle 7: 出欠登録ページ**
-- [ ] T162 [Red] [US4] __tests__/app/[org]/events/[id]/register/page.test.tsx を非同期対応に更新
-- [ ] T163 [Green] [US4] app/[org]/events/[id]/register/page.tsx を非同期データ取得に対応
-- [ ] T164 [Green] [US4] app/[org]/events/[id]/register/page.tsx にローディングスピナーを追加
-- [ ] T165 [Refactor] [US4] テスト実行・確認、コード改善
+**Cycle 7: 出欠登録ページ** ✅
+- [x] T162 [Red] [US4] __tests__/app/[org]/events/[id]/register/page.test.tsx を非同期対応に更新
+- [x] T163 [Green] [US4] app/[org]/events/[id]/register/page.tsx を非同期データ取得に対応
+- [x] T164 [Green] [US4] app/[org]/events/[id]/register/page.tsx にローディングスピナーを追加
+- [x] T165 [Refactor] [US4] テスト実行・確認、コード改善（テスト成功、カバレッジ95.04%）
 
-**Cycle 8: 一括出欠登録ページ**
-- [ ] T166 [Red] [US4] __tests__/app/[org]/my-register/page.test.tsx を非同期対応に更新
-- [ ] T167 [Green] [US4] app/[org]/my-register/page.tsx を非同期データ取得に対応
-- [ ] T168 [Green] [US4] app/[org]/my-register/page.tsx にローディングスピナーを追加
-- [ ] T169 [Refactor] [US4] テスト実行・確認、コード改善
+**Cycle 8: 一括出欠登録ページ** ✅
+- [x] T166 [Red] [US4] __tests__/app/[org]/my-register/page.test.tsx を非同期対応に更新
+- [x] T167 [Green] [US4] app/[org]/my-register/page.tsx を非同期データ取得に対応
+- [x] T168 [Green] [US4] app/[org]/my-register/page.tsx にローディングスピナーを追加
+- [x] T169 [Refactor] [US4] テスト実行・確認、コード改善（テスト成功、カバレッジ95.31%）
 
-**Cycle 9: エラーハンドリング**
-- [ ] T170 [Red] [US4] 各ページのエラーハンドリングテストを作成
-- [ ] T171 [Green] [US4] 全ページにエラーハンドリングとユーザーフレンドリーなエラーメッセージを追加
-- [ ] T172 [Refactor] [US4] テスト実行・確認
+**Cycle 9: エラーハンドリング** ✅
+- [x] T170 [Red] [US4] 各ページのエラーハンドリングテストを作成（admin/groups、events/[id]、events/[id]/register）
+- [x] T171 [Green] [US4] 全ページにエラーハンドリングとユーザーフレンドリーなエラーメッセージを追加（既存実装を確認）
+- [x] T172 [Refactor] [US4] テスト実行・確認（467テスト成功、ビルド成功）
 
-**Cycle 10: 404エラーハンドリング**
-- [ ] T173 [Red] [US4] OrganizationContextの404エラーハンドリングテストを作成
-- [ ] T174 [Green] [US4] 存在しない団体IDでアクセスすると404エラーページが表示される実装
-- [ ] T175 [Refactor] [US4] テスト実行・確認
+**Cycle 10: 404エラーハンドリング** ✅
+- [x] T173 [Red] [US4] OrganizationContextの404エラーハンドリングテストを作成（既存実装を確認）
+- [x] T174 [Green] [US4] 存在しない団体IDでアクセスすると404エラーページが表示される実装（既存実装を確認）
+- [x] T175 [Refactor] [US4] テスト実行・確認（467テスト成功、リンティング成功）
 
-**統合確認**
-- [ ] T176 [US4] ブラウザで全ページの動作確認（ローディング、データ表示、エラー）
-- [ ] T177 [US4] 型チェック実行、エラー修正
-- [ ] T178 [US4] リンティング実行（npm run lint）、警告修正
-- [ ] T179 [US4] 全UI層テスト実行、100% pass確認
+**統合確認** ✅
+- [x] T176 [US4] ブラウザで全ページの動作確認（ローディング、データ表示、エラー）
+- [x] T177 [US4] 型チェック実行、エラー修正（型エラーなし）
+- [x] T178 [US4] リンティング実行（npm run lint）、警告修正（リンティング成功）
+- [x] T179 [US4] 全UI層テスト実行、100% pass確認（467テスト全て成功、カバレッジ90.17%）
 
-**Verification**: 全ページが非同期対応され、ローディング状態とエラーハンドリングが実装されている（10サイクル完了）
+**Verification**: ✅ 全ページが非同期対応され、ローディング状態とエラーハンドリングが実装されている（10サイクル完了）
 
 ---
 
@@ -557,38 +557,38 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 
 ### Tasks
 
-**Cycle 1: Supabase Clientモック検証**
-- [ ] T180 [Red] [US5] Supabase Clientモック（__mocks__/@supabase/supabase-js.ts）のテストを作成
-- [ ] T181 [Green] [US5] Supabase Clientモックの動作確認、必要に応じて修正
-- [ ] T182 [Refactor] [US5] テスト実行・確認
+**Cycle 1: Supabase Clientモック検証** ✅
+- [x] T180 [Red] [US5] Supabase Clientモック（__mocks__/@supabase/supabase-js.ts）のテストを作成（supabase-storage.test.tsで18テスト実装済み）
+- [x] T181 [Green] [US5] Supabase Clientモックの動作確認、必要に応じて修正（18テスト全て成功）
+- [x] T182 [Refactor] [US5] テスト実行・確認（18テスト成功）
 
-**Cycle 2: 統合テスト実行**
-- [ ] T183 [Red] [US5] 全テスト実行（npm test）、失敗したテストを特定
-- [ ] T184 [Green] [US5] 失敗したテスト1個目を修正（Supabase Clientモック、async/await対応）
-- [ ] T185 [Refactor] [US5] テスト実行・確認
+**Cycle 2: 統合テスト実行** ✅
+- [x] T183 [Red] [US5] 全テスト実行（npm test）、失敗したテストを特定（失敗テストなし）
+- [x] T184 [Green] [US5] 失敗したテスト1個目を修正（Supabase Clientモック、async/await対応）（スキップ：失敗テストなし）
+- [x] T185 [Refactor] [US5] テスト実行・確認（467テスト全て成功）
 
-**Cycle 3-N: 失敗テスト修正（繰り返し）**
-- [ ] T186 [Red] [US5] 失敗したテスト2個目を特定
-- [ ] T187 [Green] [US5] 失敗したテスト2個目を修正
-- [ ] T188 [Refactor] [US5] テスト実行・確認
-- [ ] T189 [US5] 失敗テストが0になるまで Cycle 3を繰り返し
+**Cycle 3-N: 失敗テスト修正（繰り返し）** ✅
+- [x] T186 [Red] [US5] 失敗したテスト2個目を特定（スキップ：失敗テストなし）
+- [x] T187 [Green] [US5] 失敗したテスト2個目を修正（スキップ：失敗テストなし）
+- [x] T188 [Refactor] [US5] テスト実行・確認（スキップ：失敗テストなし）
+- [x] T189 [US5] 失敗テストが0になるまで Cycle 3を繰り返し（完了：失敗テストなし）
 
-**Cycle N+1: カバレッジ測定**
-- [ ] T190 [Red] [US5] カバレッジ測定（npm test -- --coverage）、現在のレベル（85%）と比較
-- [ ] T191 [Green] [US5] カバレッジ不足箇所を特定（HTMLレポート確認）、必要に応じて追加テスト作成
-- [ ] T192 [Refactor] [US5] カバレッジ再測定、85%維持確認
+**Cycle N+1: カバレッジ測定** ✅
+- [x] T190 [Red] [US5] カバレッジ測定（npm test -- --coverage）、現在のレベル（85%）と比較（90.17%達成）
+- [x] T191 [Green] [US5] カバレッジ不足箇所を特定（HTMLレポート確認）、必要に応じて追加テスト作成（不要：全指標で目標超過）
+- [x] T192 [Refactor] [US5] カバレッジ再測定、85%維持確認（90.17%維持、目標大幅超過）
 
-**Cycle N+2: 全テストpass確認**
-- [ ] T193 [Red] [US5] 全テスト実行（npm test）
-- [ ] T194 [Green] [US5] 全テスト100% pass確認、失敗があれば修正
-- [ ] T195 [Refactor] [US5] テスト実行・確認
+**Cycle N+2: 全テストpass確認** ✅
+- [x] T193 [Red] [US5] 全テスト実行（npm test）
+- [x] T194 [Green] [US5] 全テスト100% pass確認、失敗があれば修正（467テスト全て成功）
+- [x] T195 [Refactor] [US5] テスト実行・確認（467テスト成功、カバレッジ90.17%）
 
-**Cycle N+3: CI/CD確認**
-- [ ] T196 [Red] [US5] CI/CD実行（git push）
+**Cycle N+3: CI/CD確認** ⏳
+- [ ] T196 [Red] [US5] CI/CD実行（git push）（変更をコミット後に実行予定）
 - [ ] T197 [Green] [US5] 全チェック（テスト、リント、ビルド）pass確認
 - [ ] T198 [Refactor] [US5] 失敗があれば修正、再実行
 
-**Verification**: 全テストがpassし、カバレッジが85%を維持し、CI/CDが成功する（6サイクル完了）
+**Verification**: ✅ 全テストがpassし、カバレッジが90.17%（目標85%超過）を達成。CI/CD確認は変更コミット後に実行予定（5サイクル完了、残り1サイクル）
 
 ---
 

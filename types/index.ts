@@ -31,6 +31,13 @@ export interface EventDate {
   createdAt: string;
 }
 
+// イベント日付作成の入力型
+export interface EventDateInput {
+  date: string;
+  title: string;
+  location?: string;
+}
+
 // グループ（汎用: 楽器パート、部署、クラス等）
 export interface Group {
   id: string;
@@ -48,6 +55,12 @@ export interface Member {
   groupId: string;
   name: string;
   createdAt: string;
+}
+
+// メンバー作成の入力型
+export interface MemberInput {
+  groupId: string;
+  name: string;
 }
 
 // 出欠登録
@@ -121,3 +134,10 @@ export type AttendanceFilterStatus =
 
 // ソート種類（Feature 007: イベント画面 個人別出欠状況表示機能）
 export type AttendanceSortBy = 'name' | 'status';
+
+// グループメンバーの出欠情報（Feature 007: イベント画面 個人別出欠状況表示機能）
+export interface GroupMemberAttendance {
+  groupId: string;
+  groupName: string;
+  members: MemberAttendanceDetail[];
+}

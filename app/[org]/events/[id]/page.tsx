@@ -20,7 +20,7 @@ import type {
   AttendanceFilterStatus,
   AttendanceSortBy,
   EventTotalSummary,
-  GroupMemberAttendance,
+  MemberAttendanceDetail,
 } from '@/types';
 
 export default function EventDetailPage() {
@@ -106,7 +106,7 @@ export default function EventDetailPage() {
   }, [event, eventId, organization]);
 
   // グループごとのメンバー出欠データを非同期で計算
-  const [groupMembersMap, setGroupMembersMap] = useState<Map<string, GroupMemberAttendance[]>>(
+  const [groupMembersMap, setGroupMembersMap] = useState<Map<string, MemberAttendanceDetail[]>>(
     new Map()
   );
 
@@ -119,7 +119,7 @@ export default function EventDetailPage() {
         return;
       }
 
-      const membersMap = new Map<string, GroupMemberAttendance[]>();
+      const membersMap = new Map<string, MemberAttendanceDetail[]>();
       for (const summary of summaries) {
         const members = await getGroupMemberAttendances(organization.id, eventId, summary.groupId);
         membersMap.set(summary.groupId, members);

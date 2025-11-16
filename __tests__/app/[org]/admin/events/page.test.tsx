@@ -20,6 +20,7 @@ jest.mock('next/navigation', () => ({
   useParams: jest.fn(),
 }));
 jest.mock('next/link', () => {
+  // eslint-disable-next-line react/display-name
   return ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
   };
@@ -212,7 +213,7 @@ describe('Admin Events Page', () => {
     });
 
     it('should delete an event', async () => {
-      mockDeleteEventDate.mockResolvedValue(undefined);
+      mockDeleteEventDate.mockResolvedValue(true);
       global.confirm = jest.fn(() => true);
 
       render(<AdminEventsPage />);

@@ -65,7 +65,7 @@ describe('OrganizationContext', () => {
       // モックで null を返す（団体が見つからない）
       mockGetOrganizationById.mockResolvedValue(null);
       // notFound() はエラーを投げずに呼び出しを記録するだけ
-      mockNotFound.mockImplementation(() => {});
+      mockNotFound.mockImplementation(() => undefined as never);
 
       render(
         <OrganizationProvider organizationId="non-existent-id">

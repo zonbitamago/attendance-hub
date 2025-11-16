@@ -29,6 +29,7 @@ jest.mock('@/contexts/organization-context', () => ({
 jest.mock('@/lib/group-service');
 
 jest.mock('next/link', () => {
+  // eslint-disable-next-line react/display-name
   return ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
   };
@@ -516,6 +517,23 @@ describe('グループ管理ページ', () => {
       });
 
       confirmSpy.mockRestore();
+    });
+  });
+
+  describe('エラーハンドリング', () => {
+    test('グループデータの読み込みに失敗した場合はエラーメッセージが表示される', async () => {
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+      mockGetAllGroups.mockRejectedValue(new Error('データの読み込みに失敗しました'));
+
+      render(<AdminGroupsPage />);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/グループを読み込み中/)).not.toBeInTheDocument();
+        expect(screen.getByText(/エラーが発生しました/)).toBeInTheDocument();
+        expect(screen.getByText(/データの読み込みに失敗しました/)).toBeInTheDocument();
+      });
+
+      consoleError.mockRestore();
     });
   });
 });

@@ -31,6 +31,7 @@ jest.mock('@/contexts/organization-context', () => ({
 jest.mock('@/lib/event-service');
 jest.mock('@/lib/attendance-service');
 jest.mock('next/link', () => {
+  // eslint-disable-next-line react/display-name
   return ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
   };
@@ -157,6 +158,7 @@ describe('イベント詳細ページ', () => {
       mockUseOrganization.mockReturnValue({
         organization: null as any,
         isLoading: true,
+        error: null,
       });
 
       render(<EventDetailPage />);
@@ -387,6 +389,21 @@ describe('イベント詳細ページ', () => {
       });
 
       consoleErrorSpy.mockRestore();
+    });
+
+    test('イベントデータの読み込みに失敗した場合はエラーメッセージが表示される', async () => {
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+      mockGetEventDateById.mockRejectedValue(new Error('ネットワークエラー'));
+
+      render(<EventDetailPage />);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/イベント情報を読み込み中/)).not.toBeInTheDocument();
+        expect(screen.getByText(/エラーが発生しました/)).toBeInTheDocument();
+        expect(screen.getByText(/ネットワークエラー/)).toBeInTheDocument();
+      });
+
+      consoleError.mockRestore();
     });
   });
 });
