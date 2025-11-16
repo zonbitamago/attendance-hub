@@ -5,7 +5,7 @@ import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
 
 // グループを作成
-export function createGroup(organizationId: string, input: GroupInput): Group {
+export async function createGroup(organizationId: string, input: GroupInput): Promise<Group> {
   const validated = CreateGroupInputSchema.parse(input);
 
   const newGroup: Group = {
@@ -29,19 +29,19 @@ export function createGroup(organizationId: string, input: GroupInput): Group {
 }
 
 // すべてのグループを取得（order昇順）
-export function getAllGroups(organizationId: string): Group[] {
+export async function getAllGroups(organizationId: string): Promise<Group[]> {
   const groups = loadGroups(organizationId);
   return groups.sort((a, b) => a.order - b.order);
 }
 
 // IDでグループを取得
-export function getGroupById(organizationId: string, id: string): Group | null {
+export async function getGroupById(organizationId: string, id: string): Promise<Group | null> {
   const groups = loadGroups(organizationId);
   return groups.find((group) => group.id === id) || null;
 }
 
 // グループを更新
-export function updateGroup(organizationId: string, id: string, input: Partial<GroupInput>): Group {
+export async function updateGroup(organizationId: string, id: string, input: Partial<GroupInput>): Promise<Group> {
   const groups = loadGroups(organizationId);
   const index = groups.findIndex((group) => group.id === id);
 
@@ -74,7 +74,7 @@ export function updateGroup(organizationId: string, id: string, input: Partial<G
 }
 
 // グループを削除
-export function deleteGroup(organizationId: string, id: string): boolean {
+export async function deleteGroup(organizationId: string, id: string): Promise<boolean> {
   const groups = loadGroups(organizationId);
   const filteredGroups = groups.filter((group) => group.id !== id);
 

@@ -339,10 +339,10 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [ ] T111 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 3: group-service**
-- [ ] T112 [Red] [US3] __tests__/lib/group-service.test.ts を async 対応に更新
-- [ ] T113 [Red] [US3] テスト実行して失敗確認
-- [ ] T114 [Green] [US3] lib/group-service.ts を async/await に変更
-- [ ] T115 [Refactor] [US3] テスト実行・確認、コード改善
+- [X] T112 [Red] [US3] __tests__/lib/group-service.test.ts を async 対応に更新
+- [X] T113 [Red] [US3] テスト実行して失敗確認
+- [X] T114 [Green] [US3] lib/group-service.ts を async/await に変更
+- [X] T115 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 4: member-service**
 - [ ] T116 [Red] [US3] __tests__/lib/member-service.test.ts を async 対応に更新
