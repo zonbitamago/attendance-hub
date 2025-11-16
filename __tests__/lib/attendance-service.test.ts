@@ -252,7 +252,7 @@ describe('Attendance Service', () => {
   });
 
   describe('calculateEventSummary', () => {
-    it('グループごとの集計を正しく計算できる', () => {
+    it('グループごとの集計を正しく計算できる', async () => {
       const mockGroups: Group[] = [
         {
           id: 'group1',
@@ -325,7 +325,7 @@ describe('Attendance Service', () => {
       mockLoadMembers.mockReturnValue(mockMembers);
       mockLoadAttendances.mockReturnValue(mockAttendances);
 
-      const summaries = calculateEventSummary('test-org-id', 'event1');
+      const summaries = await calculateEventSummary('test-org-id', 'event1');
 
       expect(summaries).toHaveLength(2);
 
@@ -350,17 +350,17 @@ describe('Attendance Service', () => {
       });
     });
 
-    it('出欠情報が存在しない場合は空配列を返す', () => {
+    it('出欠情報が存在しない場合は空配列を返す', async () => {
       mockLoadGroups.mockReturnValue([]);
       mockLoadMembers.mockReturnValue([]);
       mockLoadAttendances.mockReturnValue([]);
 
-      const summaries = calculateEventSummary('test-org-id', 'event1');
+      const summaries = await calculateEventSummary('test-org-id', 'event1');
 
       expect(summaries).toEqual([]);
     });
 
-    it('出欠情報がないグループを除外する', () => {
+    it('出欠情報がないグループを除外する', async () => {
       const mockGroups: Group[] = [
         {
           id: 'group1',
@@ -403,7 +403,7 @@ describe('Attendance Service', () => {
       mockLoadMembers.mockReturnValue(mockMembers);
       mockLoadAttendances.mockReturnValue(mockAttendances);
 
-      const summaries = calculateEventSummary('test-org-id', 'event1');
+      const summaries = await calculateEventSummary('test-org-id', 'event1');
 
       // Only group1 should be returned (group2 has no attendances)
       expect(summaries).toHaveLength(1);

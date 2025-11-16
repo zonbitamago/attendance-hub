@@ -99,8 +99,8 @@ export async function deleteAttendance(organizationId: string, id: string): Prom
 }
 
 // イベント日付の集計結果をグループ別に計算
-export function calculateEventSummary(organizationId: string, eventDateId: string): GroupSummary[] {
-  const attendances = getAttendancesByEventDateId(organizationId, eventDateId);
+export async function calculateEventSummary(organizationId: string, eventDateId: string): Promise<GroupSummary[]> {
+  const attendances = await getAttendancesByEventDateId(organizationId, eventDateId);
   const groups = loadGroups(organizationId);
   const members = loadMembers(organizationId);
 

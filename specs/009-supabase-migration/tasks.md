@@ -357,9 +357,9 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [X] T123 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 6: calculateEventSummary（SQL集計）**
-- [ ] T124 [Red] [US3] calculateEventSummaryのSQL集計テストを作成
-- [ ] T125 [Green] [US3] calculateEventSummary を SQL GROUP BY で実装
-- [ ] T126 [Refactor] [US3] テスト実行・確認、コード改善
+- [X] T124 [Red] [US3] calculateEventSummaryのSQL集計テストを作成
+- [X] T125 [Green] [US3] calculateEventSummary を SQL GROUP BY で実装
+- [X] T126 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 7: calculateEventTotalSummary（SQL集計）**
 - [ ] T127 [Red] [US3] calculateEventTotalSummaryのSQL集計テストを作成
