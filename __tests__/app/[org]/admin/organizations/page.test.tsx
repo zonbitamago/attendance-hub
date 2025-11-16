@@ -19,6 +19,11 @@ jest.mock('next/navigation', () => ({
   }),
   useParams: () => mockParams,
 }));
+jest.mock('next/link', () => {
+  return ({ children, href }: { children: React.ReactNode; href: string }) => {
+    return <a href={href}>{children}</a>;
+  };
+});
 
 describe('Organizations Admin Page', () => {
   const mockUpdateOrganization = organizationService.updateOrganization as jest.MockedFunction<
@@ -40,6 +45,7 @@ describe('Organizations Admin Page', () => {
     (OrganizationContextModule.useOrganization as jest.Mock).mockReturnValue({
       organization: testOrganization,
       isLoading: false,
+      error: null,
     });
   });
 
@@ -51,12 +57,12 @@ describe('Organizations Admin Page', () => {
     expect(screen.getByDisplayValue('テスト用の説明')).toBeInTheDocument();
   });
 
-  it('should update organization name', () => {
+  it('should update organization name', async () => {
     const updatedOrg: Organization = {
       ...testOrganization,
       name: '新しい団体名',
     };
-    mockUpdateOrganization.mockReturnValue(updatedOrg);
+    mockUpdateOrganization.mockResolvedValue(updatedOrg);
 
     render(<OrganizationsPage />);
 
@@ -66,18 +72,20 @@ describe('Organizations Admin Page', () => {
     const saveButton = screen.getByRole('button', { name: /保存/ });
     fireEvent.click(saveButton);
 
-    expect(mockUpdateOrganization).toHaveBeenCalledWith('test-org-123', {
-      name: '新しい団体名',
-      description: 'テスト用の説明',
+    await waitFor(() => {
+      expect(mockUpdateOrganization).toHaveBeenCalledWith('test-org-123', {
+        name: '新しい団体名',
+        description: 'テスト用の説明',
+      });
     });
   });
 
-  it('should update organization description', () => {
+  it('should update organization description', async () => {
     const updatedOrg: Organization = {
       ...testOrganization,
       description: '新しい説明',
     };
-    mockUpdateOrganization.mockReturnValue(updatedOrg);
+    mockUpdateOrganization.mockResolvedValue(updatedOrg);
 
     render(<OrganizationsPage />);
 
@@ -87,9 +95,11 @@ describe('Organizations Admin Page', () => {
     const saveButton = screen.getByRole('button', { name: /保存/ });
     fireEvent.click(saveButton);
 
-    expect(mockUpdateOrganization).toHaveBeenCalledWith('test-org-123', {
-      name: 'テスト団体',
-      description: '新しい説明',
+    await waitFor(() => {
+      expect(mockUpdateOrganization).toHaveBeenCalledWith('test-org-123', {
+        name: 'テスト団体',
+        description: '新しい説明',
+      });
     });
   });
 
@@ -104,7 +114,7 @@ describe('Organizations Admin Page', () => {
   });
 
   it('should delete organization and redirect to home', async () => {
-    mockDeleteOrganization.mockImplementation(() => {});
+    mockDeleteOrganization.mockResolvedValue(undefined);
 
     render(<OrganizationsPage />);
 
@@ -140,10 +150,8 @@ describe('Organizations Admin Page', () => {
     expect(screen.queryByText(/本当に削除しますか/)).not.toBeInTheDocument();
   });
 
-  it('should display error message when update fails', () => {
-    mockUpdateOrganization.mockImplementation(() => {
-      throw new Error('更新に失敗しました');
-    });
+  it('should display error message when update fails', async () => {
+    mockUpdateOrganization.mockRejectedValue(new Error('更新に失敗しました'));
 
     render(<OrganizationsPage />);
 
@@ -153,6 +161,8 @@ describe('Organizations Admin Page', () => {
     const saveButton = screen.getByRole('button', { name: /保存/ });
     fireEvent.click(saveButton);
 
-    expect(screen.getByText(/更新に失敗しました/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/更新に失敗しました/)).toBeInTheDocument();
+    });
   });
 });

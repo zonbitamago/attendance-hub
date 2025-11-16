@@ -18,12 +18,12 @@ export default function OrganizationsPage() {
   const [success, setSuccess] = useState('');
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setError('');
     setSuccess('');
 
     try {
-      updateOrganization(organization.id, {
+      await updateOrganization(organization.id, {
         name,
         description: description || undefined,
       });
@@ -37,9 +37,9 @@ export default function OrganizationsPage() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     try {
-      deleteOrganization(organization.id);
+      await deleteOrganization(organization.id);
       router.push('/');
     } catch (err) {
       if (err instanceof Error) {
