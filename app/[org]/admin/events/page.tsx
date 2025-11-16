@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getAllEventDates, createEventDate, updateEventDate, deleteEventDate } from '@/lib/event-service';
@@ -8,7 +8,7 @@ import { calculateEventTotalSummary } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
 import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
-import type { EventDate } from '@/types';
+import type { EventDate, EventTotalSummary } from '@/types';
 
 export default function AdminEventsPage() {
   const router = useRouter();
@@ -17,38 +17,77 @@ export default function AdminEventsPage() {
   const { organization } = useOrganization();
   const [events, setEvents] = useState<EventDate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [editingEvent, setEditingEvent] = useState<EventDate | null>(null);
   const [formData, setFormData] = useState({ date: '', title: '', location: '' });
   const [error, setError] = useState('');
 
-  const loadData = () => {
-    if (!organization) return;
-    try {
-      const allEvents = getAllEventDates(organization.id);
-      setEvents(allEvents);
-    } catch (error) {
-      console.error('Failed to load events:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadData = async () => {
+      if (!organization) return;
+
+      try {
+        setIsLoading(true);
+        setLoadError(null);
+        const allEvents = await getAllEventDates(organization.id);
+
+        if (isMounted) {
+          setEvents(allEvents);
+        }
+      } catch (err) {
+        console.error('Failed to load events:', err);
+        if (isMounted) {
+          setLoadError(err instanceof Error ? err : new Error('Unknown error'));
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [organization, reloadKey]);
+
+  // すべてのイベントの出欠集計を非同期で計算
+  const [eventSummaries, setEventSummaries] = useState<Map<string, EventTotalSummary>>(new Map());
 
   useEffect(() => {
-    loadData();
-  }, []);
+    let isMounted = true;
 
-  // メモ化: すべてのイベントの出欠集計を計算
-  const eventSummaries = useMemo(() => {
-    if (!organization) return new Map();
-    const summaries = new Map();
-    events.forEach((event) => {
-      summaries.set(event.id, calculateEventTotalSummary(organization.id, event.id));
-    });
-    return summaries;
+    const loadSummaries = async () => {
+      if (!organization || events.length === 0) {
+        setEventSummaries(new Map());
+        return;
+      }
+
+      const summaries = new Map<string, EventTotalSummary>();
+      for (const event of events) {
+        const summary = await calculateEventTotalSummary(organization.id, event.id);
+        summaries.set(event.id, summary);
+      }
+
+      if (isMounted) {
+        setEventSummaries(summaries);
+      }
+    };
+
+    loadSummaries();
+
+    return () => {
+      isMounted = false;
+    };
   }, [events, organization]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -60,14 +99,14 @@ export default function AdminEventsPage() {
     try {
       if (editingEvent) {
         // 更新
-        updateEventDate(organization.id, editingEvent.id, {
+        await updateEventDate(organization.id, editingEvent.id, {
           date: formData.date,
           title: formData.title,
           location: formData.location || undefined,
         });
       } else {
         // 新規作成
-        createEventDate(organization.id, {
+        await createEventDate(organization.id, {
           date: formData.date,
           title: formData.title,
           location: formData.location || undefined,
@@ -76,7 +115,7 @@ export default function AdminEventsPage() {
       setFormData({ date: '', title: '', location: '' });
       setEditingEvent(null);
       setIsEditing(false);
-      loadData();
+      setReloadKey((prev) => prev + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : '保存に失敗しました');
     }
@@ -93,7 +132,7 @@ export default function AdminEventsPage() {
     setError('');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('このイベント日付を削除しますか?\n\n※ この日付に関連する出欠登録も削除されます。')) {
       return;
     }
@@ -104,8 +143,8 @@ export default function AdminEventsPage() {
     }
 
     try {
-      deleteEventDate(organization.id, id);
-      loadData();
+      await deleteEventDate(organization.id, id);
+      setReloadKey((prev) => prev + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : '削除に失敗しました');
     }
@@ -121,7 +160,17 @@ export default function AdminEventsPage() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <LoadingSpinner message="イベント情報を読み込み中..." />
+        <LoadingSpinner message="イベント日付を読み込み中..." />
+      </main>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">エラーが発生しました: {loadError.message}</p>
+        </div>
       </main>
     );
   }
