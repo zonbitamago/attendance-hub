@@ -468,17 +468,17 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 
 ### Tasks
 
-**Cycle 1: OrganizationContext**
-- [ ] T138 [Red] [US4] __tests__/contexts/organization-context.test.tsx を作成（Supabase非同期取得テスト）
-- [ ] T139 [Green] [US4] contexts/organization-context.tsx を Supabase 非同期取得に対応（useEffect使用）
-- [ ] T140 [Green] [US4] contexts/organization-context.tsx にローディング状態とエラー状態を追加
-- [ ] T141 [Refactor] [US4] テスト実行・確認、コード改善
+**Cycle 1: OrganizationContext** ✅
+- [x] T138 [Red] [US4] __tests__/contexts/organization-context.test.tsx を作成（Supabase非同期取得テスト）
+- [x] T139 [Green] [US4] contexts/organization-context.tsx を Supabase 非同期取得に対応（useEffect使用）
+- [x] T140 [Green] [US4] contexts/organization-context.tsx にローディング状態とエラー状態を追加
+- [x] T141 [Refactor] [US4] テスト実行・確認、コード改善（全8テスト成功）
 
-**Cycle 2: イベント一覧ページ**
-- [ ] T142 [Red] [US4] __tests__/app/[org]/page.test.tsx を非同期対応に更新
-- [ ] T143 [Green] [US4] app/[org]/page.tsx を非同期データ取得に対応（イベント一覧）
-- [ ] T144 [Green] [US4] app/[org]/page.tsx にローディングスピナーを追加
-- [ ] T145 [Refactor] [US4] テスト実行・確認、コード改善
+**Cycle 2: イベント一覧ページ** ✅
+- [x] T142 [Red] [US4] __tests__/app/[org]/page.test.tsx を非同期対応に更新
+- [x] T143 [Green] [US4] app/[org]/page.tsx を非同期データ取得に対応（イベント一覧）
+- [x] T144 [Green] [US4] app/[org]/page.tsx にローディングスピナーを追加
+- [x] T145 [Refactor] [US4] テスト実行・確認、コード改善（全7テスト成功、カバレッジ98.21%）
 
 **Cycle 3: グループ管理ページ**
 - [ ] T146 [Red] [US4] __tests__/app/[org]/admin/groups/page.test.tsx を非同期対応に更新
