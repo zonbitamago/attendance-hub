@@ -128,8 +128,8 @@ export async function calculateEventSummary(organizationId: string, eventDateId:
 }
 
 // イベント全体の人数集計を計算
-export function calculateEventTotalSummary(organizationId: string, eventDateId: string): EventTotalSummary {
-  const attendances = getAttendancesByEventDateId(organizationId, eventDateId);
+export async function calculateEventTotalSummary(organizationId: string, eventDateId: string): Promise<EventTotalSummary> {
+  const attendances = await getAttendancesByEventDateId(organizationId, eventDateId);
 
   // NOTE: 現在のデータモデルでは、eventDateIdごとにmemberIdは一意なので重複は発生しない。
   // ただし、将来的にメンバーが複数グループに所属できるようになった場合に備えて、

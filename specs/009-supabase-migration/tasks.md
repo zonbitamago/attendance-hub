@@ -362,9 +362,9 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [X] T126 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 7: calculateEventTotalSummary（SQL集計）**
-- [ ] T127 [Red] [US3] calculateEventTotalSummaryのSQL集計テストを作成
-- [ ] T128 [Green] [US3] calculateEventTotalSummary を SQL 集計で実装
-- [ ] T129 [Refactor] [US3] テスト実行・確認、コード改善
+- [X] T127 [Red] [US3] calculateEventTotalSummaryのSQL集計テストを作成
+- [X] T128 [Green] [US3] calculateEventTotalSummary を SQL 集計で実装
+- [X] T129 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 8: upsertBulkAttendances**
 - [ ] T130 [Red] [US3] upsertBulkAttendancesのテストを作成（バッチ処理、重複更新確認）

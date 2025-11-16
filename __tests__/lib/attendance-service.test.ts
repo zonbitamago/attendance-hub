@@ -413,7 +413,7 @@ describe('Attendance Service', () => {
 
   describe('calculateEventTotalSummary', () => {
     describe('基本シナリオの集計', () => {
-      it('基本シナリオでイベント全体の集計を正しく計算できる', () => {
+      it('基本シナリオでイベント全体の集計を正しく計算できる', async () => {
         const mockAttendances: Attendance[] = [
           {
             id: '1',
@@ -459,7 +459,7 @@ describe('Attendance Service', () => {
 
         mockLoadAttendances.mockReturnValue(mockAttendances);
 
-        const result = calculateEventTotalSummary('test-org-id', 'event1');
+        const result = await calculateEventTotalSummary('test-org-id', 'event1');
 
         expect(result).toEqual({
           totalAttending: 2,
@@ -471,10 +471,10 @@ describe('Attendance Service', () => {
     });
 
     describe('出欠登録なしの場合', () => {
-      it('出欠情報が存在しない場合はすべて0を返す', () => {
+      it('出欠情報が存在しない場合はすべて0を返す', async () => {
         mockLoadAttendances.mockReturnValue([]);
 
-        const result = calculateEventTotalSummary('test-org-id', 'event1');
+        const result = await calculateEventTotalSummary('test-org-id', 'event1');
 
         expect(result).toEqual({
           totalAttending: 0,
@@ -486,7 +486,7 @@ describe('Attendance Service', () => {
     });
 
     describe('メンバー重複カウント防止', () => {
-      it('複数の出欠登録があっても各メンバーを1回のみカウントする', () => {
+      it('複数の出欠登録があっても各メンバーを1回のみカウントする', async () => {
         // 同じメンバーが複数の出欠登録を持つ場合（将来的に複数グループに所属する可能性）
         const mockAttendances: Attendance[] = [
           {
@@ -517,7 +517,7 @@ describe('Attendance Service', () => {
 
         mockLoadAttendances.mockReturnValue(mockAttendances);
 
-        const result = calculateEventTotalSummary('test-org-id', 'event1');
+        const result = await calculateEventTotalSummary('test-org-id', 'event1');
 
         // member1は2回登録されているが1回のみカウント
         expect(result).toEqual({
