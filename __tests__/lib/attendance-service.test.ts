@@ -31,14 +31,14 @@ describe('Attendance Service', () => {
   });
 
   describe('createAttendance', () => {
-    it('有効な入力で新しい出欠情報を作成できる', () => {
+    it('有効な入力で新しい出欠情報を作成できる', async () => {
       const input = {
         eventDateId: '00000000-0000-0000-0000-000000000001',
         memberId: '00000000-0000-0000-0000-000000000002',
         status: '◯' as const,
       };
 
-      const attendance = createAttendance('test-org-id', input);
+      const attendance = await createAttendance('test-org-id', input);
 
       expect(attendance).toMatchObject({
         eventDateId: '00000000-0000-0000-0000-000000000001',
@@ -50,17 +50,17 @@ describe('Attendance Service', () => {
       expect(mockSaveAttendances).toHaveBeenCalledWith('test-org-id', [attendance]);
     });
 
-    it('無効なステータスでエラーをスローする', () => {
+    it('無効なステータスでエラーをスローする', async () => {
       const input = {
         eventDateId: '00000000-0000-0000-0000-000000000001',
         memberId: '00000000-0000-0000-0000-000000000002',
         status: 'invalid' as any,
       };
 
-      expect(() => createAttendance('test-org-id', input)).toThrow();
+      await expect(createAttendance('test-org-id', input)).rejects.toThrow();
     });
 
-    it('ストレージが失敗した場合はエラーをスローする', () => {
+    it('ストレージが失敗した場合はエラーをスローする', async () => {
       mockSaveAttendances.mockReturnValue(false);
 
       const input = {
@@ -69,12 +69,12 @@ describe('Attendance Service', () => {
         status: '◯' as const,
       };
 
-      expect(() => createAttendance('test-org-id', input)).toThrow();
+      await expect(createAttendance('test-org-id', input)).rejects.toThrow();
     });
   });
 
   describe('getAttendancesByEventDateId', () => {
-    it('特定のイベント日付の出欠情報を取得できる', () => {
+    it('特定のイベント日付の出欠情報を取得できる', async () => {
       const mockAttendances: Attendance[] = [
         {
           id: '1',
@@ -104,24 +104,24 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue(mockAttendances);
 
-      const attendances = getAttendancesByEventDateId('test-org-id', 'event1');
+      const attendances = await getAttendancesByEventDateId('test-org-id', 'event1');
 
       expect(attendances).toHaveLength(2);
       expect(attendances[0].eventDateId).toBe('event1');
       expect(attendances[1].eventDateId).toBe('event1');
     });
 
-    it('イベントに出欠情報が存在しない場合は空配列を返す', () => {
+    it('イベントに出欠情報が存在しない場合は空配列を返す', async () => {
       mockLoadAttendances.mockReturnValue([]);
 
-      const attendances = getAttendancesByEventDateId('test-org-id', 'event1');
+      const attendances = await getAttendancesByEventDateId('test-org-id', 'event1');
 
       expect(attendances).toEqual([]);
     });
   });
 
   describe('getAttendancesByMemberId', () => {
-    it('特定のメンバーの出欠情報を取得できる', () => {
+    it('特定のメンバーの出欠情報を取得できる', async () => {
       const mockAttendances: Attendance[] = [
         {
           id: '1',
@@ -151,7 +151,7 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue(mockAttendances);
 
-      const attendances = getAttendancesByMemberId('test-org-id', 'member1');
+      const attendances = await getAttendancesByMemberId('test-org-id', 'member1');
 
       expect(attendances).toHaveLength(2);
       expect(attendances[0].memberId).toBe('member1');
@@ -160,7 +160,7 @@ describe('Attendance Service', () => {
   });
 
   describe('updateAttendance', () => {
-    it('既存の出欠ステータスを更新できる', () => {
+    it('既存の出欠ステータスを更新できる', async () => {
       const existingAttendance: Attendance = {
         id: '00000000-0000-0000-0000-000000000001',
         organizationId: 'test-org-id',
@@ -172,7 +172,7 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue([existingAttendance]);
 
-      const updated = updateAttendance('test-org-id', '00000000-0000-0000-0000-000000000001', {
+      const updated = await updateAttendance('test-org-id', '00000000-0000-0000-0000-000000000001', {
         status: '△',
       });
 
@@ -186,15 +186,15 @@ describe('Attendance Service', () => {
       expect(mockSaveAttendances).toHaveBeenCalled();
     });
 
-    it('出欠情報が見つからない場合はエラーをスローする', () => {
+    it('出欠情報が見つからない場合はエラーをスローする', async () => {
       mockLoadAttendances.mockReturnValue([]);
 
-      expect(() =>
+      await expect(
         updateAttendance('test-org-id', 'nonexistent', { status: '◯' })
-      ).toThrow();
+      ).rejects.toThrow();
     });
 
-    it('無効な更新データの場合はエラーをスローする', () => {
+    it('無効な更新データの場合はエラーをスローする', async () => {
       const existingAttendance: Attendance = {
         id: '00000000-0000-0000-0000-000000000001',
         organizationId: 'test-org-id',
@@ -206,14 +206,14 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue([existingAttendance]);
 
-      expect(() =>
+      await expect(
         updateAttendance('test-org-id', '00000000-0000-0000-0000-000000000001', { status: 'invalid' as any })
-      ).toThrow();
+      ).rejects.toThrow();
     });
   });
 
   describe('deleteAttendance', () => {
-    it('既存の出欠情報を削除できる', () => {
+    it('既存の出欠情報を削除できる', async () => {
       const attendances: Attendance[] = [
         {
           id: '1',
@@ -235,16 +235,16 @@ describe('Attendance Service', () => {
 
       mockLoadAttendances.mockReturnValue(attendances);
 
-      const result = deleteAttendance('test-org-id', '1');
+      const result = await deleteAttendance('test-org-id', '1');
 
       expect(result).toBe(true);
       expect(mockSaveAttendances).toHaveBeenCalledWith('test-org-id', [attendances[1]]);
     });
 
-    it('出欠情報が見つからない場合はfalseを返す', () => {
+    it('出欠情報が見つからない場合はfalseを返す', async () => {
       mockLoadAttendances.mockReturnValue([]);
 
-      const result = deleteAttendance('test-org-id', 'nonexistent');
+      const result = await deleteAttendance('test-org-id', 'nonexistent');
 
       expect(result).toBe(false);
       expect(mockSaveAttendances).not.toHaveBeenCalled();
@@ -533,7 +533,7 @@ describe('Attendance Service', () => {
   // User Story 1: 複数イベント一括出欠登録
   describe('upsertAttendance', () => {
     describe('Test Case 1: 新規レコードを作成する', () => {
-      it('既存レコードがない場合、新規レコードを作成する', () => {
+      it('既存レコードがない場合、新規レコードを作成する', async () => {
         const eventDateId = '550e8400-e29b-41d4-a716-446655440001';
         const memberId = '550e8400-e29b-41d4-a716-446655440002';
 
@@ -546,7 +546,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertAttendance('test-org-id', input);
+        const result = await upsertAttendance('test-org-id', input);
 
         expect(result).toMatchObject({
           eventDateId,
@@ -560,7 +560,7 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 2: 既存レコードを更新する', () => {
-      it('既存レコードがある場合、ステータスのみを更新する', () => {
+      it('既存レコードがある場合、ステータスのみを更新する', async () => {
         const eventDateId = '550e8400-e29b-41d4-a716-446655440001';
         const memberId = '550e8400-e29b-41d4-a716-446655440002';
         const existingAttendanceId = '550e8400-e29b-41d4-a716-446655440003';
@@ -583,7 +583,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([existingAttendance]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertAttendance('test-org-id', input);
+        const result = await upsertAttendance('test-org-id', input);
 
         expect(result).toMatchObject({
           id: existingAttendanceId,
@@ -597,7 +597,7 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 3: 重複レコードを処理する', () => {
-      it('重複レコードがある場合、最新のものを保持し古いものを削除する', () => {
+      it('重複レコードがある場合、最新のものを保持し古いものを削除する', async () => {
         const eventDateId = '550e8400-e29b-41d4-a716-446655440001';
         const memberId = '550e8400-e29b-41d4-a716-446655440002';
 
@@ -629,7 +629,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue([olderDuplicate, newerDuplicate]);
         mockSaveAttendances.mockReturnValue(true);
 
-        const result = upsertAttendance('test-org-id', input);
+        const result = await upsertAttendance('test-org-id', input);
 
         // 最新のレコード（newerDuplicate）が更新される
         expect(result).toMatchObject({
@@ -815,7 +815,7 @@ describe('Attendance Service', () => {
   // Feature 007: イベント画面 個人別出欠状況表示機能
   describe('getGroupMemberAttendances', () => {
     describe('Test Case 1: 出欠登録済みと未登録のメンバーを正しく返す', () => {
-      it('出欠登録済みと未登録のメンバーを正しく返す', () => {
+      it('出欠登録済みと未登録のメンバーを正しく返す', async () => {
         const orgId = 'org-1';
         const eventDateId = 'event-1';
         const groupId = 'group-1';
@@ -862,7 +862,7 @@ describe('Attendance Service', () => {
         mockLoadMembers.mockReturnValue(mockMembers);
         mockLoadAttendances.mockReturnValue(mockAttendances);
 
-        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
         expect(details).toHaveLength(2);
         expect(details[0].memberName).toBe('すずきはなこ');
@@ -875,7 +875,7 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 2: 全員が出欠登録済みの場合', () => {
-      it('全員が出欠登録済みの場合', () => {
+      it('全員が出欠登録済みの場合', async () => {
         const orgId = 'org-1';
         const eventDateId = 'event-1';
         const groupId = 'group-1';
@@ -930,7 +930,7 @@ describe('Attendance Service', () => {
         mockLoadMembers.mockReturnValue(mockMembers);
         mockLoadAttendances.mockReturnValue(mockAttendances);
 
-        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
         expect(details).toHaveLength(2);
         expect(details.every((d) => d.hasRegistered)).toBe(true);
@@ -942,7 +942,7 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 3: 全員が未登録の場合', () => {
-      it('全員が未登録の場合', () => {
+      it('全員が未登録の場合', async () => {
         const orgId = 'org-1';
         const eventDateId = 'event-1';
         const groupId = 'group-1';
@@ -978,7 +978,7 @@ describe('Attendance Service', () => {
         mockLoadMembers.mockReturnValue(mockMembers);
         mockLoadAttendances.mockReturnValue([]);
 
-        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
         expect(details).toHaveLength(2);
         expect(details.every((d) => !d.hasRegistered)).toBe(true);
@@ -987,7 +987,7 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 4: グループにメンバーが0人の場合', () => {
-      it('グループにメンバーがいない場合', () => {
+      it('グループにメンバーがいない場合', async () => {
         const orgId = 'org-1';
         const eventDateId = 'event-1';
         const groupId = 'group-empty';
@@ -1006,14 +1006,14 @@ describe('Attendance Service', () => {
         mockLoadMembers.mockReturnValue([]);
         mockLoadAttendances.mockReturnValue([]);
 
-        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
         expect(details).toHaveLength(0);
       });
     });
 
     describe('Test Case 5: グループが存在しない場合', () => {
-      it('グループが存在しない場合は空配列を返す', () => {
+      it('グループが存在しない場合は空配列を返す', async () => {
         const orgId = 'org-1';
         const eventDateId = 'event-1';
         const groupId = 'nonexistent-group';
@@ -1022,14 +1022,14 @@ describe('Attendance Service', () => {
         mockLoadMembers.mockReturnValue([]);
         mockLoadAttendances.mockReturnValue([]);
 
-        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
         expect(details).toHaveLength(0);
       });
     });
 
     describe('Test Case 6: 名前順ソート（日本語）', () => {
-      it('メンバーが名前の五十音順でソートされる', () => {
+      it('メンバーが名前の五十音順でソートされる', async () => {
         const orgId = 'org-1';
         const eventDateId = 'event-1';
         const groupId = 'group-1';
@@ -1072,7 +1072,7 @@ describe('Attendance Service', () => {
         mockLoadMembers.mockReturnValue(mockMembers);
         mockLoadAttendances.mockReturnValue([]);
 
-        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
         expect(details.map((d) => d.memberName)).toEqual([
           'いとうけんた',
@@ -1083,7 +1083,7 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 7: 名前順ソート（アルファベット）', () => {
-      it('メンバーが名前のアルファベット順でソートされる', () => {
+      it('メンバーが名前のアルファベット順でソートされる', async () => {
         const orgId = 'org-1';
         const eventDateId = 'event-1';
         const groupId = 'group-1';
@@ -1126,14 +1126,14 @@ describe('Attendance Service', () => {
         mockLoadMembers.mockReturnValue(mockMembers);
         mockLoadAttendances.mockReturnValue([]);
 
-        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
         expect(details.map((d) => d.memberName)).toEqual(['Alice', 'Bob', 'Charlie']);
       });
     });
 
     describe('Test Case 8: 大量データ（パフォーマンステスト）', () => {
-      it('100人のメンバーでもパフォーマンスが許容範囲内', () => {
+      it('100人のメンバーでもパフォーマンスが許容範囲内', async () => {
         const orgId = 'org-1';
         const eventDateId = 'event-1';
         const groupId = 'group-1';
@@ -1178,7 +1178,7 @@ describe('Attendance Service', () => {
         mockLoadAttendances.mockReturnValue(mockAttendances);
 
         const startTime = performance.now();
-        const details = getGroupMemberAttendances(orgId, eventDateId, groupId);
+        const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
         const endTime = performance.now();
 
         expect(details).toHaveLength(100);

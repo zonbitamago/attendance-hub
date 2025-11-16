@@ -351,10 +351,10 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [ ] T119 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 5: attendance-service（基本関数）**
-- [ ] T120 [Red] [US3] __tests__/lib/attendance-service.test.ts の基本関数を async 対応に更新
-- [ ] T121 [Red] [US3] テスト実行して失敗確認
-- [ ] T122 [Green] [US3] lib/attendance-service.ts の基本関数を async/await に変更
-- [ ] T123 [Refactor] [US3] テスト実行・確認、コード改善
+- [X] T120 [Red] [US3] __tests__/lib/attendance-service.test.ts の基本関数を async 対応に更新
+- [X] T121 [Red] [US3] テスト実行して失敗確認
+- [X] T122 [Green] [US3] lib/attendance-service.ts の基本関数を async/await に変更
+- [X] T123 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 6: calculateEventSummary（SQL集計）**
 - [ ] T124 [Red] [US3] calculateEventSummaryのSQL集計テストを作成
