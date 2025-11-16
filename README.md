@@ -20,7 +20,7 @@
 - **個別ステータス設定**: イベントごとに異なる出欠状況を一括設定可能
 - **個人別出欠状況表示**: グループごとにメンバー名と出欠ステータス（◯/△/✗/-）を確認（New! v2.1）
 - **高度なフィルタ・ソート・検索**: 出欠状況でフィルタ、名前/ステータスでソート、メンバー名検索（New! v2.1）
-- **データ永続化**: ブラウザのlocalStorageを使用してデータを保存
+- **データ永続化**: Supabase PostgreSQLデータベースでデータを永続化、ローカルではlocalStorageも併用
 
 ### 📱 対応環境
 
@@ -35,6 +35,7 @@
 - **言語**: [TypeScript 5.9](https://www.typescriptlang.org/) (Strict Mode)
 - **UIライブラリ**: [React 19.2](https://react.dev/)
 - **スタイリング**: [Tailwind CSS 3.4](https://tailwindcss.com/)
+- **データベース**: [Supabase](https://supabase.com/) PostgreSQL (v2.3以降)
 - **バリデーション**: [Zod 3.23](https://zod.dev/)
 - **日付処理**: [date-fns 4.1](https://date-fns.org/)
 - **ID生成**: [nanoid 5.1](https://github.com/ai/nanoid)
@@ -120,7 +121,10 @@ attendance-hub/
 │   ├── loading-spinner.tsx  # ローディング表示
 │   └── skeleton.tsx         # スケルトンUI
 ├── lib/                   # ビジネスロジック・ユーティリティ
+│   ├── supabase/
+│   │   └── client.ts     # Supabaseクライアント
 │   ├── storage.ts        # localStorage操作（団体スコープ対応）
+│   ├── supabase-storage.ts  # Supabaseストレージ層
 │   ├── organization-service.ts  # 団体関連ロジック
 │   ├── group-service.ts  # グループ関連ロジック
 │   ├── event-service.ts  # イベント関連ロジック
@@ -128,10 +132,11 @@ attendance-hub/
 │   ├── attendance-service.ts  # 出欠登録関連ロジック
 │   ├── migration.ts      # データマイグレーション
 │   ├── validation.ts     # Zodスキーマ
+│   ├── error-utils.ts    # エラーユーティリティ
 │   └── date-utils.ts     # 日付フォーマット
 ├── types/                 # TypeScript型定義
 │   └── index.ts
-├── __tests__/            # テスト（411テスト）
+├── __tests__/            # テスト（467テスト）
 │   ├── app/
 │   │   ├── page.test.tsx            # トップページテスト
 │   │   └── [org]/
@@ -220,11 +225,11 @@ attendance-hub/
 
 ## テスト
 
-- **テストスイート**: 411テスト（26スイート）
-- **カバレッジ**: statements: 84.82%, branches: 74.71%, functions: 84.77%, lines: 85.51%
+- **テストスイート**: 467テスト（30スイート）
+- **カバレッジ**: statements: 90.17%, branches: 77.08%, functions: 92.61%, lines: 90.65%
 - **CI**: すべてのPRで自動実行（型チェック、lint、テスト、ビルド）
 
-全411テストが実装されています:
+全467テストが実装されています:
 
 **ユーティリティ・サービス層** (70テスト):
 - **日付ユーティリティ**: 日付フォーマット、相対日付、バリデーション (94.44%カバレッジ)
@@ -300,4 +305,4 @@ MIT
 
 ---
 
-最終更新: 2025-11-12
+最終更新: 2025-11-16 (v2.3 - Supabase PostgreSQL対応)
