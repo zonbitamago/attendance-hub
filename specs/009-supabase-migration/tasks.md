@@ -195,9 +195,9 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [X] T053 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 11: clearOrganizationData**
-- [ ] T054 [Red] [US1] clearOrganizationDataのテストを作成（失敗するテスト）
-- [ ] T055 [Green] [US1] clearOrganizationDataを実装（カスケード削除はDBが自動実行）
-- [ ] T056 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T054 [Red] [US1] clearOrganizationDataのテストを作成（失敗するテスト）
+- [X] T055 [Green] [US1] clearOrganizationDataを実装（カスケード削除はDBが自動実行）
+- [X] T056 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 12: エラーハンドリング**
 - [ ] T057 [Red] [US1] エラーハンドリングのテストを作成（Supabaseエラー時の挙動）

@@ -195,4 +195,23 @@ export async function saveAttendances(attendance: Attendance): Promise<boolean> 
   return true;
 }
 
+/**
+ * 組織データを削除（カスケード削除により関連データも自動削除）
+ * @param organizationId 組織ID
+ * @returns 成功した場合 true、失敗した場合 false
+ */
+export async function clearOrganizationData(organizationId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('organizations')
+    .delete()
+    .eq('id', organizationId);
+
+  if (error) {
+    console.error('Failed to clear organization data:', error);
+    return false;
+  }
+
+  return true;
+}
+
 // TODO: 各関数を実装（TDDサイクルで段階的に実装）

@@ -6,7 +6,7 @@
  */
 
 import type { Organization, EventDate, Group, Member, Attendance } from '@/types';
-import { loadOrganizations, saveOrganizations, loadEventDates, saveEventDates, loadGroups, saveGroups, loadMembers, saveMembers, loadAttendances, saveAttendances } from '@/lib/supabase-storage';
+import { loadOrganizations, saveOrganizations, loadEventDates, saveEventDates, loadGroups, saveGroups, loadMembers, saveMembers, loadAttendances, saveAttendances, clearOrganizationData } from '@/lib/supabase-storage';
 import { supabase } from '@/lib/supabase/client';
 
 // Supabaseクライアントをモック
@@ -400,6 +400,35 @@ describe('Supabase Storage Layer', () => {
 
   describe('Utilities', () => {
     // Cycle 11: clearOrganizationData
+    describe('clearOrganizationData', () => {
+      it('指定されたorganizationIdの組織を削除できる（カスケード削除はDB側で自動実行）', async () => {
+        const organizationId = 'testorg001';
+
+        // Supabaseのモックレスポンスを設定
+        const mockEq = jest.fn().mockResolvedValue({
+          data: null,
+          error: null,
+        });
+
+        const mockDelete = jest.fn().mockReturnValue({
+          eq: mockEq,
+        });
+
+        (supabase.from as jest.Mock).mockReturnValue({
+          delete: mockDelete,
+        });
+
+        // テスト実行
+        const result = await clearOrganizationData(organizationId);
+
+        // 検証
+        expect(result).toBe(true);
+        expect(supabase.from).toHaveBeenCalledWith('organizations');
+        expect(mockDelete).toHaveBeenCalled();
+        expect(mockEq).toHaveBeenCalledWith('id', organizationId);
+      });
+    });
+
     // Cycle 12: エラーハンドリング
   });
 
