@@ -369,10 +369,14 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [X] T107 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 2: event-service**
-- [ ] T108 [Red] [US3] __tests__/lib/event-service.test.ts を async 対応に更新
-- [ ] T109 [Red] [US3] テスト実行して失敗確認
-- [ ] T110 [Green] [US3] lib/event-service.ts を async/await に変更
-- [ ] T111 [Refactor] [US3] テスト実行・確認、コード改善
+- [X] T108 [Red] [US3] __tests__/lib/event-service.test.ts を作成（19テスト）
+  - ✅ event-service.test.ts 作成完了
+- [X] T109 [Red] [US3] テスト実行して失敗確認
+  - ✅ 15/18 pass（3 failures expected - Red stage）
+- [X] T110 [Green] [US3] lib/event-service.ts を async/await に変更
+  - ✅ 5関数を async/await に変換
+- [X] T111 [Refactor] [US3] テスト実行・確認、コード改善
+  - ✅ 19/19 tests pass、95.23% coverage
 
 **Cycle 3: group-service**
 - [X] T112 [Red] [US3] __tests__/lib/group-service.test.ts を async 対応に更新
@@ -381,10 +385,14 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [X] T115 [Refactor] [US3] テスト実行・確認、コード改善
 
 **Cycle 4: member-service**
-- [ ] T116 [Red] [US3] __tests__/lib/member-service.test.ts を async 対応に更新
-- [ ] T117 [Red] [US3] テスト実行して失敗確認
-- [ ] T118 [Green] [US3] lib/member-service.ts を async/await に変更
-- [ ] T119 [Refactor] [US3] テスト実行・確認、コード改善
+- [X] T116 [Red] [US3] __tests__/lib/member-service.test.ts を作成（22テスト）
+  - ✅ member-service.test.ts 作成完了
+- [X] T117 [Red] [US3] テスト実行して失敗確認
+  - ✅ 18/22 pass（4 failures expected - Red stage）
+- [X] T118 [Green] [US3] lib/member-service.ts を async/await に変更
+  - ✅ 7関数を async/await に変換
+- [X] T119 [Refactor] [US3] テスト実行・確認、コード改善
+  - ✅ 22/22 tests pass、95.65% coverage
 
 **Cycle 5: attendance-service（基本関数）**
 - [X] T120 [Red] [US3] __tests__/lib/attendance-service.test.ts の基本関数を async 対応に更新
@@ -427,14 +435,17 @@ Phase 3: US1  Phase 4: US2 (並行可能)
   - ✅ attendance-service: 32/32 tests, 92.85% coverage
   - ✅ organization-service: 100% coverage
   - ✅ group-service: 97.61% coverage
+  - ✅ event-service: 19/19 tests, 95.23% coverage
+  - ✅ member-service: 22/22 tests, 95.65% coverage
 
-**Verification**: 全サービス層が非同期化され、全テストがpass
+**Verification**: 全サービス層が非同期化され、全テストがpass ✅
 - ✅ Cycle 1: organization-service async化完了
-- ⚠️ Cycle 2: event-service (テストファイル未存在でスキップ)
+- ✅ Cycle 2: event-service async化完了（19テスト、95.23% coverage）
 - ✅ Cycle 3: group-service async化完了
-- ⚠️ Cycle 4: member-service (テストファイル未存在でスキップ)
+- ✅ Cycle 4: member-service async化完了（22テスト、95.65% coverage）
 - ✅ Cycle 5-7: attendance-service async化完了
 - ✅ Cycle 8-9: 既存実装で対応済み（Feature 004, 007）
+- ✅ **Phase 5 完全完了: 全9サイクル完了**
 
 ---
 

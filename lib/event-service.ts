@@ -5,7 +5,7 @@ import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
 
 // イベント日付を作成
-export function createEventDate(organizationId: string, input: EventDateInput): EventDate {
+export async function createEventDate(organizationId: string, input: EventDateInput): Promise<EventDate> {
   const validated = CreateEventDateInputSchema.parse(input);
 
   const newEventDate: EventDate = {
@@ -29,19 +29,19 @@ export function createEventDate(organizationId: string, input: EventDateInput): 
 }
 
 // すべてのイベント日付を取得（日付昇順）
-export function getAllEventDates(organizationId: string): EventDate[] {
+export async function getAllEventDates(organizationId: string): Promise<EventDate[]> {
   const eventDates = loadEventDates(organizationId);
   return eventDates.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 // IDでイベント日付を取得
-export function getEventDateById(organizationId: string, id: string): EventDate | null {
+export async function getEventDateById(organizationId: string, id: string): Promise<EventDate | null> {
   const eventDates = loadEventDates(organizationId);
   return eventDates.find((event) => event.id === id) || null;
 }
 
 // イベント日付を更新
-export function updateEventDate(organizationId: string, id: string, input: Partial<EventDateInput>): EventDate {
+export async function updateEventDate(organizationId: string, id: string, input: Partial<EventDateInput>): Promise<EventDate> {
   const eventDates = loadEventDates(organizationId);
   const index = eventDates.findIndex((event) => event.id === id);
 
@@ -74,7 +74,7 @@ export function updateEventDate(organizationId: string, id: string, input: Parti
 }
 
 // イベント日付を削除
-export function deleteEventDate(organizationId: string, id: string): boolean {
+export async function deleteEventDate(organizationId: string, id: string): Promise<boolean> {
   const eventDates = loadEventDates(organizationId);
   const filteredEventDates = eventDates.filter((event) => event.id !== id);
 

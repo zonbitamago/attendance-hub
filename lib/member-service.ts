@@ -5,7 +5,7 @@ import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
 
 // メンバーを作成
-export function createMember(organizationId: string, input: MemberInput): Member {
+export async function createMember(organizationId: string, input: MemberInput): Promise<Member> {
   const validated = CreateMemberInputSchema.parse(input);
 
   const newMember: Member = {
@@ -29,29 +29,29 @@ export function createMember(organizationId: string, input: MemberInput): Member
 
 // メンバーを保存（新規作成のエイリアス）
 // 一括登録機能で使用
-export function saveMember(organizationId: string, input: MemberInput): Member {
-  return createMember(organizationId, input);
+export async function saveMember(organizationId: string, input: MemberInput): Promise<Member> {
+  return await createMember(organizationId, input);
 }
 
 // すべてのメンバーを取得
-export function getAllMembers(organizationId: string): Member[] {
+export async function getAllMembers(organizationId: string): Promise<Member[]> {
   return loadMembers(organizationId);
 }
 
 // グループIDでメンバーを取得
-export function getMembersByGroupId(organizationId: string, groupId: string): Member[] {
+export async function getMembersByGroupId(organizationId: string, groupId: string): Promise<Member[]> {
   const members = loadMembers(organizationId);
   return members.filter((member) => member.groupId === groupId);
 }
 
 // IDでメンバーを取得
-export function getMemberById(organizationId: string, id: string): Member | null {
+export async function getMemberById(organizationId: string, id: string): Promise<Member | null> {
   const members = loadMembers(organizationId);
   return members.find((member) => member.id === id) || null;
 }
 
 // メンバーを更新
-export function updateMember(organizationId: string, id: string, input: Partial<Omit<MemberInput, 'groupId'>>): Member {
+export async function updateMember(organizationId: string, id: string, input: Partial<Omit<MemberInput, 'groupId'>>): Promise<Member> {
   const members = loadMembers(organizationId);
   const index = members.findIndex((member) => member.id === id);
 
@@ -81,7 +81,7 @@ export function updateMember(organizationId: string, id: string, input: Partial<
 }
 
 // メンバーを削除
-export function deleteMember(organizationId: string, id: string): boolean {
+export async function deleteMember(organizationId: string, id: string): Promise<boolean> {
   const members = loadMembers(organizationId);
   const filteredMembers = members.filter((member) => member.id !== id);
 
