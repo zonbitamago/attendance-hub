@@ -77,7 +77,7 @@ export default function MyRegisterPage() {
       // 新規メンバーの場合は先に作成
       let memberId = memberSelection.memberId;
       if (!memberId) {
-        const newMember = saveMember(organization.id, {
+        const newMember = await saveMember(organization.id, {
           groupId: memberSelection.groupId,
           name: memberSelection.memberName,
         });
@@ -92,7 +92,7 @@ export default function MyRegisterPage() {
       }));
 
       // 一括登録を実行
-      const result = upsertBulkAttendances(organization.id, inputs);
+      const result = await upsertBulkAttendances(organization.id, inputs);
 
       const totalCount = result.success.length + result.updated.length;
       const updatedCount = result.updated.length;

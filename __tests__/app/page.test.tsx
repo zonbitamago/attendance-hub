@@ -45,7 +45,7 @@ describe('Home (Landing) Page', () => {
     expect(screen.getByRole('button', { name: /団体を作成/ })).toBeInTheDocument();
   });
 
-  it('should create organization on form submission', () => {
+  it('should create organization on form submission', async () => {
     const mockOrganization: Organization = {
       id: 'test-org-123',
       name: 'テスト団体',
@@ -53,7 +53,7 @@ describe('Home (Landing) Page', () => {
       createdAt: '2025-01-01T00:00:00.000Z',
     };
 
-    mockCreateOrganization.mockReturnValue(mockOrganization);
+    mockCreateOrganization.mockResolvedValue(mockOrganization);
 
     render(<Home />);
 
@@ -74,7 +74,7 @@ describe('Home (Landing) Page', () => {
     });
   });
 
-  it('should display URL for bookmarking after organization creation', () => {
+  it('should display URL for bookmarking after organization creation', async () => {
     const mockOrganization: Organization = {
       id: 'test-org-456',
       name: '新しい団体',
@@ -82,7 +82,7 @@ describe('Home (Landing) Page', () => {
       createdAt: '2025-01-01T00:00:00.000Z',
     };
 
-    mockCreateOrganization.mockReturnValue(mockOrganization);
+    mockCreateOrganization.mockResolvedValue(mockOrganization);
 
     // window.location.originをモック
     delete (window as any).location;
@@ -98,9 +98,9 @@ describe('Home (Landing) Page', () => {
     const createButton = screen.getByRole('button', { name: /団体を作成/ });
     fireEvent.click(createButton);
 
-    // URL表示を確認
-    expect(screen.getByText(/作成されました/)).toBeInTheDocument();
-    expect(screen.getByText(/test-org-456/)).toBeInTheDocument();
+    // URL表示を確認（非同期処理の完了を待つ）
+    expect(await screen.findByText(/作成されました/)).toBeInTheDocument();
+    expect(await screen.findByText(/test-org-456/)).toBeInTheDocument();
 
     // アクセスボタンがあることを確認
     expect(screen.getByRole('link', { name: /アクセスする/ })).toHaveAttribute(
@@ -170,7 +170,7 @@ describe('Home (Landing) Page', () => {
         createdAt: '2025-01-01T00:00:00.000Z',
       };
 
-      mockCreateOrganization.mockReturnValue(mockOrganization);
+      mockCreateOrganization.mockResolvedValue(mockOrganization);
 
       render(<Home />);
 
@@ -202,7 +202,7 @@ describe('Home (Landing) Page', () => {
 
       // getAllOrganizationsをモックしてデータが存在することを示す
       const mockGetAllOrganizations = jest.spyOn(organizationService, 'getAllOrganizations');
-      mockGetAllOrganizations.mockReturnValue(mockOrganizations);
+      mockGetAllOrganizations.mockResolvedValue(mockOrganizations);
 
       render(<Home />);
 

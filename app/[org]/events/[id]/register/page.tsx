@@ -22,6 +22,7 @@ export default function RegisterAttendancePage() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<Error | null>(null);
 
   // Form state
   const [selectedGroupId, setSelectedGroupId] = useState('');
@@ -31,39 +32,70 @@ export default function RegisterAttendancePage() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const loadData = () => {
-    if (!organization) return;
-    try {
-      const foundEvent = getEventDateById(organization.id, eventId);
-      if (!foundEvent) {
-        router.push(`/${params.org as string}`);
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadData = async () => {
+      if (!organization) return;
+
+      try {
+        setIsLoading(true);
+        setLoadError(null);
+
+        const foundEvent = await getEventDateById(organization.id, eventId);
+        if (!foundEvent) {
+          router.push(`/${params.org as string}`);
+          return;
+        }
+
+        const allGroups = await getAllGroups(organization.id);
+
+        if (isMounted) {
+          setEvent(foundEvent);
+          setGroups(allGroups);
+        }
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        if (isMounted) {
+          setLoadError(error instanceof Error ? error : new Error('Unknown error'));
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [organization, eventId, params.org, router]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadMembers = async () => {
+      if (!selectedGroupId || !organization) {
+        setMembers([]);
         return;
       }
 
-      const allGroups = getAllGroups(organization.id);
-      setEvent(foundEvent);
-      setGroups(allGroups);
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      const groupMembers = await getMembersByGroupId(organization.id, selectedGroupId);
 
-  useEffect(() => {
-    loadData();
-  }, [eventId, router]);
+      if (isMounted) {
+        setMembers(groupMembers);
+        setSelectedMemberId('');
+        setNewMemberName('');
+      }
+    };
 
-  useEffect(() => {
-    // グループが選択されたらそのグループのメンバーを読み込む
-    if (selectedGroupId && organization) {
-      const groupMembers = getMembersByGroupId(organization.id, selectedGroupId);
-      setMembers(groupMembers);
-      setSelectedMemberId('');
-      setNewMemberName('');
-    } else {
-      setMembers([]);
-    }
+    loadMembers();
+
+    return () => {
+      isMounted = false;
+    };
   }, [selectedGroupId, organization]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,7 +118,7 @@ export default function RegisterAttendancePage() {
 
       // 新しいメンバー名が入力されている場合は作成
       if (newMemberName.trim()) {
-        const newMember = createMember(organization.id, {
+        const newMember = await createMember(organization.id, {
           groupId: selectedGroupId,
           name: newMemberName.trim(),
         });
@@ -98,7 +130,7 @@ export default function RegisterAttendancePage() {
       }
 
       // 出欠登録を作成
-      createAttendance(organization.id, {
+      await createAttendance(organization.id, {
         eventDateId: eventId,
         memberId,
         status,
@@ -116,6 +148,16 @@ export default function RegisterAttendancePage() {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
         <LoadingSpinner message="読み込み中..." />
+      </main>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">エラーが発生しました: {loadError.message}</p>
+        </div>
       </main>
     );
   }

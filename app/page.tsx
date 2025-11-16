@@ -24,17 +24,18 @@ export default function Home() {
       router.push(`/${result.defaultOrgId}`);
     } else if (result.error) {
       // マイグレーション失敗 → エラー表示
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMigrationError(result.error);
     }
     // migrated: false の場合は何もしない（新規ユーザー）
   }, [router]);
 
-  const handleCreateOrganization = () => {
+  const handleCreateOrganization = async () => {
     setError('');
 
     try {
       // 団体を作成
-      const newOrganization = createOrganization({
+      const newOrganization = await createOrganization({
         name: organizationName,
         description: organizationDescription,
       });

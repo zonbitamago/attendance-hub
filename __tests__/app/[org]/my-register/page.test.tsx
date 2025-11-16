@@ -133,6 +133,13 @@ describe('一括出欠登録ページ', () => {
       replace: jest.fn(),
       prefetch: jest.fn(),
     });
+jest.mock('next/link', () => {
+  // eslint-disable-next-line react/display-name
+  return ({ children, href }: { children: React.ReactNode; href: string }) => {
+    return <a href={href}>{children}</a>;
+  };
+});
+
 
     mockUseParams.mockReturnValue({
       org: 'test-org-123',
@@ -141,6 +148,7 @@ describe('一括出欠登録ページ', () => {
     mockUseOrganization.mockReturnValue({
       organization: mockOrganization,
       isLoading: false,
+      error: null,
     });
 
     mockUpsertBulkAttendances.mockReturnValue({
@@ -156,55 +164,67 @@ describe('一括出欠登録ページ', () => {
   });
 
   describe('基本表示', () => {
-    test('ページタイトルが表示される', () => {
+    test('ページタイトルが表示される', async () => {
       render(<MyRegisterPage />);
 
-      expect(screen.getByText('一括出欠登録')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('一括出欠登録')).toBeInTheDocument();
+      });
     });
 
-    test('トップページへ戻るリンクが表示される', () => {
+    test('トップページへ戻るリンクが表示される', async () => {
       render(<MyRegisterPage />);
 
       const backLink = screen.getByRole('link', { name: /トップページへ戻る/ });
-      expect(backLink).toHaveAttribute('href', '/test-org-123');
+      await waitFor(() => {
+        expect(backLink).toHaveAttribute('href', '/test-org-123');
+      });
     });
 
-    test('MemberSelectorコンポーネントが表示される', () => {
+    test('MemberSelectorコンポーネントが表示される', async () => {
       render(<MyRegisterPage />);
 
-      expect(screen.getByTestId('member-selector')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByTestId('member-selector')).toBeInTheDocument();
+      });
     });
 
-    test('メンバー未選択時はEventListが非表示', () => {
+    test('メンバー未選択時はEventListが非表示', async () => {
       render(<MyRegisterPage />);
 
-      expect(screen.queryByTestId('event-list')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByTestId('event-list')).not.toBeInTheDocument();
+      });
     });
   });
 
   describe('メンバー選択', () => {
-    test('メンバー選択時にEventListが表示される', () => {
+    test('メンバー選択時にEventListが表示される', async () => {
       render(<MyRegisterPage />);
 
       const selectButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectButton);
 
-      expect(screen.getByTestId('event-list')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByTestId('event-list')).toBeInTheDocument();
+      });
     });
 
-    test('メンバー選択時にmemberSelectionステートが保存される', () => {
+    test('メンバー選択時にmemberSelectionステートが保存される', async () => {
       render(<MyRegisterPage />);
 
       const selectButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectButton);
 
       // EventListが表示されることで、memberSelectionが設定されたことを確認
-      expect(screen.getByTestId('event-list')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByTestId('event-list')).toBeInTheDocument();
+      });
     });
   });
 
   describe('イベント選択', () => {
-    test('イベント選択時に選択一覧が更新される', () => {
+    test('イベント選択時に選択一覧が更新される', async () => {
       render(<MyRegisterPage />);
 
       // メンバーを選択
@@ -216,10 +236,12 @@ describe('一括出欠登録ページ', () => {
       fireEvent.click(selectEventButton);
 
       // 登録ボタンが表示される（イベントが選択されたため）
-      expect(screen.getByRole('button', { name: /2件のイベントに登録/ })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /2件のイベントに登録/ })).toBeInTheDocument();
+      });
     });
 
-    test('イベント選択時にデフォルトステータス「◯」が設定される', () => {
+    test('イベント選択時にデフォルトステータス「◯」が設定される', async () => {
       render(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
@@ -234,7 +256,7 @@ describe('一括出欠登録ページ', () => {
   });
 
   describe('イベントステータス変更', () => {
-    test('個別イベントステータス変更が反映される', () => {
+    test('個別イベントステータス変更が反映される', async () => {
       render(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
@@ -269,11 +291,11 @@ describe('一括出欠登録ページ', () => {
           { eventDateId: 'event-1', memberId: 'member-1', status: '◯' },
           { eventDateId: 'event-2', memberId: 'member-1', status: '◯' },
         ]);
-      });
+          });
     });
 
     test('新規メンバーの場合は先にsaveMemberが呼ばれる', async () => {
-      mockSaveMember.mockReturnValue({
+      mockSaveMember.mockResolvedValue({
         id: 'new-member-1',
         organizationId: 'test-org-123',
         groupId: 'group-1',
@@ -314,7 +336,7 @@ describe('一括出欠登録ページ', () => {
 
       await waitFor(() => {
         expect(screen.getByText('2件登録しました')).toBeInTheDocument();
-      });
+          });
     });
 
     test('更新件数がある場合はメッセージに含まれる', async () => {
@@ -377,7 +399,7 @@ describe('一括出欠登録ページ', () => {
 
       await waitFor(() => {
         expect(screen.getByText('2件登録しました')).toBeInTheDocument();
-      });
+          });
 
       // 1秒進める
       jest.advanceTimersByTime(1000);
@@ -387,7 +409,7 @@ describe('一括出欠登録ページ', () => {
   });
 
   describe('バリデーション', () => {
-    test('メンバー未選択時はエラーメッセージが表示される', () => {
+    test('メンバー未選択時はエラーメッセージが表示される', async () => {
       render(<MyRegisterPage />);
 
       // フォームを直接送信しようとする
@@ -397,22 +419,26 @@ describe('一括出欠登録ページ', () => {
       }
 
       // メンバー未選択なので送信できない（登録ボタンが表示されていない）
-      expect(screen.queryByRole('button', { name: /のイベントに登録/ })).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /のイベントに登録/ })).not.toBeInTheDocument();
+      });
     });
 
-    test('イベント未選択時はエラーメッセージが表示される', () => {
+    test('イベント未選択時はエラーメッセージが表示される', async () => {
       render(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
 
       // イベント未選択なので登録ボタンが表示されない
-      expect(screen.queryByRole('button', { name: /のイベントに登録/ })).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /のイベントに登録/ })).not.toBeInTheDocument();
+      });
     });
   });
 
   describe('UI状態管理', () => {
-    test('送信中はボタンが無効化される', () => {
+    test('送信中はボタンが無効化される', async () => {
       render(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
@@ -430,10 +456,12 @@ describe('一括出欠登録ページ', () => {
 
       // upsertBulkAttendancesは同期関数なので、クリック後すぐに処理完了
       // 成功メッセージが表示されていることを確認
-      expect(screen.getByText('2件登録しました')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('2件登録しました')).toBeInTheDocument();
+      });
     });
 
-    test('イベント選択数が登録ボタンに表示される', () => {
+    test('イベント選択数が登録ボタンに表示される', async () => {
       render(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
@@ -442,7 +470,9 @@ describe('一括出欠登録ページ', () => {
       const selectEventButton = screen.getByRole('button', { name: 'イベントを選択' });
       fireEvent.click(selectEventButton);
 
-      expect(screen.getByRole('button', { name: '2件のイベントに登録' })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: '2件のイベントに登録' })).toBeInTheDocument();
+      });
     });
   });
 });

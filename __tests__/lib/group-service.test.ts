@@ -22,14 +22,14 @@ describe('Group Service', () => {
   });
 
   describe('createGroup', () => {
-    it('有効な入力で新しいグループを作成できる', () => {
+    it('有効な入力で新しいグループを作成できる', async () => {
       const input = {
         name: '打',
         order: 0,
         color: '#FF0000',
       };
 
-      const group = createGroup('test-org-id', input);
+      const group = await createGroup('test-org-id', input);
 
       expect(group).toMatchObject({
         name: '打',
@@ -41,48 +41,48 @@ describe('Group Service', () => {
       expect(mockSaveGroups).toHaveBeenCalledWith('test-org-id', [group]);
     });
 
-    it('色なしでグループを作成できる', () => {
+    it('色なしでグループを作成できる', async () => {
       const input = {
         name: 'Cla',
         order: 1,
       };
 
-      const group = createGroup('test-org-id', input);
+      const group = await createGroup('test-org-id', input);
 
       expect(group.name).toBe('Cla');
       expect(group.order).toBe(1);
       expect(group.color).toBeUndefined();
     });
 
-    it('無効な入力でエラーをスローする', () => {
+    it('無効な入力でエラーをスローする', async () => {
       const input = {
         name: '',
         order: 0,
       };
 
-      expect(() => createGroup('test-org-id', input)).toThrow();
+      await expect(createGroup('test-org-id', input)).rejects.toThrow();
     });
 
-    it('名前が長すぎる場合はエラーをスローする', () => {
+    it('名前が長すぎる場合はエラーをスローする', async () => {
       const input = {
         name: 'a'.repeat(51),
         order: 0,
       };
 
-      expect(() => createGroup('test-org-id', input)).toThrow();
+      await expect(createGroup('test-org-id', input)).rejects.toThrow();
     });
 
-    it('無効な色フォーマットの場合はエラーをスローする', () => {
+    it('無効な色フォーマットの場合はエラーをスローする', async () => {
       const input = {
         name: 'Test',
         order: 0,
         color: 'red', // Invalid format
       };
 
-      expect(() => createGroup('test-org-id', input)).toThrow();
+      await expect(createGroup('test-org-id', input)).rejects.toThrow();
     });
 
-    it('ストレージが失敗した場合はエラーをスローする', () => {
+    it('ストレージが失敗した場合はエラーをスローする', async () => {
       mockSaveGroups.mockReturnValue(false);
 
       const input = {
@@ -90,12 +90,12 @@ describe('Group Service', () => {
         order: 0,
       };
 
-      expect(() => createGroup('test-org-id', input)).toThrow();
+      await expect(createGroup('test-org-id', input)).rejects.toThrow();
     });
   });
 
   describe('getAllGroups', () => {
-    it('すべてのグループを順序でソートして取得できる', () => {
+    it('すべてのグループを順序でソートして取得できる', async () => {
       const mockGroups: Group[] = [
         {
           id: '2',
@@ -122,7 +122,7 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue(mockGroups);
 
-      const groups = getAllGroups('test-org-id');
+      const groups = await getAllGroups('test-org-id');
 
       expect(groups).toHaveLength(3);
       expect(groups[0].name).toBe('打'); // order: 0
@@ -131,17 +131,17 @@ describe('Group Service', () => {
       expect(mockLoadGroups).toHaveBeenCalled();
     });
 
-    it('グループが存在しない場合は空配列を返す', () => {
+    it('グループが存在しない場合は空配列を返す', async () => {
       mockLoadGroups.mockReturnValue([]);
 
-      const groups = getAllGroups('test-org-id');
+      const groups = await getAllGroups('test-org-id');
 
       expect(groups).toEqual([]);
     });
   });
 
   describe('getGroupById', () => {
-    it('IDでグループを取得できる', () => {
+    it('IDでグループを取得できる', async () => {
       const mockGroups: Group[] = [
         {
           id: '1',
@@ -161,22 +161,22 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue(mockGroups);
 
-      const group = getGroupById('test-org-id', '1');
+      const group = await getGroupById('test-org-id', '1');
 
       expect(group).toEqual(mockGroups[0]);
     });
 
-    it('グループが見つからない場合はnullを返す', () => {
+    it('グループが見つからない場合はnullを返す', async () => {
       mockLoadGroups.mockReturnValue([]);
 
-      const group = getGroupById('test-org-id', 'nonexistent');
+      const group = await getGroupById('test-org-id', 'nonexistent');
 
       expect(group).toBeNull();
     });
   });
 
   describe('updateGroup', () => {
-    it('既存のグループを更新できる', () => {
+    it('既存のグループを更新できる', async () => {
       const existingGroup: Group = {
         id: '1',
         organizationId: 'test-org-id',
@@ -187,7 +187,7 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue([existingGroup]);
 
-      const updated = updateGroup('test-org-id', '1', {
+      const updated = await updateGroup('test-org-id', '1', {
         name: 'New Name',
         order: 1,
         color: '#00FF00',
@@ -203,15 +203,15 @@ describe('Group Service', () => {
       expect(mockSaveGroups).toHaveBeenCalled();
     });
 
-    it('グループが見つからない場合はエラーをスローする', () => {
+    it('グループが見つからない場合はエラーをスローする', async () => {
       mockLoadGroups.mockReturnValue([]);
 
-      expect(() =>
+      await expect(
         updateGroup('test-org-id', 'nonexistent', { name: 'New Name', order: 0 })
-      ).toThrow();
+      ).rejects.toThrow();
     });
 
-    it('無効な更新データの場合はエラーをスローする', () => {
+    it('無効な更新データの場合はエラーをスローする', async () => {
       const existingGroup: Group = {
         id: '1',
         organizationId: 'test-org-id',
@@ -222,14 +222,14 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue([existingGroup]);
 
-      expect(() =>
+      await expect(
         updateGroup('test-org-id', '1', { name: '', order: 0 })
-      ).toThrow();
+      ).rejects.toThrow();
     });
   });
 
   describe('deleteGroup', () => {
-    it('既存のグループを削除できる', () => {
+    it('既存のグループを削除できる', async () => {
       const groups: Group[] = [
         {
           id: '1',
@@ -249,16 +249,16 @@ describe('Group Service', () => {
 
       mockLoadGroups.mockReturnValue(groups);
 
-      const result = deleteGroup('test-org-id', '1');
+      const result = await deleteGroup('test-org-id', '1');
 
       expect(result).toBe(true);
       expect(mockSaveGroups).toHaveBeenCalledWith('test-org-id', [groups[1]]);
     });
 
-    it('グループが見つからない場合はfalseを返す', () => {
+    it('グループが見つからない場合はfalseを返す', async () => {
       mockLoadGroups.mockReturnValue([]);
 
-      const result = deleteGroup('test-org-id', 'nonexistent');
+      const result = await deleteGroup('test-org-id', 'nonexistent');
 
       expect(result).toBe(false);
       expect(mockSaveGroups).not.toHaveBeenCalled();

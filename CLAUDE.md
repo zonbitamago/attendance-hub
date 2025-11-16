@@ -200,6 +200,14 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 
 ## 最近の変更
 
+- **2025-11-16**: 009-supabase-migration Phase 6-7完了（v2.3 - Supabase PostgreSQL対応）
+  - データストレージをlocalStorageからSupabase PostgreSQLに完全移行
+  - 全ページのUI層を非同期対応（ローディング状態、エラーハンドリング）
+  - 404エラーハンドリング実装（存在しない団体IDで404ページ表示）
+  - Supabase Clientモック実装、18テスト追加
+  - エラーハンドリングテスト追加（3ページ）
+  - 467テスト全てpass、カバレッジ90.17%達成
+  - ビルド成功、CI/CD成功
 - **2025-11-11**: 007-event-member-attendance フィーチャーを完了
   - イベント画面 個人別出欠状況表示機能実装
   - グループ別アコーディオン（展開/折りたたみ）
@@ -281,6 +289,8 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 - TypeScript 5.9 (strict mode必須) + Next.js 16.0.1, React 19.2.0, Tailwind CSS 3.4 (007-event-member-attendance)
 - TypeScript 5.9（strict mode必須） + Jest 29、@testing-library/react 14、@testing-library/jest-dom (008-test-coverage-expansion)
 - N/A（テストフィーチャー、既存のlocalStorageストレージを使用） (008-test-coverage-expansion)
+- TypeScript 5.9（strict mode必須） + Next.js 16.0.1, React 19.2.0, @supabase/supabase-js（最新安定版）, Zod（既存） (009-supabase-migration)
+- Supabase PostgreSQL（無料プラン: 500MB ストレージ、50,000 月間アクティブユーザー） (009-supabase-migration)
 
 ## Recent Changes
 - 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function

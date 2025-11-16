@@ -46,7 +46,7 @@ describe('Migration Integration Test', () => {
   });
 
   describe('Complete Migration Workflow', () => {
-    it('should migrate all legacy data types and create default organization', () => {
+    it('should migrate all legacy data types and create default organization', async () => {
       // レガシーデータをセットアップ（v1.0形式）
       const legacyEvents = [
         { id: 'evt1', title: '定期練習', date: '2025-01-10' },
@@ -94,18 +94,18 @@ describe('Migration Integration Test', () => {
       const defaultOrgId = result.defaultOrgId!;
 
       // デフォルト団体が作成されたことを確認
-      const orgs = getAllOrganizations();
+      const orgs = await getAllOrganizations();
       expect(orgs).toHaveLength(1);
       expect(orgs[0].id).toBe(defaultOrgId);
       expect(orgs[0].name).toBe('マイ団体');
       expect(orgs[0].description).toBe('既存データから自動作成された団体です');
 
-      const defaultOrg = getOrganizationById(defaultOrgId);
+      const defaultOrg = await getOrganizationById(defaultOrgId);
       expect(defaultOrg).toBeDefined();
       expect(defaultOrg!.name).toBe('マイ団体');
 
       // イベントがマイグレーションされたことを確認
-      const migratedEvents = getAllEventDates(defaultOrgId);
+      const migratedEvents = await getAllEventDates(defaultOrgId);
       expect(migratedEvents).toHaveLength(3);
       expect(migratedEvents[0].id).toBe('evt1');
       expect(migratedEvents[0].title).toBe('定期練習');
@@ -114,7 +114,7 @@ describe('Migration Integration Test', () => {
       expect(migratedEvents[2].organizationId).toBe(defaultOrgId);
 
       // グループがマイグレーションされたことを確認
-      const migratedGroups = getAllGroups(defaultOrgId);
+      const migratedGroups = await getAllGroups(defaultOrgId);
       expect(migratedGroups).toHaveLength(3);
       expect(migratedGroups[0].id).toBe('grp1');
       expect(migratedGroups[0].name).toBe('ボーカル');
@@ -123,7 +123,7 @@ describe('Migration Integration Test', () => {
       expect(migratedGroups[2].organizationId).toBe(defaultOrgId);
 
       // メンバーがマイグレーションされたことを確認
-      const migratedMembers = getAllMembers(defaultOrgId);
+      const migratedMembers = await getAllMembers(defaultOrgId);
       expect(migratedMembers).toHaveLength(4);
       expect(migratedMembers[0].id).toBe('mem1');
       expect(migratedMembers[0].name).toBe('田中太郎');
@@ -133,7 +133,7 @@ describe('Migration Integration Test', () => {
       expect(migratedMembers[3].organizationId).toBe(defaultOrgId);
 
       // 出欠記録がマイグレーションされたことを確認
-      const migratedAttendances = getAllAttendances(defaultOrgId);
+      const migratedAttendances = await getAllAttendances(defaultOrgId);
       expect(migratedAttendances).toHaveLength(4);
       expect(migratedAttendances[0].id).toBe('att1');
       expect(migratedAttendances[0].eventDateId).toBe('evt1');
@@ -155,7 +155,7 @@ describe('Migration Integration Test', () => {
       expect(hasLegacyData()).toBe(false);
     });
 
-    it('should not migrate data twice when called multiple times', () => {
+    it('should not migrate data twice when called multiple times', async () => {
       // レガシーデータをセットアップ
       const legacyEvents = [{ id: 'evt1', title: 'イベント', date: '2025-01-10' }];
       localStorage.setItem(LEGACY_KEYS.EVENT_DATES, JSON.stringify(legacyEvents));
@@ -165,19 +165,19 @@ describe('Migration Integration Test', () => {
       expect(result1.migrated).toBe(true);
 
       const firstOrgId = result1.defaultOrgId!;
-      const orgsAfterFirst = getAllOrganizations();
+      const orgsAfterFirst = await getAllOrganizations();
       expect(orgsAfterFirst).toHaveLength(1);
 
       // 2回目のマイグレーション
       const result2 = migrateToMultiTenant();
       expect(result2.migrated).toBe(false); // 既に完了しているのでスキップ
 
-      const orgsAfterSecond = getAllOrganizations();
+      const orgsAfterSecond = await getAllOrganizations();
       expect(orgsAfterSecond).toHaveLength(1); // 増えていない
       expect(orgsAfterSecond[0].id).toBe(firstOrgId); // 同じID
     });
 
-    it('should handle migration with only partial legacy data', () => {
+    it('should handle migration with only partial legacy data', async () => {
       // イベントとグループのみ存在するケース
       const legacyEvents = [{ id: 'evt1', title: 'イベント', date: '2025-01-10' }];
       const legacyGroups = [{ id: 'grp1', name: 'グループA', order: 1, color: '#FF0000' }];
@@ -192,10 +192,10 @@ describe('Migration Integration Test', () => {
       const defaultOrgId = result.defaultOrgId!;
 
       // イベントとグループのみマイグレーションされる
-      const events = getAllEventDates(defaultOrgId);
-      const groups = getAllGroups(defaultOrgId);
-      const members = getAllMembers(defaultOrgId);
-      const attendances = getAllAttendances(defaultOrgId);
+      const events = await getAllEventDates(defaultOrgId);
+      const groups = await getAllGroups(defaultOrgId);
+      const members = await getAllMembers(defaultOrgId);
+      const attendances = await getAllAttendances(defaultOrgId);
 
       expect(events).toHaveLength(1);
       expect(groups).toHaveLength(1);
@@ -203,7 +203,7 @@ describe('Migration Integration Test', () => {
       expect(attendances).toHaveLength(0);
     });
 
-    it('should preserve data integrity across migration', () => {
+    it('should preserve data integrity across migration', async () => {
       // データの整合性を保つかテスト
       const legacyEvents = [
         { id: 'evt1', title: 'イベント1', date: '2025-01-10' },
@@ -229,8 +229,8 @@ describe('Migration Integration Test', () => {
       const orgId = result.defaultOrgId!;
 
       // データの参照整合性が保たれているか確認
-      const members = getAllMembers(orgId);
-      const attendances = getAllAttendances(orgId);
+      const members = await getAllMembers(orgId);
+      const attendances = await getAllAttendances(orgId);
 
       // メンバーのgroupIdが保持されている
       expect(members[0].groupId).toBe('grp1');
