@@ -480,11 +480,11 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 - [x] T144 [Green] [US4] app/[org]/page.tsx にローディングスピナーを追加
 - [x] T145 [Refactor] [US4] テスト実行・確認、コード改善（全7テスト成功、カバレッジ98.21%）
 
-**Cycle 3: グループ管理ページ**
-- [ ] T146 [Red] [US4] __tests__/app/[org]/admin/groups/page.test.tsx を非同期対応に更新
-- [ ] T147 [Green] [US4] app/[org]/admin/groups/page.tsx を非同期データ取得に対応
-- [ ] T148 [Green] [US4] app/[org]/admin/groups/page.tsx にローディングスピナーを追加
-- [ ] T149 [Refactor] [US4] テスト実行・確認、コード改善
+**Cycle 3: グループ管理ページ** ✅
+- [x] T146 [Red] [US4] __tests__/app/[org]/admin/groups/page.test.tsx を非同期対応に更新
+- [x] T147 [Green] [US4] app/[org]/admin/groups/page.tsx を非同期データ取得に対応
+- [x] T148 [Green] [US4] app/[org]/admin/groups/page.tsx にローディングスピナーを追加
+- [x] T149 [Refactor] [US4] テスト実行・確認、コード改善（全24テスト成功、カバレッジ93.97%）
 
 **Cycle 4: イベント管理ページ**
 - [ ] T150 [Red] [US4] __tests__/app/[org]/admin/events/page.test.tsx を非同期対応に更新
