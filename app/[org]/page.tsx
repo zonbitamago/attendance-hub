@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getAllEventDates } from '@/lib/event-service';
@@ -8,7 +8,7 @@ import { calculateEventTotalSummary } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
 import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
-import type { EventDate } from '@/types';
+import type { EventDate, EventTotalSummary } from '@/types';
 
 export default function Home() {
   const params = useParams();
@@ -16,37 +16,85 @@ export default function Home() {
   const { organization } = useOrganization();
   const [events, setEvents] = useState<EventDate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const loadEvents = () => {
+    let isMounted = true;
+
+    const loadEvents = async () => {
       if (!organization) return;
+
       try {
-        const allEvents = getAllEventDates(organization.id);
-        setEvents(allEvents);
-      } catch (error) {
-        console.error('Failed to load events:', error);
+        setIsLoading(true);
+        setError(null);
+        const allEvents = await getAllEventDates(organization.id);
+
+        if (isMounted) {
+          setEvents(allEvents);
+        }
+      } catch (err) {
+        console.error('Failed to load events:', err);
+        if (isMounted) {
+          setError(err instanceof Error ? err : new Error('Unknown error'));
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     loadEvents();
+
+    return () => {
+      isMounted = false;
+    };
   }, [organization]);
 
-  // メモ化: すべてのイベントの出欠集計を計算
-  const eventSummaries = useMemo(() => {
-    if (!organization) return new Map();
-    const summaries = new Map();
-    events.forEach((event) => {
-      summaries.set(event.id, calculateEventTotalSummary(organization.id, event.id));
-    });
-    return summaries;
+  // すべてのイベントの出欠集計を非同期で計算
+  const [eventSummaries, setEventSummaries] = useState<Map<string, EventTotalSummary>>(new Map());
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadSummaries = async () => {
+      if (!organization || events.length === 0) {
+        setEventSummaries(new Map());
+        return;
+      }
+
+      const summaries = new Map<string, EventTotalSummary>();
+      for (const event of events) {
+        const summary = await calculateEventTotalSummary(organization.id, event.id);
+        summaries.set(event.id, summary);
+      }
+
+      if (isMounted) {
+        setEventSummaries(summaries);
+      }
+    };
+
+    loadSummaries();
+
+    return () => {
+      isMounted = false;
+    };
   }, [events, organization]);
 
   if (isLoading) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
         <LoadingSpinner message="イベント一覧を読み込み中..." />
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">エラーが発生しました: {error.message}</p>
+        </div>
       </main>
     );
   }

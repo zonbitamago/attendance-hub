@@ -9,6 +9,7 @@ import { setOrganizationContext } from '@/lib/supabase-storage';
 interface OrganizationContextValue {
   organization: Organization;
   isLoading: boolean;
+  error: Error | null;
 }
 
 const OrganizationContext = createContext<OrganizationContextValue | null>(null);
@@ -21,14 +22,38 @@ interface OrganizationProviderProps {
 export function OrganizationProvider({ organizationId, children }: OrganizationProviderProps) {
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    // RLS: Supabaseに組織コンテキストを設定
-    setOrganizationContext(organizationId);
+    let isMounted = true;
 
-    const org = getOrganizationById(organizationId);
-    setOrganization(org);
-    setIsLoading(false);
+    const fetchOrganization = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // RLS: Supabaseに組織コンテキストを設定
+        await setOrganizationContext(organizationId);
+
+        const org = await getOrganizationById(organizationId);
+
+        if (isMounted) {
+          setOrganization(org);
+          setIsLoading(false);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err : new Error('Unknown error'));
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchOrganization();
+
+    return () => {
+      isMounted = false;
+    };
   }, [organizationId]);
 
   // useMemoでコンテキスト値をメモ化
@@ -39,11 +64,20 @@ export function OrganizationProvider({ organizationId, children }: OrganizationP
     return {
       organization,
       isLoading,
+      error,
     };
-  }, [organization, isLoading]);
+  }, [organization, isLoading, error]);
 
   if (isLoading) {
     return <div>読み込み中...</div>;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <p>エラーが発生しました: {error.message}</p>
+      </div>
+    );
   }
 
   if (!value) {
