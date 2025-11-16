@@ -150,46 +150,54 @@ describe('出欠登録ページ', () => {
     test('イベント情報が表示される', async () => {
       render(<RegisterAttendancePage />);
 
-          await waitFor(() => {
-      expect(screen.getByText('出欠を登録')).toBeInTheDocument();
-          await waitFor(() => {
-      expect(screen.getByText('テストイベント')).toBeInTheDocument();
-          await waitFor(() => {
-      expect(screen.getByText(/2025年11月20日/)).toBeInTheDocument();
-          await waitFor(() => {
-      expect(screen.getByText('場所: テスト会場')).toBeInTheDocument();
-          });
+      await waitFor(() => {
+        expect(screen.getByText('出欠を登録')).toBeInTheDocument();
+      });
+      await waitFor(() => {
+        expect(screen.getByText('テストイベント')).toBeInTheDocument();
+      });
+      await waitFor(() => {
+        expect(screen.getByText(/2025年11月20日/)).toBeInTheDocument();
+      });
+      await waitFor(() => {
+        expect(screen.getByText('場所: テスト会場')).toBeInTheDocument();
+      });
+    });
 
     test('イベントが存在しない場合は組織トップページにリダイレクトされる', async () => {
       mockGetEventDateById.mockResolvedValue(null);
 
       render(<RegisterAttendancePage />);
 
-          await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/test-org-123');
-          });
+      await waitFor(() => {
+        expect(mockPush).toHaveBeenCalledWith('/test-org-123');
+      });
+    });
 
     test('グループが0件の場合は登録を促すメッセージが表示される', async () => {
       mockGetAllGroups.mockResolvedValue([]);
 
       render(<RegisterAttendancePage />);
 
-          await waitFor(() => {
-      expect(screen.getByText('グループが登録されていません')).toBeInTheDocument();
-          await waitFor(() => {
-      expect(screen.getByRole('link', { name: /グループを登録する/ })).toHaveAttribute(
-        'href',
-        '/test-org-123/admin/groups'
-      );
-          });
+      await waitFor(() => {
+        expect(screen.getByText('グループが登録されていません')).toBeInTheDocument();
+      });
+      await waitFor(() => {
+        expect(screen.getByRole('link', { name: /グループを登録する/ })).toHaveAttribute(
+          'href',
+          '/test-org-123/admin/groups'
+        );
+      });
+    });
 
     test('イベント詳細に戻るリンクが表示される', async () => {
       render(<RegisterAttendancePage />);
 
       const link = screen.getByRole('link', { name: /イベント詳細に戻る/ });
-          await waitFor(() => {
-      expect(link).toHaveAttribute('href', '/test-org-123/events/event-123');
-          });
+      await waitFor(() => {
+        expect(link).toHaveAttribute('href', '/test-org-123/events/event-123');
+      });
+    });
   });
 
   describe('グループ選択', () => {
@@ -197,13 +205,16 @@ describe('出欠登録ページ', () => {
       render(<RegisterAttendancePage />);
 
       const groupSelect = screen.getByLabelText(/1\. グループを選択/);
-          await waitFor(() => {
-      expect(groupSelect).toBeInTheDocument();
-          await waitFor(() => {
-      expect(screen.getByRole('option', { name: '打' })).toBeInTheDocument();
-          await waitFor(() => {
-      expect(screen.getByRole('option', { name: '投' })).toBeInTheDocument();
-          });
+      await waitFor(() => {
+        expect(groupSelect).toBeInTheDocument();
+      });
+      await waitFor(() => {
+        expect(screen.getByRole('option', { name: '打' })).toBeInTheDocument();
+      });
+      await waitFor(() => {
+        expect(screen.getByRole('option', { name: '投' })).toBeInTheDocument();
+      });
+    });
 
     test('グループを選択するとメンバー一覧が読み込まれる', async () => {
       render(<RegisterAttendancePage />);
@@ -213,7 +224,7 @@ describe('出欠登録ページ', () => {
 
       await waitFor(() => {
         expect(mockGetMembersByGroupId).toHaveBeenCalledWith('test-org-123', 'group-1');
-          });
+      });
 
       expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
       expect(screen.getByRole('option', { name: '山田太郎' })).toBeInTheDocument();
@@ -223,9 +234,10 @@ describe('出欠登録ページ', () => {
     test('グループ未選択の場合はメンバー選択が表示されない', async () => {
       render(<RegisterAttendancePage />);
 
-          await waitFor(() => {
-      expect(screen.queryByLabelText(/2\. メンバーを選択または新規登録/)).not.toBeInTheDocument();
-          });
+      await waitFor(() => {
+        expect(screen.queryByLabelText(/2\. メンバーを選択または新規登録/)).not.toBeInTheDocument();
+      });
+    });
   });
 
   describe('メンバー選択', () => {
@@ -268,7 +280,7 @@ describe('出欠登録ページ', () => {
 
       await waitFor(() => {
         expect(screen.getByText(/3\. 出欠状況を選択/)).toBeInTheDocument();
-          });
+      });
     });
 
     test('3つのステータスボタンが表示される', async () => {
@@ -304,7 +316,7 @@ describe('出欠登録ページ', () => {
 
       await waitFor(() => {
         expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-          });
+      });
 
       // メンバー選択
       const memberSelect = screen.getByLabelText(/既存のメンバーから選択/);
@@ -344,7 +356,7 @@ describe('出欠登録ページ', () => {
 
       await waitFor(() => {
         expect(screen.getByLabelText(/または新しい名前を入力/)).toBeInTheDocument();
-          });
+      });
 
       // 新規メンバー名入力
       const newMemberInput = screen.getByLabelText(/または新しい名前を入力/);
@@ -383,7 +395,7 @@ describe('出欠登録ページ', () => {
 
       await waitFor(() => {
         expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-          });
+      });
 
       // メンバー選択
       const memberSelect = screen.getByLabelText(/既存のメンバーから選択/);
@@ -404,9 +416,10 @@ describe('出欠登録ページ', () => {
       render(<RegisterAttendancePage />);
 
       const submitButton = screen.getByRole('button', { name: /登録する/ });
-          await waitFor(() => {
-      expect(submitButton).toBeDisabled(); // グループ未選択時は送信ボタンが無効
-          });
+      await waitFor(() => {
+        expect(submitButton).toBeDisabled(); // グループ未選択時は送信ボタンが無効
+      });
+    });
 
     test('メンバー未選択かつ新規名前未入力の場合はエラーが表示される', async () => {
       render(<RegisterAttendancePage />);
@@ -417,7 +430,7 @@ describe('出欠登録ページ', () => {
 
       await waitFor(() => {
         expect(screen.getByLabelText(/既存のメンバーから選択/)).toBeInTheDocument();
-          });
+      });
 
       // メンバー未選択のまま送信
       const submitButton = screen.getByRole('button', { name: /登録する/ });
@@ -436,7 +449,7 @@ describe('出欠登録ページ', () => {
       mockUseOrganization.mockReturnValue({
         organization: null as any,
         isLoading: false,
-      error: null,
+        error: null,
       });
 
       render(<RegisterAttendancePage />);
