@@ -1,0 +1,124 @@
+/**
+ * Supabase Storage Layer
+ * localStorage から Supabase PostgreSQL への移行
+ *
+ * このファイルは既存の lib/storage.ts と同じインターフェースを提供しますが、
+ * Supabase を使用してデータを永続化します。
+ */
+
+import type { EventDate, Group, Member, Attendance, Organization } from '@/types';
+import { supabase } from '@/lib/supabase/client';
+
+/**
+ * 組織データを取得
+ * @param organizationId 組織ID
+ * @returns 組織オブジェクト、または null
+ */
+export async function loadOrganizations(organizationId: string): Promise<Organization | null> {
+  const { data, error } = await supabase
+    .from('organizations')
+    .select('*')
+    .eq('id', organizationId)
+    .single();
+
+  if (error) {
+    console.error('Failed to load organization:', error);
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * 組織データを保存（upsert）
+ * @param organization 組織オブジェクト
+ * @returns 成功した場合 true、失敗した場合 false
+ */
+export async function saveOrganizations(organization: Organization): Promise<boolean> {
+  const { error } = await supabase
+    .from('organizations')
+    .upsert(organization);
+
+  if (error) {
+    console.error('Failed to save organization:', error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * イベント日付データを取得
+ * @param organizationId 組織ID
+ * @returns イベント日付の配列
+ */
+export async function loadEventDates(organizationId: string): Promise<EventDate[]> {
+  const { data, error } = await supabase
+    .from('event_dates')
+    .select('*')
+    .eq('organization_id', organizationId);
+
+  if (error) {
+    console.error('Failed to load event dates:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * イベント日付データを保存（upsert）
+ * @param eventDate イベント日付オブジェクト
+ * @returns 成功した場合 true、失敗した場合 false
+ */
+export async function saveEventDates(eventDate: EventDate): Promise<boolean> {
+  const { error } = await supabase
+    .from('event_dates')
+    .upsert(eventDate);
+
+  if (error) {
+    console.error('Failed to save event date:', error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * グループデータを取得
+ * @param organizationId 組織ID
+ * @returns グループの配列
+ */
+export async function loadGroups(organizationId: string): Promise<Group[]> {
+  const { data, error } = await supabase
+    .from('groups')
+    .select('*')
+    .eq('organization_id', organizationId);
+
+  if (error) {
+    console.error('Failed to load groups:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * グループデータを保存（upsert）
+ * @param group グループオブジェクト
+ * @returns 成功した場合 true、失敗した場合 false
+ */
+export async function saveGroups(group: Group): Promise<boolean> {
+  const { error } = await supabase
+    .from('groups')
+    .upsert(group);
+
+  if (error) {
+    console.error('Failed to save group:', error);
+    return false;
+  }
+
+  return true;
+}
+
+// TODO: 各関数を実装（TDDサイクルで段階的に実装）

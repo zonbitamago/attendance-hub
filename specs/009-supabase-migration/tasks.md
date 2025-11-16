@@ -140,39 +140,39 @@ Phase 3: US1  Phase 4: US2 (並行可能)
 ### Tasks
 
 **準備**
-- [ ] T021 [US1] lib/storage.ts の現在の実装を確認（localStorage操作のインターフェース把握）
-- [ ] T022 [US1] lib/supabase-storage.ts の骨格を作成（空のファイル、基本構造のみ）
-- [ ] T023 [US1] __tests__/lib/supabase-storage.test.ts の骨格を作成（describe構造のみ）
+- [X] T021 [US1] lib/storage.ts の現在の実装を確認（localStorage操作のインターフェース把握）
+- [X] T022 [US1] lib/supabase-storage.ts の骨格を作成（空のファイル、基本構造のみ）
+- [X] T023 [US1] __tests__/lib/supabase-storage.test.ts の骨格を作成（describe構造のみ）
 
 **Cycle 1: loadOrganizations**
-- [ ] T024 [Red] [US1] loadOrganizationsのテストを作成（失敗するテスト）
-- [ ] T025 [Green] [US1] loadOrganizationsを実装（テストを通す最小限の実装）
-- [ ] T026 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T024 [Red] [US1] loadOrganizationsのテストを作成（失敗するテスト）
+- [X] T025 [Green] [US1] loadOrganizationsを実装（テストを通す最小限の実装）
+- [X] T026 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 2: saveOrganizations**
-- [ ] T027 [Red] [US1] saveOrganizationsのテストを作成（失敗するテスト）
-- [ ] T028 [Green] [US1] saveOrganizationsを実装（テストを通す最小限の実装）
-- [ ] T029 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T027 [Red] [US1] saveOrganizationsのテストを作成（失敗するテスト）
+- [X] T028 [Green] [US1] saveOrganizationsを実装（テストを通す最小限の実装）
+- [X] T029 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 3: loadEventDates**
-- [ ] T030 [Red] [US1] loadEventDatesのテストを作成（失敗するテスト）
-- [ ] T031 [Green] [US1] loadEventDatesを実装（テストを通す最小限の実装）
-- [ ] T032 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T030 [Red] [US1] loadEventDatesのテストを作成（失敗するテスト）
+- [X] T031 [Green] [US1] loadEventDatesを実装（テストを通す最小限の実装）
+- [X] T032 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 4: saveEventDates**
-- [ ] T033 [Red] [US1] saveEventDatesのテストを作成（失敗するテスト）
-- [ ] T034 [Green] [US1] saveEventDatesを実装（テストを通す最小限の実装）
-- [ ] T035 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T033 [Red] [US1] saveEventDatesのテストを作成（失敗するテスト）
+- [X] T034 [Green] [US1] saveEventDatesを実装（テストを通す最小限の実装）
+- [X] T035 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 5: loadGroups**
-- [ ] T036 [Red] [US1] loadGroupsのテストを作成（失敗するテスト）
-- [ ] T037 [Green] [US1] loadGroupsを実装（テストを通す最小限の実装）
-- [ ] T038 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T036 [Red] [US1] loadGroupsのテストを作成（失敗するテスト）
+- [X] T037 [Green] [US1] loadGroupsを実装（テストを通す最小限の実装）
+- [X] T038 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 6: saveGroups**
-- [ ] T039 [Red] [US1] saveGroupsのテストを作成（失敗するテスト）
-- [ ] T040 [Green] [US1] saveGroupsを実装（テストを通す最小限の実装）
-- [ ] T041 [Refactor] [US1] テスト実行・確認、コード改善
+- [X] T039 [Red] [US1] saveGroupsのテストを作成（失敗するテスト）
+- [X] T040 [Green] [US1] saveGroupsを実装（テストを通す最小限の実装）
+- [X] T041 [Refactor] [US1] テスト実行・確認、コード改善
 
 **Cycle 7: loadMembers**
 - [ ] T042 [Red] [US1] loadMembersのテストを作成（失敗するテスト）
