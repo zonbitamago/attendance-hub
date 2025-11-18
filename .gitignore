@@ -48,3 +48,11 @@ Thumbs.db
 
 # Claude settings
 .claude/settings.local.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/e2e/test-state.json
+/e2e/storage-state.json

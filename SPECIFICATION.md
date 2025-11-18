@@ -1,7 +1,7 @@
 # attendance-hub 仕様書
 
-**バージョン:** 2.3.0
-**最終更新:** 2025-11-16
+**バージョン:** 2.4.0
+**最終更新:** 2025-11-18
 **ステータス:** 本番（Supabase PostgreSQL版、マルチテナント対応）
 
 ---
@@ -931,6 +931,7 @@ const summary = calculateEventTotalSummary('event1');
 | **イベント詳細** | `/[org]/events/[id]` | イベント詳細・全体集計・グループ別集計 |
 | **出欠登録** | `/[org]/events/[id]/register` | 出欠登録フォーム |
 | **複数イベント一括登録** | `/[org]/my-register` | 複数イベントの一括出欠登録 |
+| **使い方ガイド** | `/[org]/guide` | スクリーンショット付き操作ガイド（New! v2.4） |
 | **管理画面トップ** | `/[org]/admin` | 管理機能へのリンク |
 | **グループ管理** | `/[org]/admin/groups` | グループCRUD |
 | **イベント管理** | `/[org]/admin/events` | イベントCRUD |
@@ -1555,6 +1556,7 @@ chore: ビルド・設定変更
 | 2025-11-09 | 2.0.0 | マルチテナント対応（005-multi-tenant実装完了）<br>- Organization エンティティ追加<br>- 団体専用URL発行機能<br>- データ分離・プライバシー保護<br>- レガシーデータ自動マイグレーション<br>- OrganizationContext 実装<br>- テスト: 56 → 199 (143件追加) |
 | 2025-11-09 | 2.1.0 | CI/CDパイプライン設定（006-ci-cd-setup実装完了）<br>- GitHub Actions CI/CDワークフロー追加<br>- Jestカバレッジ監視（branches: 30%、functions: 50%、lines: 45%、statements: 45%）<br>- Node.js 20.x/22.xマトリックステスト<br>- 自動チェック: 型チェック、リント、テスト、ビルド<br>- テスト: 199 → 187（正確な数に修正） |
 | 2025-11-12 | 2.2.0 | テストカバレッジ拡張（008-test-coverage-expansion実装完了）<br>- ユーティリティ関数テスト追加（date-utils, error-utils: 70テスト、94-100%カバレッジ）<br>- ページコンポーネントテスト拡充（register, event-detail, admin pages: 106テスト、92-98%カバレッジ）<br>- UIコンポーネントテスト追加（bulk-register, event-detail: 35テスト、91-100%カバレッジ）<br>- 全体カバレッジ向上: statements 84.82%, branches 74.71%, functions 84.77%, lines 85.51%<br>- テスト: 234 → 411 (177件追加、26スイート)<br>- カバレッジ閾値を大幅に上回る品質達成 |
+| 2025-11-18 | 2.4.0 | 使い方ガイドページ追加<br>- `/[org]/guide` に操作ガイドページを新規追加<br>- 20枚のスクリーンショット付き詳細ガイド<br>- Playwright E2Eテストによるスクリーンショット自動生成<br>- `npm run capture-screenshots` コマンド追加 |
 
 ---
 

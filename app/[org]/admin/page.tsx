@@ -26,6 +26,12 @@ export default function AdminPage() {
           >
             → 一括出欠登録
           </Link>
+          <Link
+            href={`/${org}/guide`}
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium block"
+          >
+            → 使い方ガイド
+          </Link>
         </div>
 
         {/* ヘッダー */}
