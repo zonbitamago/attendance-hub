@@ -334,29 +334,23 @@ test.describe('使い方ガイド スクリーンショット', () => {
       await page.waitForLoadState('networkidle');
 
       // グループ選択
-      const groupSelect = page.locator('select').first();
+      const groupSelect = page.locator('#group');
       if (await groupSelect.isVisible()) {
-        const options = await groupSelect.locator('option').allTextContents();
-        if (options.length > 1) {
-          await groupSelect.selectOption({ index: 1 });
-          await page.waitForTimeout(500);
+        await groupSelect.selectOption({ index: 1 });
+        await page.waitForTimeout(500);
 
-          // メンバー選択
-          const memberSelect = page.locator('select').nth(1);
-          if (await memberSelect.isVisible()) {
-            const memberOptions = await memberSelect.locator('option').allTextContents();
-            if (memberOptions.length > 1) {
-              await memberSelect.selectOption({ index: 1 });
-              await page.waitForTimeout(300);
+        // 新しいメンバー名を入力
+        const nameInput = page.locator('#newMember');
+        if (await nameInput.isVisible()) {
+          await nameInput.fill('山田太郎');
+          await page.waitForTimeout(300);
+        }
 
-              // 参加ボタンをクリック
-              const attendButton = page.locator('button:has-text("◯")').first();
-              if (await attendButton.isVisible()) {
-                await attendButton.click();
-                await page.waitForTimeout(500);
-              }
-            }
-          }
+        // 参加ボタンをクリック
+        const attendButton = page.locator('button:has-text("◯")').first();
+        if (await attendButton.isVisible()) {
+          await attendButton.click();
+          await page.waitForTimeout(300);
         }
       }
 
@@ -364,6 +358,13 @@ test.describe('使い方ガイド スクリーンショット', () => {
         path: `${SCREENSHOT_DIR}/08-attendance-register-status-selected.png`,
         fullPage: true,
       });
+
+      // 実際に登録を行う（イベント詳細画面でアコーディオンを表示するため）
+      const submitButton = page.locator('button:has-text("登録する")');
+      if (await submitButton.isVisible()) {
+        await submitButton.click();
+        await page.waitForTimeout(1000);
+      }
     });
   });
 
@@ -391,8 +392,12 @@ test.describe('使い方ガイド スクリーンショット', () => {
       await page.goto(`/${orgId}/events/${eventId}`);
       await page.waitForLoadState('networkidle');
 
-      // 最初のアコーディオンをクリック
-      const accordion = page.locator('button[aria-expanded]').first();
+      // 開発ツールメニューを閉じる（ページ本体をクリック）
+      await page.click('body', { position: { x: 640, y: 300 } });
+      await page.waitForTimeout(100);
+
+      // 最初のアコーディオンをクリック（aria-controlsがあるボタンはアコーディオンのみ）
+      const accordion = page.locator('button[aria-controls]').first();
       if (await accordion.isVisible()) {
         await accordion.click();
         await page.waitForTimeout(300);
@@ -449,11 +454,21 @@ test.describe('使い方ガイド スクリーンショット', () => {
       await page.goto(`/${orgId}/my-register`);
       await page.waitForLoadState('networkidle');
 
+      // まずグループを選択
+      const groupSelect = page.locator('#group-select');
+      if (await groupSelect.isVisible()) {
+        const groupOptions = await groupSelect.locator('option').allTextContents();
+        if (groupOptions.length > 1) {
+          await groupSelect.selectOption({ index: 1 });
+          await page.waitForTimeout(500);
+        }
+      }
+
       // メンバーを選択
-      const memberSelect = page.locator('select').first();
+      const memberSelect = page.locator('#member-select');
       if (await memberSelect.isVisible()) {
-        const options = await memberSelect.locator('option').allTextContents();
-        if (options.length > 1) {
+        const memberOptions = await memberSelect.locator('option').allTextContents();
+        if (memberOptions.length > 1) {
           await memberSelect.selectOption({ index: 1 });
           await page.waitForTimeout(500);
         }
