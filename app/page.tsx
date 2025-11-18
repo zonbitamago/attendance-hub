@@ -236,6 +236,16 @@ export default function Home() {
           </div>
         </div>
 
+        {/* 使い方ガイドリンク */}
+        <div className="text-center mb-4">
+          <Link
+            href="/guide"
+            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+          >
+            使い方ガイドを見る →
+          </Link>
+        </div>
+
         {/* フッター */}
         <p className="text-xs text-center text-gray-500">
           作成後、専用URLをブックマークしてご利用ください
