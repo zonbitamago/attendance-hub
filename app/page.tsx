@@ -142,6 +142,14 @@ export default function Home() {
             >
               団体にアクセスする
             </Link>
+
+            {/* 使い方ガイドリンク */}
+            <Link
+              href={`/${createdOrganizationId}/guide`}
+              className="block w-full px-4 py-3 mt-3 bg-gray-100 text-gray-700 rounded-md font-medium hover:bg-gray-200 transition-colors text-center border border-gray-300"
+            >
+              使い方ガイドを見る
+            </Link>
           </div>
         </div>
       </main>
@@ -168,6 +176,7 @@ export default function Home() {
           </h2>
           <p className="text-sm text-gray-600 mb-4">
             団体を作成すると、専用のURLが発行されます。そのURLをブックマークすることで、いつでも団体の出欠管理にアクセスできます。
+            団体ページには使い方ガイドも用意されています。
           </p>
 
           {/* マイグレーションエラーメッセージ */}
