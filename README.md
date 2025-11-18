@@ -20,6 +20,7 @@
 - **個別ステータス設定**: イベントごとに異なる出欠状況を一括設定可能
 - **個人別出欠状況表示**: グループごとにメンバー名と出欠ステータス（◯/△/✗/-）を確認（New! v2.1）
 - **高度なフィルタ・ソート・検索**: 出欠状況でフィルタ、名前/ステータスでソート、メンバー名検索（New! v2.1）
+- **使い方ガイドページ**: スクリーンショット付きの操作ガイドを各団体ページに表示（New! v2.4）
 - **データ永続化**: Supabase PostgreSQLデータベースでデータを永続化、ローカルではlocalStorageも併用
 
 ### 📱 対応環境
@@ -84,6 +85,9 @@ npm test -- --watch
 
 # 型チェック
 npx tsc --noEmit
+
+# ガイド用スクリーンショット生成（E2E）
+npm run capture-screenshots
 ```
 
 ## プロジェクト構造
@@ -106,8 +110,10 @@ attendance-hub/
 │       │   └── [id]/
 │       │       ├── page.tsx          # イベント詳細
 │       │       └── register/page.tsx # 出欠登録
-│       └── my-register/          # 一括出欠登録
-│           └── page.tsx              # 複数イベント一括登録
+│       ├── my-register/          # 一括出欠登録
+│       │   └── page.tsx              # 複数イベント一括登録
+│       └── guide/                # 使い方ガイド
+│           └── page.tsx              # スクリーンショット付きガイド
 ├── contexts/              # React Context
 │   └── organization-context.tsx  # 団体コンテキスト
 ├── components/            # 再利用可能なコンポーネント
@@ -154,6 +160,9 @@ attendance-hub/
 │   ├── contexts/
 │   ├── integration/
 │   └── lib/
+├── e2e/                  # E2Eテスト（Playwright）
+│   └── capture-screenshots.spec.ts # ガイド用スクリーンショット生成
+├── public/images/guide/  # 使い方ガイドのスクリーンショット画像
 └── specs/                # 機能仕様・設計ドキュメント
     ├── 001-attendance-prototype/
     ├── 002-input-text-visibility/
@@ -305,4 +314,4 @@ MIT
 
 ---
 
-最終更新: 2025-11-16 (v2.3 - Supabase PostgreSQL対応)
+最終更新: 2025-11-18 (v2.4 - 使い方ガイドページ追加)
