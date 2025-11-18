@@ -124,6 +124,12 @@ export default function Home() {
           >
             → 管理画面（グループ・イベント日付の管理）
           </Link>
+          <Link
+            href={`/${org}/guide`}
+            className="block text-sm text-blue-600 hover:text-blue-700 font-medium"
+          >
+            → 使い方ガイド
+          </Link>
         </div>
 
         {/* イベント一覧 */}
