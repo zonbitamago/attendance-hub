@@ -1,8 +1,9 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import OrganizationsPage from '@/app/[org]/admin/organizations/page';
 import * as organizationService from '@/lib/organization-service';
 import * as OrganizationContextModule from '@/contexts/organization-context';
 import type { Organization } from '@/types';
+import { renderWithTheme, setupMatchMediaMock, clearDocumentClasses } from '../../../../utils/test-utils';
 
 // モック
 jest.mock('@/lib/organization-service');
@@ -48,10 +49,12 @@ describe('Organizations Admin Page', () => {
       isLoading: false,
       error: null,
     });
+    setupMatchMediaMock();
+    clearDocumentClasses();
   });
 
   it('should display organization information', () => {
-    render(<OrganizationsPage />);
+    renderWithTheme(<OrganizationsPage />);
 
     expect(screen.getByText('団体設定')).toBeInTheDocument();
     expect(screen.getByDisplayValue('テスト団体')).toBeInTheDocument();
@@ -65,7 +68,7 @@ describe('Organizations Admin Page', () => {
     };
     mockUpdateOrganization.mockResolvedValue(updatedOrg);
 
-    render(<OrganizationsPage />);
+    renderWithTheme(<OrganizationsPage />);
 
     const nameInput = screen.getByLabelText('団体名');
     fireEvent.change(nameInput, { target: { value: '新しい団体名' } });
@@ -88,7 +91,7 @@ describe('Organizations Admin Page', () => {
     };
     mockUpdateOrganization.mockResolvedValue(updatedOrg);
 
-    render(<OrganizationsPage />);
+    renderWithTheme(<OrganizationsPage />);
 
     const descInput = screen.getByLabelText(/説明/);
     fireEvent.change(descInput, { target: { value: '新しい説明' } });
@@ -105,7 +108,7 @@ describe('Organizations Admin Page', () => {
   });
 
   it('should show delete confirmation dialog', () => {
-    render(<OrganizationsPage />);
+    renderWithTheme(<OrganizationsPage />);
 
     const deleteButton = screen.getByRole('button', { name: /団体を削除/ });
     fireEvent.click(deleteButton);
@@ -117,7 +120,7 @@ describe('Organizations Admin Page', () => {
   it('should delete organization and redirect to home', async () => {
     mockDeleteOrganization.mockResolvedValue(undefined);
 
-    render(<OrganizationsPage />);
+    renderWithTheme(<OrganizationsPage />);
 
     // 削除ボタンをクリック
     const deleteButton = screen.getByRole('button', { name: /団体を削除/ });
@@ -134,7 +137,7 @@ describe('Organizations Admin Page', () => {
   });
 
   it('should cancel deletion when clicking cancel button', () => {
-    render(<OrganizationsPage />);
+    renderWithTheme(<OrganizationsPage />);
 
     // 削除ボタンをクリック
     const deleteButton = screen.getByRole('button', { name: /団体を削除/ });
@@ -154,7 +157,7 @@ describe('Organizations Admin Page', () => {
   it('should display error message when update fails', async () => {
     mockUpdateOrganization.mockRejectedValue(new Error('更新に失敗しました'));
 
-    render(<OrganizationsPage />);
+    renderWithTheme(<OrganizationsPage />);
 
     const nameInput = screen.getByLabelText('団体名');
     fireEvent.change(nameInput, { target: { value: '新しい名前' } });

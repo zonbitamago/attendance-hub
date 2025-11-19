@@ -11,12 +11,13 @@
  * - 成功メッセージと失敗メッセージ
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter, useParams } from 'next/navigation';
 import MyRegisterPage from '@/app/[org]/my-register/page';
 import { useOrganization } from '@/contexts/organization-context';
 import * as attendanceService from '@/lib/attendance-service';
 import * as memberService from '@/lib/member-service';
+import { renderWithTheme, setupMatchMediaMock, clearDocumentClasses } from '../../../utils/test-utils';
 
 // モックの設定
 jest.mock('next/navigation', () => ({
@@ -156,6 +157,8 @@ jest.mock('next/link', () => {
       updated: [],
       failed: [],
     });
+    setupMatchMediaMock();
+    clearDocumentClasses();
   });
 
   afterEach(() => {
@@ -165,7 +168,7 @@ jest.mock('next/link', () => {
 
   describe('基本表示', () => {
     test('ページタイトルが表示される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       await waitFor(() => {
         expect(screen.getByText('一括出欠登録')).toBeInTheDocument();
@@ -173,7 +176,7 @@ jest.mock('next/link', () => {
     });
 
     test('トップページへ戻るリンクが表示される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const backLink = screen.getByRole('link', { name: /トップページへ戻る/ });
       await waitFor(() => {
@@ -182,7 +185,7 @@ jest.mock('next/link', () => {
     });
 
     test('MemberSelectorコンポーネントが表示される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       await waitFor(() => {
         expect(screen.getByTestId('member-selector')).toBeInTheDocument();
@@ -190,7 +193,7 @@ jest.mock('next/link', () => {
     });
 
     test('メンバー未選択時はEventListが非表示', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       await waitFor(() => {
         expect(screen.queryByTestId('event-list')).not.toBeInTheDocument();
@@ -200,7 +203,7 @@ jest.mock('next/link', () => {
 
   describe('メンバー選択', () => {
     test('メンバー選択時にEventListが表示される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectButton);
@@ -211,7 +214,7 @@ jest.mock('next/link', () => {
     });
 
     test('メンバー選択時にmemberSelectionステートが保存される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectButton);
@@ -225,7 +228,7 @@ jest.mock('next/link', () => {
 
   describe('イベント選択', () => {
     test('イベント選択時に選択一覧が更新される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       // メンバーを選択
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
@@ -242,7 +245,7 @@ jest.mock('next/link', () => {
     });
 
     test('イベント選択時にデフォルトステータス「◯」が設定される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -257,7 +260,7 @@ jest.mock('next/link', () => {
 
   describe('イベントステータス変更', () => {
     test('個別イベントステータス変更が反映される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -275,7 +278,7 @@ jest.mock('next/link', () => {
 
   describe('一括登録処理', () => {
     test('有効な入力で登録するとupsertBulkAttendancesが呼ばれる', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -303,7 +306,7 @@ jest.mock('next/link', () => {
         createdAt: '2025-01-01T00:00:00.000Z',
       });
 
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '新規メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -323,7 +326,7 @@ jest.mock('next/link', () => {
     });
 
     test('登録成功時は成功メッセージが表示される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -346,7 +349,7 @@ jest.mock('next/link', () => {
         failed: [],
       });
 
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -369,7 +372,7 @@ jest.mock('next/link', () => {
         failed: [{ input: { eventDateId: 'event-2', memberId: 'member-1', status: '◯' }, error: 'Failed to register' }],
       });
 
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -386,7 +389,7 @@ jest.mock('next/link', () => {
     });
 
     test('成功時は1秒後にトップページにリダイレクトされる', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -410,7 +413,7 @@ jest.mock('next/link', () => {
 
   describe('バリデーション', () => {
     test('メンバー未選択時はエラーメッセージが表示される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       // フォームを直接送信しようとする
       const form = screen.getByRole('button', { name: '既存メンバーを選択' }).closest('form');
@@ -425,7 +428,7 @@ jest.mock('next/link', () => {
     });
 
     test('イベント未選択時はエラーメッセージが表示される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -439,7 +442,7 @@ jest.mock('next/link', () => {
 
   describe('UI状態管理', () => {
     test('送信中はボタンが無効化される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);
@@ -462,7 +465,7 @@ jest.mock('next/link', () => {
     });
 
     test('イベント選択数が登録ボタンに表示される', async () => {
-      render(<MyRegisterPage />);
+      renderWithTheme(<MyRegisterPage />);
 
       const selectMemberButton = screen.getByRole('button', { name: '既存メンバーを選択' });
       fireEvent.click(selectMemberButton);

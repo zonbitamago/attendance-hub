@@ -29,6 +29,12 @@ attendance-hub/
 │   │   └── page.tsx              # 複数イベント一括登録
 │   └── globals.css        # Tailwind CSS
 ├── components/            # 再利用可能なコンポーネント
+│   ├── ui/                # 共通UIコンポーネント（デザインシステム）
+│   │   ├── button.tsx           # ボタン（primary/secondary/danger/ghost）
+│   │   ├── input.tsx            # 入力フィールド
+│   │   ├── card.tsx             # カードコンテナ
+│   │   ├── message.tsx          # メッセージ（error/success/warning/info）
+│   │   └── heading.tsx          # 見出し（h1-h6）
 │   ├── bulk-register/     # 一括登録関連コンポーネント
 │   │   ├── member-selector.tsx   # メンバー選択
 │   │   └── event-list.tsx        # イベント一覧
@@ -197,6 +203,33 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 - [ ] 新規入力欄に `text-gray-900 placeholder:text-gray-400` が含まれているか
 - [ ] 既存の入力欄スタイルと一貫性があるか
 
+#### デザインシステムコンポーネント（推奨）
+
+新規ページや機能を実装する際は、`@/components/ui/`の共通コンポーネントを**必ず使用**してください：
+
+```tsx
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Message } from '@/components/ui/message';
+import { Heading } from '@/components/ui/heading';
+```
+
+**コンポーネント一覧**:
+- **Button**: `variant="primary|secondary|danger|ghost"`
+- **Input**: `ariaLabel`必須、`error`プロパティでエラー表示
+- **Card**: コンテンツのグループ化に使用
+- **Message**: `type="error|success|warning|info"`
+- **Heading**: `level={1-6}`で見出しレベルを指定
+
+**チェックリスト**:
+- [ ] ボタンに`<Button>`コンポーネントを使用しているか
+- [ ] 入力欄に`<Input>`コンポーネントを使用しているか（`ariaLabel`必須）
+- [ ] コンテンツグループに`<Card>`を使用しているか
+- [ ] メッセージ表示に`<Message>`を使用しているか
+- [ ] 見出しに`<Heading>`を使用しているか
+- [ ] ダークモード対応のクラス（`dark:`プレフィックス）が含まれているか
+
 ### テスト（TDD）
 
 - **Red-Green-Refactor**: t-wadaのTDD原則に従う
@@ -208,6 +241,13 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 
 ## 最近の変更
 
+- **2025-11-19**: 011-design-system フィーチャーを完了（v2.6 - 統合デザインシステム）
+  - 5つの共通UIコンポーネント実装（Button, Input, Card, Message, Heading）
+  - 全11ページにコンポーネントを適用し、UI一貫性を確保
+  - ダークモード対応（prefers-color-schemeに基づく自動切り替え）
+  - WCAG 2.1 AA準拠のアクセシビリティ
+  - TDDで80テスト追加（コンポーネントテスト）
+  - 565テスト全てpass、ビルド成功
 - **2025-11-19**: 010-unified-storage フィーチャーを完了（v2.5 - 統合ストレージ層）
   - 環境に応じて自動的にlocalStorageとSupabaseを切り替える統合ストレージ層を実装
   - `lib/unified-storage.ts` - ストレージモード検出とFacadeパターンによる統一インターフェース

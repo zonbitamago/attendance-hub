@@ -3,6 +3,8 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useOrganization } from '@/contexts/organization-context';
+import { Heading } from '@/components/ui/heading';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export default function AdminPage() {
   const params = useParams();
@@ -10,34 +12,38 @@ export default function AdminPage() {
   const { organization } = useOrganization();
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
+      {/* テーマ切替 */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ナビゲーション */}
-        <div className="mb-6 space-y-2">
+        <div className="mb-6 sm:mb-8 space-y-2">
           <Link
             href={`/${org}`}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium flex items-center gap-1"
           >
             ← トップページに戻る
           </Link>
           <Link
             href={`/${org}/my-register`}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium block"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium block"
           >
             → 一括出欠登録
           </Link>
           <Link
             href={`/${org}/guide`}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium block"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium block"
           >
             → 使い方ガイド
           </Link>
         </div>
 
         {/* ヘッダー */}
-        <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">管理画面</h1>
-          <p className="text-sm sm:text-base text-gray-600">
+        <div className="mb-6 sm:mb-8">
+          <Heading level={1} className="mb-2">管理画面</Heading>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
             グループとイベント日付を管理できます
           </p>
         </div>
@@ -47,12 +53,12 @@ export default function AdminPage() {
           {/* グループ管理 */}
           <Link
             href={`/${org}/admin/groups`}
-            className="block bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+            className="block bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md dark:hover:bg-gray-700/50 transition-shadow"
           >
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-blue-600 dark:text-blue-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -66,8 +72,8 @@ export default function AdminPage() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">グループ管理</h2>
-                <p className="text-sm text-gray-600">
+                <Heading level={2} className="mb-1">グループ管理</Heading>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   グループの作成・編集・削除・並び替えを行います
                 </p>
               </div>
@@ -77,12 +83,12 @@ export default function AdminPage() {
           {/* イベント日付管理 */}
           <Link
             href={`/${org}/admin/events`}
-            className="block bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+            className="block bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md dark:hover:bg-gray-700/50 transition-shadow"
           >
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+              <div className="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-green-600"
+                  className="w-6 h-6 text-green-600 dark:text-green-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -96,8 +102,8 @@ export default function AdminPage() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">イベント日付管理</h2>
-                <p className="text-sm text-gray-600">
+                <Heading level={2} className="mb-1">イベント日付管理</Heading>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   イベント日付の作成・編集・削除を行います
                 </p>
               </div>

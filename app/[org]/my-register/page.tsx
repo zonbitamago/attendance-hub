@@ -8,6 +8,11 @@ import { MemberSelector, type MemberSelection } from '@/components/bulk-register
 import { EventList } from '@/components/bulk-register/event-list';
 import { upsertBulkAttendances } from '@/lib/attendance-service';
 import { saveMember } from '@/lib/member-service';
+import { Card } from '@/components/ui/card';
+import { Heading } from '@/components/ui/heading';
+import { Message } from '@/components/ui/message';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import type { AttendanceStatus } from '@/types';
 
 export default function MyRegisterPage() {
@@ -125,28 +130,32 @@ export default function MyRegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 sm:py-8 relative">
+      {/* テーマ切替 */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-6">
+        <div className="mb-6 sm:mb-8">
           <Link
             href={`/${org}`}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium flex items-center gap-1"
           >
             ← トップページへ戻る
           </Link>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">一括出欠登録</h1>
+        <Heading level={1} className="mb-6 sm:mb-8">一括出欠登録</Heading>
 
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           {/* メンバー選択 */}
-          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <Card>
             <MemberSelector onSelect={handleMemberSelect} organizationId={organization.id} />
-          </div>
+          </Card>
 
           {/* イベント選択（メンバーが選択された後に表示） */}
           {memberSelection && (
-            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <Card>
               <EventList
                 memberId={memberSelection.memberId}
                 selectedEvents={selectedEvents}
@@ -155,33 +164,30 @@ export default function MyRegisterPage() {
                 onStatusChange={handleEventStatusChange}
                 organizationId={organization.id}
               />
-            </div>
+            </Card>
           )}
 
           {/* 登録ボタン */}
           {memberSelection && selectedEvents.length > 0 && (
-            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-              <button
+            <Card>
+              <Button
                 type="submit"
+                variant="primary"
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="w-full"
               >
                 {isSubmitting ? '登録中...' : `${selectedEvents.length}件のイベントに登録`}
-              </button>
-            </div>
+              </Button>
+            </Card>
           )}
 
           {/* メッセージ表示 */}
           {message && (
-            <div
-              className={`p-4 rounded-md ${
-                message.includes('エラー') || message.includes('失敗')
-                  ? 'bg-red-50 text-red-800'
-                  : 'bg-green-50 text-green-800'
-              }`}
+            <Message
+              type={message.includes('エラー') || message.includes('失敗') ? 'error' : 'success'}
             >
               {message}
-            </div>
+            </Message>
           )}
         </form>
       </div>

@@ -26,3 +26,10 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Dark mode support for native date picker (popup and icon) */
+.dark input[type="date"],
+.dark input[type="time"],
+.dark input[type="datetime-local"] {
+  color-scheme: dark;
+}

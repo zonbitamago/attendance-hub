@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import Home from '@/app/[org]/page';
 import * as eventService from '@/lib/event-service';
 import * as attendanceService from '@/lib/attendance-service';
 import * as organizationContext from '@/contexts/organization-context';
 import type { EventDate, Organization } from '@/types';
+import { renderWithTheme, setupMatchMediaMock, clearDocumentClasses } from '../../utils/test-utils';
 
 // モック
 jest.mock('@/lib/event-service');
@@ -55,6 +56,8 @@ describe('Home Page (Event List)', () => {
       isLoading: false,
       error: null,
     });
+    setupMatchMediaMock();
+    clearDocumentClasses();
   });
 
   describe('Loading State', () => {
@@ -64,7 +67,7 @@ describe('Home Page (Event List)', () => {
         () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
       );
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       // ローディング中は「イベント一覧を読み込み中...」が表示される
       expect(screen.getByText(/イベント一覧を読み込み中/)).toBeInTheDocument();
@@ -90,7 +93,7 @@ describe('Home Page (Event List)', () => {
         totalResponded: 8,
       });
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       // データ取得後はローディングメッセージが消える
       await waitFor(() => {
@@ -128,7 +131,7 @@ describe('Home Page (Event List)', () => {
         totalResponded: 4,
       });
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(screen.getByText('イベント1')).toBeInTheDocument();
@@ -140,7 +143,7 @@ describe('Home Page (Event List)', () => {
     it('should display empty state when no events exist', async () => {
       mockGetAllEventDates.mockResolvedValue([]);
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(screen.getByText('イベント日付が登録されていません')).toBeInTheDocument();
@@ -167,7 +170,7 @@ describe('Home Page (Event List)', () => {
         totalResponded: 15,
       });
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(screen.getByText('◯ 10人')).toBeInTheDocument();
@@ -184,7 +187,7 @@ describe('Home Page (Event List)', () => {
 
       mockGetAllEventDates.mockRejectedValue(new Error('Network error'));
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(screen.queryByText(/イベント一覧を読み込み中/)).not.toBeInTheDocument();
@@ -201,7 +204,7 @@ describe('Home Page (Event List)', () => {
     it('should display organization name and description', async () => {
       mockGetAllEventDates.mockResolvedValue([]);
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(screen.getByText('テスト団体')).toBeInTheDocument();

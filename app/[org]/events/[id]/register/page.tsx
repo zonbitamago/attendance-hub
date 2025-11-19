@@ -10,6 +10,11 @@ import { createAttendance } from '@/lib/attendance-service';
 import { formatLongDate } from '@/lib/date-utils';
 import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
+import { Card } from '@/components/ui/card';
+import { Heading } from '@/components/ui/heading';
+import { Message } from '@/components/ui/message';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import type { EventDate, Group, Member, AttendanceStatus } from '@/types';
 
 export default function RegisterAttendancePage() {
@@ -146,7 +151,7 @@ export default function RegisterAttendancePage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <LoadingSpinner message="読み込み中..." />
       </main>
     );
@@ -154,9 +159,9 @@ export default function RegisterAttendancePage() {
 
   if (loadError) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600">エラーが発生しました: {loadError.message}</p>
+          <Message type="error">エラーが発生しました: {loadError.message}</Message>
         </div>
       </main>
     );
@@ -167,36 +172,40 @@ export default function RegisterAttendancePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
+      {/* テーマ切替 */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ナビゲーション */}
-        <div className="mb-6">
+        <div className="mb-6 sm:mb-8">
           <Link
             href={`/${params.org as string}/events/${eventId}`}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium flex items-center gap-1"
           >
             ← イベント詳細に戻る
           </Link>
         </div>
 
         {/* ヘッダー */}
-        <div className="mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">出欠を登録</h1>
-          <div className="text-sm text-gray-600">
+        <div className="mb-6 sm:mb-8">
+          <Heading level={1} className="mb-2">出欠を登録</Heading>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
             <p className="font-medium">{event.title}</p>
             <p>{formatLongDate(event.date)}</p>
-            {event.location && <p className="text-xs text-gray-500 mt-1">場所: {event.location}</p>}
+            {event.location && <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">場所: {event.location}</p>}
           </div>
         </div>
 
         {/* フォーム */}
-        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+        <Card>
           {groups.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 mb-4">グループが登録されていません</p>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">グループが登録されていません</p>
               <Link
                 href={`/${params.org as string}/admin/groups`}
-                className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors text-sm"
+                className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors text-sm"
               >
                 グループを登録する
               </Link>
@@ -205,14 +214,14 @@ export default function RegisterAttendancePage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* グループ選択 */}
               <div>
-                <label htmlFor="group" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="group" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   1. グループを選択 <span className="text-red-500">*</span>
                 </label>
                 <select
                   id="group"
                   value={selectedGroupId}
                   onChange={(e) => setSelectedGroupId(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder:text-gray-400"
                   required
                 >
                   <option value="">-- 選択してください --</option>
@@ -227,13 +236,13 @@ export default function RegisterAttendancePage() {
               {/* メンバー選択または新規作成 */}
               {selectedGroupId && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     2. メンバーを選択または新規登録 <span className="text-red-500">*</span>
                   </label>
 
                   {members.length > 0 && (
                     <div className="mb-3">
-                      <label htmlFor="member" className="block text-xs text-gray-600 mb-1">
+                      <label htmlFor="member" className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
                         既存のメンバーから選択
                       </label>
                       <select
@@ -243,7 +252,7 @@ export default function RegisterAttendancePage() {
                           setSelectedMemberId(e.target.value);
                           if (e.target.value) setNewMemberName('');
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder:text-gray-400"
                         disabled={!!newMemberName}
                       >
                         <option value="">-- 選択してください --</option>
@@ -257,7 +266,7 @@ export default function RegisterAttendancePage() {
                   )}
 
                   <div>
-                    <label htmlFor="newMember" className="block text-xs text-gray-600 mb-1">
+                    <label htmlFor="newMember" className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
                       または新しい名前を入力
                     </label>
                     <input
@@ -268,7 +277,7 @@ export default function RegisterAttendancePage() {
                         setNewMemberName(e.target.value);
                         if (e.target.value) setSelectedMemberId('');
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder:text-gray-400"
                       placeholder="名前を入力"
                       disabled={!!selectedMemberId}
                     />
@@ -279,7 +288,7 @@ export default function RegisterAttendancePage() {
               {/* 出欠ステータス選択 */}
               {selectedGroupId && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     3. 出欠状況を選択 <span className="text-red-500">*</span>
                   </label>
                   <div className="grid grid-cols-3 gap-3">
@@ -288,8 +297,8 @@ export default function RegisterAttendancePage() {
                       onClick={() => setStatus('◯')}
                       className={`p-4 border-2 rounded-lg font-medium transition-all ${
                         status === '◯'
-                          ? 'border-green-500 bg-green-50 text-green-700'
-                          : 'border-gray-200 hover:border-green-300'
+                          ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-green-300 dark:hover:border-green-500 text-gray-900 dark:text-gray-100'
                       }`}
                     >
                       <div className="text-2xl mb-1">◯</div>
@@ -301,8 +310,8 @@ export default function RegisterAttendancePage() {
                       onClick={() => setStatus('△')}
                       className={`p-4 border-2 rounded-lg font-medium transition-all ${
                         status === '△'
-                          ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
-                          : 'border-gray-200 hover:border-yellow-300'
+                          ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-yellow-300 dark:hover:border-yellow-500 text-gray-900 dark:text-gray-100'
                       }`}
                     >
                       <div className="text-2xl mb-1">△</div>
@@ -314,8 +323,8 @@ export default function RegisterAttendancePage() {
                       onClick={() => setStatus('✗')}
                       className={`p-4 border-2 rounded-lg font-medium transition-all ${
                         status === '✗'
-                          ? 'border-red-500 bg-red-50 text-red-700'
-                          : 'border-gray-200 hover:border-red-300'
+                          ? 'border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-red-300 dark:hover:border-red-500 text-gray-900 dark:text-gray-100'
                       }`}
                     >
                       <div className="text-2xl mb-1">✗</div>
@@ -327,24 +336,23 @@ export default function RegisterAttendancePage() {
 
               {/* エラーメッセージ */}
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-                  <p className="text-sm text-red-600">{error}</p>
-                </div>
+                <Message type="error">{error}</Message>
               )}
 
               {/* 送信ボタン */}
               <div className="pt-2">
-                <button
+                <Button
                   type="submit"
+                  variant="primary"
                   disabled={isSubmitting || !selectedGroupId}
-                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full"
                 >
                   {isSubmitting ? '登録中...' : '登録する'}
-                </button>
+                </Button>
               </div>
             </form>
           )}
-        </div>
+        </Card>
       </div>
     </main>
   );
