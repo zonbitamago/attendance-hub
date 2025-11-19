@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useOrganization } from '@/contexts/organization-context';
 import { updateOrganization, deleteOrganization } from '@/lib/organization-service';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export default function OrganizationsPage() {
   const router = useRouter();
@@ -52,7 +53,11 @@ export default function OrganizationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
+      {/* テーマ切替 */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* ヘッダー */}
         <div className="mb-6">

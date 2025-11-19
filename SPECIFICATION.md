@@ -1,8 +1,8 @@
 # attendance-hub 仕様書
 
-**バージョン:** 2.5.0
+**バージョン:** 2.6.0
 **最終更新:** 2025-11-19
-**ステータス:** 本番（Supabase PostgreSQL版、マルチテナント対応）
+**ステータス:** 本番（Supabase PostgreSQL版、マルチテナント対応、統合デザインシステム）
 
 ---
 
@@ -109,7 +109,7 @@
 
 - **自動チェック**: 型チェック、リント、テスト（カバレッジ測定付き）、ビルド検証
 - **カバレッジ閾値**: branches: 30%、functions: 50%、lines: 45%、statements: 45%（達成状況: 84.82%/74.71%/84.77%/85.51%）
-- **テスト数**: 485テスト（31スイート）
+- **テスト数**: 565テスト（36スイート）
 
 ### 2.2 アーキテクチャ概要
 
@@ -131,6 +131,12 @@
 │  └─ organization-context.tsx                 │
 ├─────────────────────────────────────────────┤
 │  Components (components/)                    │
+│  ├─ ui/ (デザインシステム)                    │
+│  │  ├─ button.tsx                            │
+│  │  ├─ input.tsx                             │
+│  │  ├─ card.tsx                              │
+│  │  ├─ message.tsx                           │
+│  │  └─ heading.tsx                           │
 │  ├─ loading-spinner.tsx                      │
 │  └─ skeleton.tsx                             │
 ├─────────────────────────────────────────────┤
@@ -176,6 +182,12 @@ attendance-hub/
 ├── contexts/              # React Context（New! v2.0）
 │   └── organization-context.tsx
 ├── components/            # 再利用可能なコンポーネント
+│   ├── ui/                # 共通UIコンポーネント（デザインシステム）（New! v2.6）
+│   │   ├── button.tsx         # ボタン（primary/secondary/danger/ghost）
+│   │   ├── input.tsx          # 入力フィールド
+│   │   ├── card.tsx           # カードコンテナ
+│   │   ├── message.tsx        # メッセージ（error/success/warning/info）
+│   │   └── heading.tsx        # 見出し（h1-h6）
 │   ├── loading-spinner.tsx
 │   └── skeleton.tsx
 ├── lib/                   # ビジネスロジック
@@ -1604,6 +1616,7 @@ chore: ビルド・設定変更
 | 2025-11-12 | 2.2.0 | テストカバレッジ拡張（008-test-coverage-expansion実装完了）<br>- ユーティリティ関数テスト追加（date-utils, error-utils: 70テスト、94-100%カバレッジ）<br>- ページコンポーネントテスト拡充（register, event-detail, admin pages: 106テスト、92-98%カバレッジ）<br>- UIコンポーネントテスト追加（bulk-register, event-detail: 35テスト、91-100%カバレッジ）<br>- 全体カバレッジ向上: statements 84.82%, branches 74.71%, functions 84.77%, lines 85.51%<br>- テスト: 234 → 411 (177件追加、26スイート)<br>- カバレッジ閾値を大幅に上回る品質達成 |
 | 2025-11-18 | 2.4.0 | 使い方ガイドページ追加<br>- `/[org]/guide` に操作ガイドページを新規追加<br>- 20枚のスクリーンショット付き詳細ガイド<br>- Playwright E2Eテストによるスクリーンショット自動生成<br>- `npm run capture-screenshots` コマンド追加 |
 | 2025-11-19 | 2.5.0 | 統合ストレージ層実装（010-unified-storage実装完了）<br>- `lib/unified-storage.ts` 追加（Facadeパターン）<br>- 環境に応じてlocalStorage/Supabaseを自動切替<br>- 本番環境: Supabase自動使用<br>- ローカル環境: localStorage（デフォルト）またはSupabase（`dev:supabase`）<br>- `npm run dev:supabase` コマンド追加<br>- 全サービスファイルを統合ストレージ層経由に更新<br>- テスト: 467 → 485 (18件追加、31スイート) |
+| 2025-11-19 | 2.6.0 | 統合デザインシステム実装（011-design-system実装完了）<br>- 5つの共通UIコンポーネント追加（Button, Input, Card, Message, Heading）<br>- 全11ページにコンポーネントを適用しUI一貫性を確保<br>- ダークモード対応（prefers-color-schemeに基づく自動切り替え）<br>- WCAG 2.1 AA準拠のアクセシビリティ<br>- TDDで80テスト追加（コンポーネントテスト）<br>- テスト: 485 → 565 (80件追加、36スイート) |
 
 ---
 

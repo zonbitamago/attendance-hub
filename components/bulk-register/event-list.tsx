@@ -54,10 +54,10 @@ export function EventList({
 
   return (
     <div className="space-y-3">
-      <h3 className="text-base sm:text-lg font-semibold text-gray-800">イベントを選択</h3>
+      <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-200">イベントを選択</h3>
 
       {eventDates.length === 0 ? (
-        <p className="text-sm sm:text-base text-gray-500">イベントがありません</p>
+        <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">イベントがありません</p>
       ) : (
         <div className="space-y-2">
           {eventDates.map((event) => {
@@ -67,7 +67,7 @@ export function EventList({
             return (
               <div
                 key={event.id}
-                className="border border-gray-200 rounded-lg p-3 sm:p-4 hover:bg-gray-50 transition-colors"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <div className="flex items-start gap-3">
                   <input
@@ -79,9 +79,9 @@ export function EventList({
                   />
 
                   <div className="flex-1">
-                    <div className="font-medium text-gray-900">{event.title}</div>
+                    <div className="font-medium text-gray-900 dark:text-gray-100">{event.title}</div>
 
-                    <div className="text-sm text-gray-600 mt-1">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                       <div>{event.date}</div>
                       <div>{event.location}</div>
                     </div>
@@ -97,7 +97,7 @@ export function EventList({
                       <div className="mt-3">
                         <label
                           htmlFor={`status-${event.id}`}
-                          className="block text-xs font-medium text-gray-700 mb-1"
+                          className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
                         >
                           このイベントのステータス
                         </label>
@@ -108,7 +108,7 @@ export function EventList({
                           onChange={(e) =>
                             onStatusChange(event.id, e.target.value as AttendanceStatus)
                           }
-                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+                          className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
                         >
                           <option value="◯">◯ 出席</option>
                           <option value="△">△ 未定</option>

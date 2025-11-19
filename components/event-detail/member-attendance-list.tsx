@@ -33,7 +33,7 @@ export function MemberAttendanceList({
   // 元のメンバーリストが空の場合は早期リターン
   if (members.length === 0) {
     return (
-      <div className="py-4 text-center text-gray-500">
+      <div className="py-4 text-center text-gray-500 dark:text-gray-400">
         メンバーがいません
       </div>
     );
@@ -85,7 +85,7 @@ export function MemberAttendanceList({
   // フィルタリング後に0件になった場合
   if (sortedMembers.length === 0) {
     return (
-      <div className="py-4 text-center text-gray-500">
+      <div className="py-4 text-center text-gray-500 dark:text-gray-400">
         条件に該当するメンバーがいません
       </div>
     );
@@ -106,9 +106,9 @@ export function MemberAttendanceList({
         return (
           <li
             key={member.memberId}
-            className="flex justify-between items-center py-2 px-3 bg-white border border-gray-200 rounded"
+            className="flex justify-between items-center py-2 px-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded"
           >
-            <span className="font-medium text-gray-900">{member.memberName}</span>
+            <span className="font-medium text-gray-900 dark:text-gray-100">{member.memberName}</span>
             <span className={`font-bold text-xl ${statusColor}`}>
               {member.status ?? '-'}
             </span>

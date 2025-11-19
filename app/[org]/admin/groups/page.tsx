@@ -6,6 +6,12 @@ import Link from 'next/link';
 import { getAllGroups, createGroup, updateGroup, deleteGroup } from '@/lib/group-service';
 import { useOrganization } from '@/contexts/organization-context';
 import LoadingSpinner from '@/components/loading-spinner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Message } from '@/components/ui/message';
+import { Heading } from '@/components/ui/heading';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import type { Group } from '@/types';
 
 export default function AdminGroupsPage() {
@@ -135,133 +141,130 @@ export default function AdminGroupsPage() {
 
   if (loadError) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600">エラーが発生しました: {loadError.message}</p>
+          <Message type="error">エラーが発生しました: {loadError.message}</Message>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
+      {/* テーマ切替 */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ナビゲーション */}
-        <div className="mb-6">
+        <div className="mb-6 sm:mb-8">
           <Link
             href={`/${org}/admin`}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium flex items-center gap-1"
           >
             ← 管理画面に戻る
           </Link>
         </div>
 
         {/* ヘッダー */}
-        <div className="mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">グループ管理</h1>
-          <p className="text-sm sm:text-base text-gray-600">
+        <div className="mb-6 sm:mb-8">
+          <Heading level={1} className="mb-2">グループ管理</Heading>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
             グループの作成・編集・削除を行います
           </p>
         </div>
 
         {/* フォーム */}
-        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">
+        <Card className="mb-6 sm:mb-8">
+          <Heading level={2} className="mb-4">
             {editingGroup ? 'グループを編集' : '新しいグループを作成'}
-          </h2>
+          </Heading>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 グループ名 <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
+              <Input
                 id="name"
+                name="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
                 placeholder="例: 打, Cla, Sax"
                 required
+                ariaLabel="グループ名"
               />
             </div>
 
             <div>
-              <label htmlFor="order" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="order" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 表示順序 <span className="text-red-500">*</span>
               </label>
-              <input
+              <Input
                 type="number"
                 id="order"
-                value={formData.order}
+                name="order"
+                value={formData.order.toString()}
                 onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
-                min="0"
+                min={0}
                 required
+                ariaLabel="表示順序"
               />
-              <p className="text-xs text-gray-500 mt-1">小さい数字ほど上に表示されます</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">小さい数字ほど上に表示されます</p>
             </div>
 
             <div>
-              <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="color" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 カラーコード（任意）
               </label>
               <div className="flex gap-2">
-                <input
-                  type="text"
+                <Input
                   id="color"
+                  name="color"
                   value={formData.color}
                   onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+                  className="flex-1"
                   placeholder="例: #3B82F6"
                   pattern="^#[0-9A-Fa-f]{6}$"
+                  ariaLabel="カラーコード"
                 />
                 {formData.color && (
                   <div
-                    className="w-10 h-10 rounded border border-gray-300"
+                    className="w-10 h-10 rounded border border-gray-300 dark:border-gray-600 flex-shrink-0"
                     style={{ backgroundColor: formData.color }}
                   />
                 )}
               </div>
-              <p className="text-xs text-gray-500 mt-1">#RRGGBB形式で入力してください</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">#RRGGBB形式で入力してください</p>
             </div>
 
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-sm text-red-600">{error}</p>
-              </div>
+              <Message type="error">{error}</Message>
             )}
 
             <div className="flex gap-2">
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors"
-              >
+              <Button type="submit" variant="primary">
                 {editingGroup ? '更新' : '作成'}
-              </button>
+              </Button>
               {isEditing && (
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md font-medium hover:bg-gray-300 transition-colors"
-                >
+                <Button type="button" variant="secondary" onClick={handleCancel}>
                   キャンセル
-                </button>
+                </Button>
               )}
             </div>
           </form>
-        </div>
+        </Card>
 
         {/* グループ一覧 */}
-        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">登録済みグループ</h2>
+        <Card>
+          <Heading level={2} className="mb-4">登録済みグループ</Heading>
           {groups.length === 0 ? (
-            <p className="text-gray-500 text-sm">グループが登録されていません</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">グループが登録されていません</p>
           ) : (
             <div className="space-y-2">
               {groups.map((group) => (
                 <div
                   key={group.id}
-                  className="flex items-center gap-3 p-3 border border-gray-200 rounded-md hover:bg-gray-50"
+                  className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50"
                 >
                   {group.color && (
                     <div
@@ -270,28 +273,22 @@ export default function AdminGroupsPage() {
                     />
                   )}
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-gray-900">{group.name}</div>
-                    <div className="text-xs text-gray-500">表示順序: {group.order}</div>
+                    <div className="font-medium text-gray-900 dark:text-gray-100">{group.name}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">表示順序: {group.order}</div>
                   </div>
                   <div className="flex gap-2 flex-shrink-0">
-                    <button
-                      onClick={() => handleEdit(group)}
-                      className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => handleEdit(group)}>
                       編集
-                    </button>
-                    <button
-                      onClick={() => handleDelete(group.id)}
-                      className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
-                    >
+                    </Button>
+                    <Button variant="danger" size="sm" onClick={() => handleDelete(group.id)}>
                       削除
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </main>
   );

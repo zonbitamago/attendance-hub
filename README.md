@@ -21,6 +21,8 @@
 - **個人別出欠状況表示**: グループごとにメンバー名と出欠ステータス（◯/△/✗/-）を確認（New! v2.1）
 - **高度なフィルタ・ソート・検索**: 出欠状況でフィルタ、名前/ステータスでソート、メンバー名検索（New! v2.1）
 - **使い方ガイドページ**: スクリーンショット付きの操作ガイドを各団体ページに表示（New! v2.4）
+- **統合デザインシステム**: 一貫性のあるUI/UXを実現する共通コンポーネント（New! v2.6）
+- **ダークモード対応**: システム設定に応じた自動テーマ切り替え（New! v2.6）
 - **データ永続化**: Supabase PostgreSQLデータベースでデータを永続化、ローカルではlocalStorageも併用
 
 ### 📱 対応環境
@@ -41,6 +43,49 @@
 - **日付処理**: [date-fns 4.1](https://date-fns.org/)
 - **ID生成**: [nanoid 5.1](https://github.com/ai/nanoid)
 - **テスト**: [Jest 29](https://jestjs.io/) + [React Testing Library 16](https://testing-library.com/)
+
+## デザインシステム
+
+アプリケーション全体で一貫したUI/UXを実現するため、5つの共通UIコンポーネントを提供しています。
+
+### コンポーネント一覧
+
+| コンポーネント | 説明 | バリアント |
+|---------------|------|-----------|
+| **Button** | インタラクティブなアクション用ボタン | `primary`, `secondary`, `danger`, `ghost` |
+| **Input** | フォーム入力フィールド（テキスト、パスワード等） | - |
+| **Card** | コンテンツをグループ化するコンテナ | - |
+| **Message** | フィードバックメッセージ表示 | `error`, `success`, `warning`, `info` |
+| **Heading** | セマンティックな見出し（h1〜h6） | `level={1-6}` |
+
+### 使用例
+
+```tsx
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Message } from '@/components/ui/message';
+import { Heading } from '@/components/ui/heading';
+
+// カード内にフォームを配置
+<Card>
+  <Heading level={2}>ログイン</Heading>
+  <Input
+    type="email"
+    placeholder="メールアドレス"
+    ariaLabel="メールアドレス"
+  />
+  <Button variant="primary">送信</Button>
+  <Message type="error">エラーが発生しました</Message>
+</Card>
+```
+
+### 特徴
+
+- **アクセシビリティ**: WCAG 2.1 AA準拠、適切なARIA属性
+- **ダークモード**: `prefers-color-scheme`に基づく自動切り替え
+- **レスポンシブ**: モバイルからデスクトップまで対応
+- **TypeScript**: 完全な型定義とforwardRef対応
 
 ## セットアップ
 
@@ -131,6 +176,12 @@ attendance-hub/
 ├── contexts/              # React Context
 │   └── organization-context.tsx  # 団体コンテキスト
 ├── components/            # 再利用可能なコンポーネント
+│   ├── ui/                # 共通UIコンポーネント（デザインシステム）
+│   │   ├── button.tsx           # ボタン（primary/secondary/danger/ghost）
+│   │   ├── input.tsx            # 入力フィールド
+│   │   ├── card.tsx             # カードコンテナ
+│   │   ├── message.tsx          # メッセージ（error/success/warning/info）
+│   │   └── heading.tsx          # 見出し（h1-h6）
 │   ├── bulk-register/     # 一括登録関連コンポーネント
 │   │   ├── member-selector.tsx   # メンバー選択
 │   │   └── event-list.tsx        # イベント一覧
@@ -157,7 +208,7 @@ attendance-hub/
 │   └── date-utils.ts     # 日付フォーマット
 ├── types/                 # TypeScript型定義
 │   └── index.ts
-├── __tests__/            # テスト（485テスト）
+├── __tests__/            # テスト（485テスト、カバレッジ90%+）
 │   ├── app/
 │   │   ├── page.test.tsx            # トップページテスト
 │   │   └── [org]/
@@ -277,7 +328,12 @@ attendance-hub/
 - **イベント管理ページ**: イベントCRUD、日付選択、useMemoメモ化 (26テスト、93.82%カバレッジ)
 - **団体設定ページ**: 団体情報編集・削除
 
-**UIコンポーネント** (35テスト):
+**UIコンポーネント** (115テスト):
+- **Button**: ボタンコンポーネント - 4バリアント、disabled、ローディング状態 (100%カバレッジ)
+- **Input**: 入力フィールド - テキスト/パスワード、バリデーション、アクセシビリティ (100%カバレッジ)
+- **Card**: カードコンテナ - 子要素、カスタムクラス (100%カバレッジ)
+- **Message**: メッセージ表示 - 4タイプ、閉じるボタン (100%カバレッジ)
+- **Heading**: 見出し - h1〜h6レベル (100%カバレッジ)
 - **MemberSelector**: メンバー選択コンポーネント (100%カバレッジ)
 - **EventList**: イベント一覧コンポーネント (91.66%カバレッジ)
 - **AttendanceFilters**: フィルタ・ソート・検索 (100%カバレッジ)
@@ -329,4 +385,4 @@ MIT
 
 ---
 
-最終更新: 2025-11-18 (v2.4 - 使い方ガイドページ追加)
+最終更新: 2025-11-19 (v2.6 - 統合デザインシステム、ダークモード対応)

@@ -53,17 +53,17 @@ export function GroupAttendanceAccordion({
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg mb-2">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg mb-2">
       <button
         type="button"
         onClick={() => onToggle(groupId)}
         onKeyDown={handleKeyDown}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        className="w-full px-4 py-3 text-left font-semibold text-gray-900 bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-4 py-3 text-left font-semibold text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <span>{groupName}</span>
-        <span className="text-gray-500">{isExpanded ? '▼' : '▶'}</span>
+        <span className="text-gray-500 dark:text-gray-400">{isExpanded ? '▼' : '▶'}</span>
       </button>
 
       {isExpanded && (

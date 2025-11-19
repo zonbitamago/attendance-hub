@@ -11,12 +11,14 @@
  * - メモ化（useMemo）の動作確認
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter, useParams } from 'next/navigation';
 import EventDetailPage from '@/app/[org]/events/[id]/page';
 import { useOrganization } from '@/contexts/organization-context';
 import * as eventService from '@/lib/event-service';
 import * as attendanceService from '@/lib/attendance-service';
+import { renderWithTheme, setupMatchMediaMock, clearDocumentClasses } from '../../../../utils/test-utils';
+import { ThemeProvider } from '@/components/ui/theme-provider';
 
 // モックの設定
 jest.mock('next/navigation', () => ({
@@ -151,6 +153,8 @@ describe('イベント詳細ページ', () => {
     mockCalculateEventSummary.mockResolvedValue(mockSummaries);
     mockCalculateEventTotalSummary.mockResolvedValue(mockTotalSummary);
     mockGetGroupMemberAttendances.mockResolvedValue(mockGroupMembers);
+    setupMatchMediaMock();
+    clearDocumentClasses();
   });
 
   describe('基本表示', () => {
@@ -161,12 +165,12 @@ describe('イベント詳細ページ', () => {
         error: null,
       });
 
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
       expect(screen.getByText('イベント情報を読み込み中...')).toBeInTheDocument();
     });
 
     test('イベント情報が表示される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('テストイベント')).toBeInTheDocument();
@@ -178,7 +182,7 @@ describe('イベント詳細ページ', () => {
     test('イベントが存在しない場合は組織トップページにリダイレクトされる', async () => {
       mockGetEventDateById.mockResolvedValue(null);
 
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         expect(mockPush).toHaveBeenCalledWith('/test-org-123');
@@ -186,7 +190,7 @@ describe('イベント詳細ページ', () => {
     });
 
     test('出欠登録ボタンが表示される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         const registerLink = screen.getByRole('link', { name: /出欠を登録する/ });
@@ -195,7 +199,7 @@ describe('イベント詳細ページ', () => {
     });
 
     test('トップページに戻るリンクが表示される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         const backLink = screen.getByRole('link', { name: /トップページに戻る/ });
@@ -206,7 +210,7 @@ describe('イベント詳細ページ', () => {
 
   describe('全体出欠集計', () => {
     test('全体集計が正しく表示される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         // 全体出欠状況セクションを探す
@@ -231,7 +235,7 @@ describe('イベント詳細ページ', () => {
         totalResponded: 0,
       });
 
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('まだ出欠登録がありません')).toBeInTheDocument();
@@ -241,7 +245,7 @@ describe('イベント詳細ページ', () => {
 
   describe('グループ別出欠集計', () => {
     test('グループ別集計が表示される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         // グループ名が表示される
@@ -257,7 +261,7 @@ describe('イベント詳細ページ', () => {
     });
 
     test('グループアコーディオンが展開/折りたたみできる', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         // 初期状態では閉じている
@@ -280,7 +284,7 @@ describe('イベント詳細ページ', () => {
 
   describe('フィルター・ソート・検索', () => {
     test('AttendanceFiltersコンポーネントが正しいpropsで表示される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         // AttendanceFiltersが表示されていることを確認
@@ -290,7 +294,7 @@ describe('イベント詳細ページ', () => {
     });
 
     test('フィルターの状態変更がAttendanceFiltersに渡される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         const filterSelect = screen.getByLabelText('フィルタ:');
@@ -304,7 +308,7 @@ describe('イベント詳細ページ', () => {
     });
 
     test('検索クエリの状態変更がAttendanceFiltersに渡される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         const searchInput = screen.getByPlaceholderText('メンバー名で検索');
@@ -318,7 +322,7 @@ describe('イベント詳細ページ', () => {
     });
 
     test('ソートの切り替えがAttendanceFiltersに渡される', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         const sortButton = screen.getByRole('button', { name: /名前順/ });
@@ -334,7 +338,7 @@ describe('イベント詳細ページ', () => {
 
   describe('useMemoメモ化', () => {
     test('totalSummaryがメモ化されている', async () => {
-      const { rerender } = render(<EventDetailPage />);
+      const { rerender } = renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         // 初回レンダリング
@@ -342,7 +346,11 @@ describe('イベント詳細ページ', () => {
       });
 
       // eventIdが変わらずに再レンダリング
-      rerender(<EventDetailPage />);
+      rerender(
+        <ThemeProvider defaultTheme="system">
+          <EventDetailPage />
+        </ThemeProvider>
+      );
 
       await waitFor(() => {
         // メモ化されているため、再計算されない
@@ -351,7 +359,7 @@ describe('イベント詳細ページ', () => {
     });
 
     test('groupMembersMapがメモ化されている', async () => {
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         // 初回レンダリングで各グループのメンバーを取得
@@ -370,7 +378,7 @@ describe('イベント詳細ページ', () => {
         error: null,
       });
 
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         // ローディングが終わっても何も表示されない
@@ -382,7 +390,7 @@ describe('イベント詳細ページ', () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       mockGetEventDateById.mockRejectedValue(new Error('Failed to load event'));
 
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to load event:', expect.any(Error));
@@ -395,7 +403,7 @@ describe('イベント詳細ページ', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
       mockGetEventDateById.mockRejectedValue(new Error('ネットワークエラー'));
 
-      render(<EventDetailPage />);
+      renderWithTheme(<EventDetailPage />);
 
       await waitFor(() => {
         expect(screen.queryByText(/イベント情報を読み込み中/)).not.toBeInTheDocument();

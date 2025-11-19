@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 /**
  * 使い方ガイドの各セクション
@@ -201,38 +202,39 @@ const guideSections: GuideSection[] = [
 
 export default function PublicGuidePage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-8 px-4">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* ナビゲーション */}
-        <nav className="mb-6">
+        <nav className="mb-6 flex justify-between items-center">
           <Link
             href="/"
-            className="text-blue-600 hover:text-blue-800"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
           >
             ← トップページに戻る
           </Link>
+          <ThemeToggle />
         </nav>
 
         {/* ヘッダー */}
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             使い方ガイド
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Attendance Hubの基本的な使い方を説明します。
           </p>
         </header>
 
         {/* 目次 */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">目次</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">目次</h2>
           <nav>
             <ul className="space-y-2">
               {guideSections.map((section) => (
                 <li key={section.id}>
                   <a
                     href={`#${section.id}`}
-                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
                   >
                     {section.title}
                   </a>
@@ -248,22 +250,22 @@ export default function PublicGuidePage() {
             <section
               key={section.id}
               id={section.id}
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6"
             >
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {section.title}
               </h2>
-              <p className="text-gray-600 mb-6">{section.description}</p>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">{section.description}</p>
 
               <div className="space-y-8">
                 {section.steps.map((step, index) => (
-                  <div key={index} className="border-l-4 border-blue-500 pl-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <div key={index} className="border-l-4 border-blue-500 dark:border-blue-400 pl-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                       {step.title}
                     </h3>
-                    <p className="text-gray-600 mb-4">{step.description}</p>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">{step.description}</p>
                     {step.image && (
-                      <div className="relative bg-gray-100 rounded-lg overflow-hidden">
+                      <div className="relative bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
                         <Image
                           src={step.image}
                           alt={step.imageAlt || step.title}
@@ -283,12 +285,12 @@ export default function PublicGuidePage() {
 
         {/* フッター */}
         <footer className="mt-12 text-center">
-          <p className="text-gray-500 text-sm mb-4">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
             ご不明な点がございましたら、管理者にお問い合わせください。
           </p>
           <Link
             href="/"
-            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors"
+            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
           >
             団体を作成する
           </Link>

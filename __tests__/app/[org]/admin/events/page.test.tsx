@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { screen, waitFor, fireEvent } from '@testing-library/react';
 import AdminEventsPage from '@/app/[org]/admin/events/page';
 import * as eventService from '@/lib/event-service';
 import * as attendanceService from '@/lib/attendance-service';
 import * as organizationContext from '@/contexts/organization-context';
 import type { EventDate, Organization } from '@/types';
+import { renderWithTheme, setupMatchMediaMock, clearDocumentClasses } from '../../../../utils/test-utils';
 
 // モック
 jest.mock('@/lib/event-service');
@@ -87,6 +88,8 @@ describe('Admin Events Page', () => {
       error: null,
     });
     mockGetAllEventDates.mockResolvedValue(testEvents);
+    setupMatchMediaMock();
+    clearDocumentClasses();
     mockCalculateEventTotalSummary.mockResolvedValue({
       totalAttending: 5,
       totalMaybe: 2,
@@ -101,12 +104,12 @@ describe('Admin Events Page', () => {
         () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
       );
 
-      render(<AdminEventsPage />);
+      renderWithTheme(<AdminEventsPage />);
       expect(screen.getByText(/イベント日付を読み込み中/)).toBeInTheDocument();
     });
 
     it('should hide loading spinner after events are fetched', async () => {
-      render(<AdminEventsPage />);
+      renderWithTheme(<AdminEventsPage />);
 
       await waitFor(() => {
         expect(screen.queryByText(/イベント日付を読み込み中/)).not.toBeInTheDocument();
@@ -117,7 +120,7 @@ describe('Admin Events Page', () => {
 
   describe('Event List Display', () => {
     it('should display event list when events exist', async () => {
-      render(<AdminEventsPage />);
+      renderWithTheme(<AdminEventsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('テストイベント1')).toBeInTheDocument();
@@ -128,7 +131,7 @@ describe('Admin Events Page', () => {
     it('should display empty state when no events exist', async () => {
       mockGetAllEventDates.mockResolvedValue([]);
 
-      render(<AdminEventsPage />);
+      renderWithTheme(<AdminEventsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('イベント日付が登録されていません')).toBeInTheDocument();
@@ -141,7 +144,7 @@ describe('Admin Events Page', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
       mockGetAllEventDates.mockRejectedValue(new Error('Network error'));
 
-      render(<AdminEventsPage />);
+      renderWithTheme(<AdminEventsPage />);
 
       await waitFor(() => {
         expect(screen.queryByText(/イベント日付を読み込み中/)).not.toBeInTheDocument();
@@ -154,7 +157,7 @@ describe('Admin Events Page', () => {
     it('should handle error when creating event fails', async () => {
       mockCreateEventDate.mockRejectedValue(new Error('作成に失敗しました'));
 
-      render(<AdminEventsPage />);
+      renderWithTheme(<AdminEventsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('新しいイベント日付を作成')).toBeInTheDocument();
@@ -187,7 +190,7 @@ describe('Admin Events Page', () => {
 
       mockCreateEventDate.mockResolvedValue(newEvent);
 
-      render(<AdminEventsPage />);
+      renderWithTheme(<AdminEventsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('新しいイベント日付を作成')).toBeInTheDocument();
@@ -216,7 +219,7 @@ describe('Admin Events Page', () => {
       mockDeleteEventDate.mockResolvedValue(true);
       global.confirm = jest.fn(() => true);
 
-      render(<AdminEventsPage />);
+      renderWithTheme(<AdminEventsPage />);
 
       await waitFor(() => {
         const deleteButtons = screen.getAllByRole('button', { name: '削除' });

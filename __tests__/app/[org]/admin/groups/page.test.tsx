@@ -10,11 +10,12 @@
  * - エラーハンドリング
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter, useParams } from 'next/navigation';
 import AdminGroupsPage from '@/app/[org]/admin/groups/page';
 import { useOrganization } from '@/contexts/organization-context';
 import * as groupService from '@/lib/group-service';
+import { renderWithTheme, setupMatchMediaMock, clearDocumentClasses } from '../../../../utils/test-utils';
 
 // モックの設定
 jest.mock('next/navigation', () => ({
@@ -111,6 +112,8 @@ describe('グループ管理ページ', () => {
     });
 
     mockGetAllGroups.mockResolvedValue(mockGroups);
+    setupMatchMediaMock();
+    clearDocumentClasses();
   });
 
   describe('基本表示', () => {
@@ -120,12 +123,12 @@ describe('グループ管理ページ', () => {
         () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
       );
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
       expect(screen.getByText('グループ情報を読み込み中...')).toBeInTheDocument();
     });
 
     test('ローディング完了後はコンテンツが表示される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.queryByText('グループ情報を読み込み中...')).not.toBeInTheDocument();
@@ -134,7 +137,7 @@ describe('グループ管理ページ', () => {
     });
 
     test('ページタイトルと説明が表示される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('グループ管理')).toBeInTheDocument();
@@ -143,7 +146,7 @@ describe('グループ管理ページ', () => {
     });
 
     test('管理画面に戻るリンクが表示される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const backLink = screen.getByRole('link', { name: /管理画面に戻る/ });
@@ -154,7 +157,7 @@ describe('グループ管理ページ', () => {
     test('グループが0件の場合はメッセージが表示される', async () => {
       mockGetAllGroups.mockResolvedValue([]);
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('グループが登録されていません')).toBeInTheDocument();
@@ -164,7 +167,7 @@ describe('グループ管理ページ', () => {
 
   describe('グループ一覧表示', () => {
     test('グループ一覧が表示される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('登録済みグループ')).toBeInTheDocument();
@@ -176,7 +179,7 @@ describe('グループ管理ページ', () => {
     });
 
     test('各グループに編集・削除ボタンが表示される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const editButtons = screen.getAllByRole('button', { name: '編集' });
@@ -188,7 +191,7 @@ describe('グループ管理ページ', () => {
     });
 
     test('カラーコードが設定されている場合は色が表示される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const colorBoxes = screen.getAllByRole('generic').filter((el) => {
@@ -202,7 +205,7 @@ describe('グループ管理ページ', () => {
 
   describe('グループ作成', () => {
     test('新規作成フォームが表示される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('新しいグループを作成')).toBeInTheDocument();
@@ -223,7 +226,7 @@ describe('グループ管理ページ', () => {
       };
       mockCreateGroup.mockResolvedValue(newGroup);
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('新しいグループを作成')).toBeInTheDocument();
@@ -258,7 +261,7 @@ describe('グループ管理ページ', () => {
       };
       mockCreateGroup.mockResolvedValue(newGroup);
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('新しいグループを作成')).toBeInTheDocument();
@@ -291,7 +294,7 @@ describe('グループ管理ページ', () => {
       };
       mockCreateGroup.mockResolvedValue(newGroup);
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('新しいグループを作成')).toBeInTheDocument();
@@ -314,7 +317,7 @@ describe('グループ管理ページ', () => {
 
   describe('グループ編集', () => {
     test('編集ボタンをクリックするとフォームに既存データが入力される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const editButtons = screen.getAllByRole('button', { name: '編集' });
@@ -331,7 +334,7 @@ describe('グループ管理ページ', () => {
     });
 
     test('編集中はフォームタイトルが「グループを編集」になる', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const editButtons = screen.getAllByRole('button', { name: '編集' });
@@ -342,7 +345,7 @@ describe('グループ管理ページ', () => {
     });
 
     test('編集中は更新ボタンとキャンセルボタンが表示される', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const editButtons = screen.getAllByRole('button', { name: '編集' });
@@ -354,7 +357,7 @@ describe('グループ管理ページ', () => {
     });
 
     test('グループ名を変更して更新ボタンをクリックするとupdateGroupが呼ばれる', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const editButtons = screen.getAllByRole('button', { name: '編集' });
@@ -377,7 +380,7 @@ describe('グループ管理ページ', () => {
     });
 
     test('キャンセルボタンをクリックするとフォームがクリアされる', async () => {
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const editButtons = screen.getAllByRole('button', { name: '編集' });
@@ -397,7 +400,7 @@ describe('グループ管理ページ', () => {
     test('削除ボタンをクリックすると確認ダイアログが表示される', async () => {
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const deleteButtons = screen.getAllByRole('button', { name: '削除' });
@@ -414,7 +417,7 @@ describe('グループ管理ページ', () => {
     test('確認ダイアログでOKを選択するとdeleteGroupが呼ばれる', async () => {
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const deleteButtons = screen.getAllByRole('button', { name: '削除' });
@@ -431,7 +434,7 @@ describe('グループ管理ページ', () => {
     test('確認ダイアログでキャンセルを選択するとdeleteGroupが呼ばれない', async () => {
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const deleteButtons = screen.getAllByRole('button', { name: '削除' });
@@ -449,7 +452,7 @@ describe('グループ管理ページ', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
       mockGetAllGroups.mockRejectedValue(new Error('Network error'));
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.queryByText(/グループ情報を読み込み中/)).not.toBeInTheDocument();
@@ -462,7 +465,7 @@ describe('グループ管理ページ', () => {
     test('createGroup失敗時はエラーメッセージが表示される', async () => {
       mockCreateGroup.mockRejectedValue(new Error('作成に失敗しました'));
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.getByText('新しいグループを作成')).toBeInTheDocument();
@@ -484,7 +487,7 @@ describe('グループ管理ページ', () => {
     test('updateGroup失敗時はエラーメッセージが表示される', async () => {
       mockUpdateGroup.mockRejectedValue(new Error('更新に失敗しました'));
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const editButtons = screen.getAllByRole('button', { name: '編集' });
@@ -505,7 +508,7 @@ describe('グループ管理ページ', () => {
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
       mockDeleteGroup.mockRejectedValue(new Error('削除に失敗しました'));
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         const deleteButtons = screen.getAllByRole('button', { name: '削除' });
@@ -525,7 +528,7 @@ describe('グループ管理ページ', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
       mockGetAllGroups.mockRejectedValue(new Error('データの読み込みに失敗しました'));
 
-      render(<AdminGroupsPage />);
+      renderWithTheme(<AdminGroupsPage />);
 
       await waitFor(() => {
         expect(screen.queryByText(/グループを読み込み中/)).not.toBeInTheDocument();

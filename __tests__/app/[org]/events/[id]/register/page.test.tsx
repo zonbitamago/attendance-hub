@@ -11,7 +11,7 @@
  * - バリデーションとエラーハンドリング
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter, useParams } from 'next/navigation';
 import RegisterAttendancePage from '@/app/[org]/events/[id]/register/page';
 import { useOrganization } from '@/contexts/organization-context';
@@ -19,6 +19,7 @@ import * as eventService from '@/lib/event-service';
 import * as groupService from '@/lib/group-service';
 import * as memberService from '@/lib/member-service';
 import * as attendanceService from '@/lib/attendance-service';
+import { renderWithTheme, setupMatchMediaMock, clearDocumentClasses } from '../../../../../utils/test-utils';
 
 // モックの設定
 jest.mock('next/navigation', () => ({
@@ -135,6 +136,8 @@ describe('出欠登録ページ', () => {
     mockGetEventDateById.mockResolvedValue(mockEvent);
     mockGetAllGroups.mockResolvedValue(mockGroups);
     mockGetMembersByGroupId.mockResolvedValue(mockMembers);
+    setupMatchMediaMock();
+    clearDocumentClasses();
   });
 
   describe('基本表示', () => {
@@ -145,12 +148,12 @@ describe('出欠登録ページ', () => {
         error: null,
       });
 
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
       expect(screen.getByText('読み込み中...')).toBeInTheDocument();
     });
 
     test('イベント情報が表示される', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       await waitFor(() => {
         expect(screen.getByText('出欠を登録')).toBeInTheDocument();
@@ -169,7 +172,7 @@ describe('出欠登録ページ', () => {
     test('イベントが存在しない場合は組織トップページにリダイレクトされる', async () => {
       mockGetEventDateById.mockResolvedValue(null);
 
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       await waitFor(() => {
         expect(mockPush).toHaveBeenCalledWith('/test-org-123');
@@ -179,7 +182,7 @@ describe('出欠登録ページ', () => {
     test('グループが0件の場合は登録を促すメッセージが表示される', async () => {
       mockGetAllGroups.mockResolvedValue([]);
 
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       await waitFor(() => {
         expect(screen.getByText('グループが登録されていません')).toBeInTheDocument();
@@ -193,7 +196,7 @@ describe('出欠登録ページ', () => {
     });
 
     test('イベント詳細に戻るリンクが表示される', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       const link = await screen.findByRole('link', { name: /イベント詳細に戻る/ });
       expect(link).toHaveAttribute('href', '/test-org-123/events/event-123');
@@ -202,7 +205,7 @@ describe('出欠登録ページ', () => {
 
   describe('グループ選択', () => {
     test('グループ一覧が表示される', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       expect(groupSelect).toBeInTheDocument();
@@ -211,7 +214,7 @@ describe('出欠登録ページ', () => {
     });
 
     test('グループを選択するとメンバー一覧が読み込まれる', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
@@ -226,7 +229,7 @@ describe('出欠登録ページ', () => {
     });
 
     test('グループ未選択の場合はメンバー選択が表示されない', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       await waitFor(() => {
         expect(screen.queryByLabelText(/2\. メンバーを選択または新規登録/)).not.toBeInTheDocument();
@@ -236,7 +239,7 @@ describe('出欠登録ページ', () => {
 
   describe('メンバー選択', () => {
     beforeEach(async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
@@ -266,7 +269,7 @@ describe('出欠登録ページ', () => {
 
   describe('出欠ステータス選択', () => {
     beforeEach(async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
       fireEvent.change(groupSelect, { target: { value: 'group-1' } });
@@ -299,7 +302,7 @@ describe('出欠登録ページ', () => {
 
   describe('フォーム送信', () => {
     test('既存メンバーで出欠登録が成功する', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       // グループ選択
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
@@ -335,7 +338,7 @@ describe('出欠登録ページ', () => {
       };
       mockCreateMember.mockResolvedValue(newMember);
 
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       // グループ選択
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
@@ -370,7 +373,7 @@ describe('出欠登録ページ', () => {
     });
 
     test('送信中は二重送信が防止される', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       // グループ選択
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
@@ -392,7 +395,7 @@ describe('出欠登録ページ', () => {
 
   describe('バリデーションエラー', () => {
     test('グループ未選択の場合はエラーが表示される', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       // データのロード完了を待ってから送信ボタンを探す
       const submitButton = await screen.findByRole('button', { name: /登録する/ });
@@ -400,7 +403,7 @@ describe('出欠登録ページ', () => {
     });
 
     test('メンバー未選択かつ新規名前未入力の場合はエラーが表示される', async () => {
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       // グループ選択
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
@@ -429,7 +432,7 @@ describe('出欠登録ページ', () => {
         error: null,
       });
 
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       // グループ選択（モックデータがないためスキップ）
       // 送信ボタンがないため、テストは組織情報がない状態での動作を確認
@@ -443,7 +446,7 @@ describe('出欠登録ページ', () => {
         throw new Error('メンバー作成に失敗しました');
       });
 
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       // グループ選択
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
@@ -469,7 +472,7 @@ describe('出欠登録ページ', () => {
         throw new Error('出欠登録に失敗しました');
       });
 
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       // グループ選択
       const groupSelect = await screen.findByLabelText(/1\. グループを選択/);
@@ -494,7 +497,7 @@ describe('出欠登録ページ', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
       mockGetEventDateById.mockRejectedValue(new Error('データの読み込みに失敗しました'));
 
-      render(<RegisterAttendancePage />);
+      renderWithTheme(<RegisterAttendancePage />);
 
       await waitFor(() => {
         expect(screen.queryByText(/読み込み中/)).not.toBeInTheDocument();

@@ -1,12 +1,23 @@
+import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
 import * as organizationService from '@/lib/organization-service';
 import * as migration from '@/lib/migration';
 import type { Organization } from '@/types';
+import { ThemeProvider } from '@/components/ui/theme-provider';
 
 // モック
 jest.mock('@/lib/organization-service');
 jest.mock('@/lib/migration');
+
+// ThemeProviderでラップするヘルパー関数
+const renderWithTheme = (ui: React.ReactElement) => {
+  return render(
+    <ThemeProvider defaultTheme="system">
+      {ui}
+    </ThemeProvider>
+  );
+};
 
 const mockCreateOrganization = organizationService.createOrganization as jest.MockedFunction<
   typeof organizationService.createOrganization
@@ -30,10 +41,28 @@ describe('Home (Landing) Page', () => {
     localStorage.clear();
     // デフォルトではマイグレーションなし
     mockMigrateToMultiTenant.mockReturnValue({ migrated: false });
+
+    // matchMediaをモック（ThemeProvider用）
+    Object.defineProperty(window, 'matchMedia', {
+      value: jest.fn().mockImplementation((query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+      writable: true,
+    });
+
+    // document.documentElement のクラスリストをクリア
+    document.documentElement.classList.remove('light', 'dark');
   });
 
   it('should display landing content with description and create button', () => {
-    render(<Home />);
+    renderWithTheme(<Home />);
 
     // ページタイトルの確認
     expect(screen.getByText('Attendance Hub')).toBeInTheDocument();
@@ -55,7 +84,7 @@ describe('Home (Landing) Page', () => {
 
     mockCreateOrganization.mockResolvedValue(mockOrganization);
 
-    render(<Home />);
+    renderWithTheme(<Home />);
 
     // フォームに入力
     const nameInput = screen.getByLabelText('団体名');
@@ -88,7 +117,7 @@ describe('Home (Landing) Page', () => {
     delete (window as any).location;
     (window as any).location = { origin: 'http://localhost:3000' };
 
-    render(<Home />);
+    renderWithTheme(<Home />);
 
     // フォームに入力
     const nameInput = screen.getByLabelText('団体名');
@@ -111,7 +140,7 @@ describe('Home (Landing) Page', () => {
 
   describe('Migration Integration', () => {
     it('should call migrateToMultiTenant on mount', async () => {
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(mockMigrateToMultiTenant).toHaveBeenCalledTimes(1);
@@ -124,7 +153,7 @@ describe('Home (Landing) Page', () => {
         defaultOrgId: 'default-org-123',
       });
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(mockPush).toHaveBeenCalledWith('/default-org-123');
@@ -134,7 +163,7 @@ describe('Home (Landing) Page', () => {
     it('should not redirect when migration returns migrated: false', async () => {
       mockMigrateToMultiTenant.mockReturnValue({ migrated: false });
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(mockMigrateToMultiTenant).toHaveBeenCalled();
@@ -150,7 +179,7 @@ describe('Home (Landing) Page', () => {
         error: 'マイグレーションに失敗しました',
       });
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       await waitFor(() => {
         expect(screen.getByText(/マイグレーションに失敗しました/)).toBeInTheDocument();
@@ -172,7 +201,7 @@ describe('Home (Landing) Page', () => {
 
       mockCreateOrganization.mockResolvedValue(mockOrganization);
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       // エラーメッセージが表示される
       await waitFor(() => {
@@ -204,7 +233,7 @@ describe('Home (Landing) Page', () => {
       const mockGetAllOrganizations = jest.spyOn(organizationService, 'getAllOrganizations');
       mockGetAllOrganizations.mockResolvedValue(mockOrganizations);
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       // 団体名が表示されていないことを確認（プライバシー保護）
       expect(screen.queryByText('団体1')).not.toBeInTheDocument();
@@ -220,7 +249,7 @@ describe('Home (Landing) Page', () => {
     it('should not call getAllOrganizations to prevent data leakage', () => {
       const mockGetAllOrganizations = jest.spyOn(organizationService, 'getAllOrganizations');
 
-      render(<Home />);
+      renderWithTheme(<Home />);
 
       // getAllOrganizationsが呼ばれていないことを確認
       expect(mockGetAllOrganizations).not.toHaveBeenCalled();
