@@ -14,6 +14,162 @@ import { supabase } from '@/lib/supabase/client';
 // ストレージモード型
 export type StorageMode = 'localStorage' | 'supabase';
 
+// =============================================================================
+// snake_case / camelCase 変換ユーティリティ
+// =============================================================================
+
+// Supabase DB用の型定義（snake_case）
+interface OrganizationRow {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
+interface GroupRow {
+  id: string;
+  organization_id: string;
+  name: string;
+  order: number;
+  color?: string;
+  created_at: string;
+}
+
+interface MemberRow {
+  id: string;
+  organization_id: string;
+  group_id: string;
+  name: string;
+  created_at: string;
+}
+
+interface EventDateRow {
+  id: string;
+  organization_id: string;
+  date: string;
+  title: string;
+  location?: string;
+  created_at: string;
+}
+
+interface AttendanceRow {
+  id: string;
+  organization_id: string;
+  event_date_id: string;
+  member_id: string;
+  status: string;
+  created_at: string;
+}
+
+// Organization変換
+function toOrganizationRow(org: Organization): OrganizationRow {
+  return {
+    id: org.id,
+    name: org.name,
+    description: org.description,
+    created_at: org.createdAt,
+  };
+}
+
+function fromOrganizationRow(row: OrganizationRow): Organization {
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    createdAt: row.created_at,
+  };
+}
+
+// Group変換
+function toGroupRow(group: Group): GroupRow {
+  return {
+    id: group.id,
+    organization_id: group.organizationId,
+    name: group.name,
+    order: group.order,
+    color: group.color,
+    created_at: group.createdAt,
+  };
+}
+
+function fromGroupRow(row: GroupRow): Group {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    name: row.name,
+    order: row.order,
+    color: row.color,
+    createdAt: row.created_at,
+  };
+}
+
+// Member変換
+function toMemberRow(member: Member): MemberRow {
+  return {
+    id: member.id,
+    organization_id: member.organizationId,
+    group_id: member.groupId,
+    name: member.name,
+    created_at: member.createdAt,
+  };
+}
+
+function fromMemberRow(row: MemberRow): Member {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    groupId: row.group_id,
+    name: row.name,
+    createdAt: row.created_at,
+  };
+}
+
+// EventDate変換
+function toEventDateRow(eventDate: EventDate): EventDateRow {
+  return {
+    id: eventDate.id,
+    organization_id: eventDate.organizationId,
+    date: eventDate.date,
+    title: eventDate.title,
+    location: eventDate.location,
+    created_at: eventDate.createdAt,
+  };
+}
+
+function fromEventDateRow(row: EventDateRow): EventDate {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    date: row.date,
+    title: row.title,
+    location: row.location,
+    createdAt: row.created_at,
+  };
+}
+
+// Attendance変換
+function toAttendanceRow(attendance: Attendance): AttendanceRow {
+  return {
+    id: attendance.id,
+    organization_id: attendance.organizationId,
+    event_date_id: attendance.eventDateId,
+    member_id: attendance.memberId,
+    status: attendance.status,
+    created_at: attendance.createdAt,
+  };
+}
+
+function fromAttendanceRow(row: AttendanceRow): Attendance {
+  return {
+    id: row.id,
+    organizationId: row.organization_id,
+    eventDateId: row.event_date_id,
+    memberId: row.member_id,
+    status: row.status as Attendance['status'],
+    createdAt: row.created_at,
+  };
+}
+
 /**
  * 現在のストレージモードを取得
  */
@@ -59,7 +215,7 @@ export async function loadOrganization(organizationId: string): Promise<Organiza
     return null;
   }
 
-  return data;
+  return fromOrganizationRow(data as OrganizationRow);
 }
 
 /**
@@ -82,7 +238,7 @@ export async function loadAllOrganizations(): Promise<Organization[]> {
     return [];
   }
 
-  return data || [];
+  return (data || []).map((row) => fromOrganizationRow(row as OrganizationRow));
 }
 
 /**
@@ -107,7 +263,7 @@ export async function saveOrganization(organization: Organization): Promise<bool
   // Supabaseモード
   const { error } = await supabase
     .from('organizations')
-    .upsert(organization);
+    .upsert(toOrganizationRow(organization));
 
   if (error) {
     console.error('Failed to save organization:', error);
@@ -168,7 +324,7 @@ export async function loadGroups(organizationId: string): Promise<Group[]> {
     return [];
   }
 
-  return data || [];
+  return (data || []).map((row) => fromGroupRow(row as GroupRow));
 }
 
 /**
@@ -198,7 +354,7 @@ export async function saveGroups(organizationId: string, groups: Group[]): Promi
 
   const { error: insertError } = await supabase
     .from('groups')
-    .insert(groups);
+    .insert(groups.map(toGroupRow));
 
   if (insertError) {
     console.error('Failed to save groups:', insertError);
@@ -233,7 +389,7 @@ export async function loadMembers(organizationId: string): Promise<Member[]> {
     return [];
   }
 
-  return data || [];
+  return (data || []).map((row) => fromMemberRow(row as MemberRow));
 }
 
 /**
@@ -263,7 +419,7 @@ export async function saveMembers(organizationId: string, members: Member[]): Pr
 
   const { error: insertError } = await supabase
     .from('members')
-    .insert(members);
+    .insert(members.map(toMemberRow));
 
   if (insertError) {
     console.error('Failed to save members:', insertError);
@@ -298,7 +454,7 @@ export async function loadEventDates(organizationId: string): Promise<EventDate[
     return [];
   }
 
-  return data || [];
+  return (data || []).map((row) => fromEventDateRow(row as EventDateRow));
 }
 
 /**
@@ -328,7 +484,7 @@ export async function saveEventDates(organizationId: string, eventDates: EventDa
 
   const { error: insertError } = await supabase
     .from('event_dates')
-    .insert(eventDates);
+    .insert(eventDates.map(toEventDateRow));
 
   if (insertError) {
     console.error('Failed to save event dates:', insertError);
@@ -363,7 +519,7 @@ export async function loadAttendances(organizationId: string): Promise<Attendanc
     return [];
   }
 
-  return data || [];
+  return (data || []).map((row) => fromAttendanceRow(row as AttendanceRow));
 }
 
 /**
@@ -393,7 +549,7 @@ export async function saveAttendances(organizationId: string, attendances: Atten
 
   const { error: insertError } = await supabase
     .from('attendances')
-    .insert(attendances);
+    .insert(attendances.map(toAttendanceRow));
 
   if (insertError) {
     console.error('Failed to save attendances:', insertError);
