@@ -1,5 +1,5 @@
 import type { EventDate } from '@/types';
-import { loadEventDates, saveEventDates } from './storage';
+import { loadEventDates, saveEventDates } from './unified-storage';
 import { CreateEventDateInputSchema, type EventDateInput } from './validation';
 import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
@@ -17,10 +17,10 @@ export async function createEventDate(organizationId: string, input: EventDateIn
     createdAt: getCurrentTimestamp(),
   };
 
-  const eventDates = loadEventDates(organizationId);
+  const eventDates = await loadEventDates(organizationId);
   eventDates.push(newEventDate);
 
-  const success = saveEventDates(organizationId, eventDates);
+  const success = await saveEventDates(organizationId, eventDates);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -30,19 +30,19 @@ export async function createEventDate(organizationId: string, input: EventDateIn
 
 // すべてのイベント日付を取得（日付昇順）
 export async function getAllEventDates(organizationId: string): Promise<EventDate[]> {
-  const eventDates = loadEventDates(organizationId);
+  const eventDates = await loadEventDates(organizationId);
   return eventDates.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 // IDでイベント日付を取得
 export async function getEventDateById(organizationId: string, id: string): Promise<EventDate | null> {
-  const eventDates = loadEventDates(organizationId);
+  const eventDates = await loadEventDates(organizationId);
   return eventDates.find((event) => event.id === id) || null;
 }
 
 // イベント日付を更新
 export async function updateEventDate(organizationId: string, id: string, input: Partial<EventDateInput>): Promise<EventDate> {
-  const eventDates = loadEventDates(organizationId);
+  const eventDates = await loadEventDates(organizationId);
   const index = eventDates.findIndex((event) => event.id === id);
 
   if (index === -1) {
@@ -65,7 +65,7 @@ export async function updateEventDate(organizationId: string, id: string, input:
 
   eventDates[index] = updatedEventDate;
 
-  const success = saveEventDates(organizationId, eventDates);
+  const success = await saveEventDates(organizationId, eventDates);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -75,12 +75,12 @@ export async function updateEventDate(organizationId: string, id: string, input:
 
 // イベント日付を削除
 export async function deleteEventDate(organizationId: string, id: string): Promise<boolean> {
-  const eventDates = loadEventDates(organizationId);
+  const eventDates = await loadEventDates(organizationId);
   const filteredEventDates = eventDates.filter((event) => event.id !== id);
 
   if (eventDates.length === filteredEventDates.length) {
     return false;
   }
 
-  return saveEventDates(organizationId, filteredEventDates);
+  return await saveEventDates(organizationId, filteredEventDates);
 }

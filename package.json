@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:supabase": "NEXT_PUBLIC_USE_SUPABASE=true next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

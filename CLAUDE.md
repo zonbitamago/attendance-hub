@@ -35,8 +35,13 @@ attendance-hub/
 │   ├── loading-spinner.tsx  # ローディング表示
 │   └── skeleton.tsx         # スケルトンUI
 ├── lib/                   # ビジネスロジック・ユーティリティ
+│   ├── unified-storage.ts  # 統合ストレージ層（localStorage/Supabase自動切替）
 │   ├── storage.ts        # localStorage操作
+│   ├── supabase-storage.ts # Supabaseストレージ層
+│   ├── organization-service.ts # 団体関連ロジック
 │   ├── group-service.ts  # グループ関連ロジック
+│   ├── event-service.ts  # イベント関連ロジック
+│   ├── member-service.ts # メンバー関連ロジック
 │   ├── attendance-service.ts  # 出欠登録関連ロジック
 │   ├── validation.ts     # Zodスキーマ
 │   └── date-utils.ts     # 日付フォーマット
@@ -74,8 +79,11 @@ attendance-hub/
 ## 主要コマンド
 
 ```bash
-# 開発サーバー起動
+# 開発サーバー起動（localStorageモード）
 npm run dev
+
+# 開発サーバー起動（Supabaseモード）
+npm run dev:supabase
 
 # テスト実行
 npm test
@@ -200,6 +208,14 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 
 ## 最近の変更
 
+- **2025-11-19**: 010-unified-storage フィーチャーを完了（v2.5 - 統合ストレージ層）
+  - 環境に応じて自動的にlocalStorageとSupabaseを切り替える統合ストレージ層を実装
+  - `lib/unified-storage.ts` - ストレージモード検出とFacadeパターンによる統一インターフェース
+  - 本番環境（Vercel）: Supabase自動使用
+  - ローカル + `npm run dev:supabase`: Supabase使用
+  - ローカル（デフォルト）: localStorage使用
+  - 全サービスファイルを統合ストレージ層経由に更新
+  - 485テスト全てpass、ビルド成功
 - **2025-11-16**: 009-supabase-migration Phase 6-7完了（v2.3 - Supabase PostgreSQL対応）
   - データストレージをlocalStorageからSupabase PostgreSQLに完全移行
   - 全ページのUI層を非同期対応（ローディング状態、エラーハンドリング）
@@ -291,6 +307,8 @@ className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none
 - N/A（テストフィーチャー、既存のlocalStorageストレージを使用） (008-test-coverage-expansion)
 - TypeScript 5.9（strict mode必須） + Next.js 16.0.1, React 19.2.0, @supabase/supabase-js（最新安定版）, Zod（既存） (009-supabase-migration)
 - Supabase PostgreSQL（無料プラン: 500MB ストレージ、50,000 月間アクティブユーザー） (009-supabase-migration)
+- TypeScript 5.9（strict mode） + Next.js 16, React 19.2, Tailwind CSS 3.4, @supabase/supabase-js (010-unified-storage)
+- localStorage / Supabase PostgreSQL（環境により切り替え） (010-unified-storage)
 
 ## Recent Changes
 - 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function

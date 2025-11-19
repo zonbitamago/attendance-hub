@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import type { Organization, CreateOrganizationInput, UpdateOrganizationInput } from '@/types';
 import { CreateOrganizationInputSchema, UpdateOrganizationInputSchema } from '@/lib/validation';
-import { loadOrganizations, saveOrganizations, clearOrganizationData } from '@/lib/storage';
+import { loadAllOrganizations, saveOrganization, clearOrganizationData, deleteOrganization as deleteOrganizationFromStorage } from '@/lib/unified-storage';
 
 // 団体IDを生成（nanoid, 10文字）
 export function generateOrganizationId(): string {
@@ -24,21 +24,15 @@ export async function createOrganization(input: CreateOrganizationInput): Promis
     createdAt: new Date().toISOString(),
   };
 
-  // 既存の団体を読み込み
-  const organizations = loadOrganizations();
-
-  // リストに追加
-  organizations.push(newOrganization);
-
   // 保存
-  saveOrganizations(organizations);
+  await saveOrganization(newOrganization);
 
   return newOrganization;
 }
 
 // すべての団体を取得（createdAt降順でソート）
 export async function getAllOrganizations(): Promise<Organization[]> {
-  const organizations = loadOrganizations();
+  const organizations = await loadAllOrganizations();
 
   // createdAt降順でソート（新しい順）
   return organizations.sort((a, b) => {
@@ -48,7 +42,7 @@ export async function getAllOrganizations(): Promise<Organization[]> {
 
 // IDで団体を取得
 export async function getOrganizationById(id: string): Promise<Organization | null> {
-  const organizations = loadOrganizations();
+  const organizations = await loadAllOrganizations();
   return organizations.find((org) => org.id === id) || null;
 }
 
@@ -58,26 +52,23 @@ export async function updateOrganization(id: string, input: UpdateOrganizationIn
   const validatedInput = UpdateOrganizationInputSchema.parse(input);
 
   // すべての団体を読み込み
-  const organizations = loadOrganizations();
+  const organizations = await loadAllOrganizations();
 
   // IDで団体を検索
-  const index = organizations.findIndex((org) => org.id === id);
-  if (index === -1) {
+  const organization = organizations.find((org) => org.id === id);
+  if (!organization) {
     throw new Error('Organization not found');
   }
 
   // 更新されたフィールドをマージ（idとcreatedAtは保持）
   const updatedOrganization: Organization = {
-    ...organizations[index],
-    name: validatedInput.name ?? organizations[index].name,
-    description: validatedInput.description ?? organizations[index].description,
+    ...organization,
+    name: validatedInput.name ?? organization.name,
+    description: validatedInput.description ?? organization.description,
   };
 
-  // リストを更新
-  organizations[index] = updatedOrganization;
-
   // 保存
-  saveOrganizations(organizations);
+  await saveOrganization(updatedOrganization);
 
   return updatedOrganization;
 }
@@ -85,20 +76,17 @@ export async function updateOrganization(id: string, input: UpdateOrganizationIn
 // 団体を削除（カスケード削除）
 export async function deleteOrganization(id: string): Promise<void> {
   // すべての団体を読み込み
-  const organizations = loadOrganizations();
+  const organizations = await loadAllOrganizations();
 
   // IDで団体を検索
-  const index = organizations.findIndex((org) => org.id === id);
-  if (index === -1) {
+  const organization = organizations.find((org) => org.id === id);
+  if (!organization) {
     throw new Error('Organization not found');
   }
 
-  // リストから削除
-  organizations.splice(index, 1);
-
-  // 保存
-  saveOrganizations(organizations);
+  // 団体を削除
+  await deleteOrganizationFromStorage(id);
 
   // カスケード削除: すべての関連データを削除
-  clearOrganizationData(id);
+  await clearOrganizationData(id);
 }

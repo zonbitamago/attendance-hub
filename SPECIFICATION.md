@@ -1,7 +1,7 @@
 # attendance-hub 仕様書
 
-**バージョン:** 2.4.0
-**最終更新:** 2025-11-18
+**バージョン:** 2.5.0
+**最終更新:** 2025-11-19
 **ステータス:** 本番（Supabase PostgreSQL版、マルチテナント対応）
 
 ---
@@ -109,7 +109,7 @@
 
 - **自動チェック**: 型チェック、リント、テスト（カバレッジ測定付き）、ビルド検証
 - **カバレッジ閾値**: branches: 30%、functions: 50%、lines: 45%、statements: 45%（達成状況: 84.82%/74.71%/84.77%/85.51%）
-- **テスト数**: 411テスト（26スイート）
+- **テスト数**: 485テスト（31スイート）
 
 ### 2.2 アーキテクチャ概要
 
@@ -670,7 +670,53 @@ if (result.migrated && result.defaultOrgId) {
 }
 ```
 
-### 5.3 event-service.ts
+### 5.3 unified-storage.ts（New! v2.5）
+
+#### `getStorageMode(): StorageMode`
+
+**概要:** 現在のストレージモードを取得
+
+**戻り値:**
+```typescript
+type StorageMode = 'localStorage' | 'supabase';
+```
+
+**ロジック:**
+1. `NODE_ENV === 'production'` → `'supabase'`（強制）
+2. `NEXT_PUBLIC_USE_SUPABASE === 'true'` → `'supabase'`
+3. それ以外 → `'localStorage'`
+
+#### Organization/Group/Member/EventDate/Attendance操作
+
+**統一インターフェース（各エンティティ共通パターン）:**
+
+```typescript
+// 読み込み
+loadOrganization(organizationId: string): Promise<Organization | null>
+loadAllOrganizations(): Promise<Organization[]>
+loadGroups(organizationId: string): Promise<Group[]>
+loadMembers(organizationId: string): Promise<Member[]>
+loadEventDates(organizationId: string): Promise<EventDate[]>
+loadAttendances(organizationId: string): Promise<Attendance[]>
+
+// 保存
+saveOrganization(organization: Organization): Promise<boolean>
+saveGroups(organizationId: string, groups: Group[]): Promise<boolean>
+saveMembers(organizationId: string, members: Member[]): Promise<boolean>
+saveEventDates(organizationId: string, eventDates: EventDate[]): Promise<boolean>
+saveAttendances(organizationId: string, attendances: Attendance[]): Promise<boolean>
+
+// 削除
+deleteOrganization(organizationId: string): Promise<boolean>
+clearOrganizationData(organizationId: string): Promise<boolean>
+```
+
+**特徴:**
+- 環境変数に基づいてlocalStorageとSupabaseを自動切替
+- 全操作が非同期（Promise）
+- サービス層からの利用は`./unified-storage`からimport
+
+### 5.4 event-service.ts
 
 #### `createEventDate(input: CreateEventDateInput): EventDate`
 
@@ -1557,6 +1603,7 @@ chore: ビルド・設定変更
 | 2025-11-09 | 2.1.0 | CI/CDパイプライン設定（006-ci-cd-setup実装完了）<br>- GitHub Actions CI/CDワークフロー追加<br>- Jestカバレッジ監視（branches: 30%、functions: 50%、lines: 45%、statements: 45%）<br>- Node.js 20.x/22.xマトリックステスト<br>- 自動チェック: 型チェック、リント、テスト、ビルド<br>- テスト: 199 → 187（正確な数に修正） |
 | 2025-11-12 | 2.2.0 | テストカバレッジ拡張（008-test-coverage-expansion実装完了）<br>- ユーティリティ関数テスト追加（date-utils, error-utils: 70テスト、94-100%カバレッジ）<br>- ページコンポーネントテスト拡充（register, event-detail, admin pages: 106テスト、92-98%カバレッジ）<br>- UIコンポーネントテスト追加（bulk-register, event-detail: 35テスト、91-100%カバレッジ）<br>- 全体カバレッジ向上: statements 84.82%, branches 74.71%, functions 84.77%, lines 85.51%<br>- テスト: 234 → 411 (177件追加、26スイート)<br>- カバレッジ閾値を大幅に上回る品質達成 |
 | 2025-11-18 | 2.4.0 | 使い方ガイドページ追加<br>- `/[org]/guide` に操作ガイドページを新規追加<br>- 20枚のスクリーンショット付き詳細ガイド<br>- Playwright E2Eテストによるスクリーンショット自動生成<br>- `npm run capture-screenshots` コマンド追加 |
+| 2025-11-19 | 2.5.0 | 統合ストレージ層実装（010-unified-storage実装完了）<br>- `lib/unified-storage.ts` 追加（Facadeパターン）<br>- 環境に応じてlocalStorage/Supabaseを自動切替<br>- 本番環境: Supabase自動使用<br>- ローカル環境: localStorage（デフォルト）またはSupabase（`dev:supabase`）<br>- `npm run dev:supabase` コマンド追加<br>- 全サービスファイルを統合ストレージ層経由に更新<br>- テスト: 467 → 485 (18件追加、31スイート) |
 
 ---
 

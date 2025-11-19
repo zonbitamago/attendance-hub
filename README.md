@@ -63,10 +63,24 @@ npm install
 ### 開発サーバーの起動
 
 ```bash
+# localStorage モード（デフォルト）
 npm run dev
+
+# Supabase モード
+npm run dev:supabase
 ```
 
 ブラウザで [http://localhost:3000](http://localhost:3000) を開いてアプリケーションにアクセスできます。
+
+### ストレージモード
+
+アプリケーションは環境に応じて自動的にストレージバックエンドを切り替えます：
+
+| 環境 | ストレージ |
+|------|------------|
+| 本番環境（Vercel） | Supabase PostgreSQL |
+| ローカル + `dev:supabase` | Supabase PostgreSQL |
+| ローカル（デフォルト） | localStorage |
 
 ### ビルド
 
@@ -129,6 +143,7 @@ attendance-hub/
 ├── lib/                   # ビジネスロジック・ユーティリティ
 │   ├── supabase/
 │   │   └── client.ts     # Supabaseクライアント
+│   ├── unified-storage.ts   # 統合ストレージ層（localStorage/Supabase自動切替）
 │   ├── storage.ts        # localStorage操作（団体スコープ対応）
 │   ├── supabase-storage.ts  # Supabaseストレージ層
 │   ├── organization-service.ts  # 団体関連ロジック
@@ -142,7 +157,7 @@ attendance-hub/
 │   └── date-utils.ts     # 日付フォーマット
 ├── types/                 # TypeScript型定義
 │   └── index.ts
-├── __tests__/            # テスト（467テスト）
+├── __tests__/            # テスト（485テスト）
 │   ├── app/
 │   │   ├── page.test.tsx            # トップページテスト
 │   │   └── [org]/
