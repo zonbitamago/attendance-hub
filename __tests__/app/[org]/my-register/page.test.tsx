@@ -151,7 +151,7 @@ jest.mock('next/link', () => {
       error: null,
     });
 
-    mockUpsertBulkAttendances.mockReturnValue({
+    mockUpsertBulkAttendances.mockResolvedValue({
       success: [mockAttendance1, mockAttendance2],
       updated: [],
       failed: [],
@@ -340,7 +340,7 @@ jest.mock('next/link', () => {
     });
 
     test('更新件数がある場合はメッセージに含まれる', async () => {
-      mockUpsertBulkAttendances.mockReturnValue({
+      mockUpsertBulkAttendances.mockResolvedValue({
         success: [mockAttendance1],
         updated: [mockAttendance2],
         failed: [],
@@ -363,7 +363,7 @@ jest.mock('next/link', () => {
     });
 
     test('失敗件数がある場合はメッセージに含まれる', async () => {
-      mockUpsertBulkAttendances.mockReturnValue({
+      mockUpsertBulkAttendances.mockResolvedValue({
         success: [mockAttendance1],
         updated: [],
         failed: [{ input: { eventDateId: 'event-2', memberId: 'member-1', status: '◯' }, error: 'Failed to register' }],

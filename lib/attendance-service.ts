@@ -1,5 +1,5 @@
 import type { Attendance, GroupSummary, EventTotalSummary, BulkAttendanceInput, BulkAttendanceResult, MemberAttendanceDetail } from '@/types';
-import { loadAttendances, saveAttendances, loadGroups, loadMembers } from './storage';
+import { loadAttendances, saveAttendances, loadGroups, loadMembers } from './unified-storage';
 import { CreateAttendanceInputSchema, type AttendanceInput } from './validation';
 import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
@@ -17,10 +17,10 @@ export async function createAttendance(organizationId: string, input: Attendance
     createdAt: getCurrentTimestamp(),
   };
 
-  const attendances = loadAttendances(organizationId);
+  const attendances = await loadAttendances(organizationId);
   attendances.push(newAttendance);
 
-  const success = saveAttendances(organizationId, attendances);
+  const success = await saveAttendances(organizationId, attendances);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -29,25 +29,25 @@ export async function createAttendance(organizationId: string, input: Attendance
 }
 
 // すべての出欠登録を取得
-export function getAllAttendances(organizationId: string): Attendance[] {
-  return loadAttendances(organizationId);
+export async function getAllAttendances(organizationId: string): Promise<Attendance[]> {
+  return await loadAttendances(organizationId);
 }
 
 // イベント日付IDで出欠登録を取得
 export async function getAttendancesByEventDateId(organizationId: string, eventDateId: string): Promise<Attendance[]> {
-  const attendances = loadAttendances(organizationId);
+  const attendances = await loadAttendances(organizationId);
   return attendances.filter((attendance) => attendance.eventDateId === eventDateId);
 }
 
 // メンバーIDで出欠登録を取得
 export async function getAttendancesByMemberId(organizationId: string, memberId: string): Promise<Attendance[]> {
-  const attendances = loadAttendances(organizationId);
+  const attendances = await loadAttendances(organizationId);
   return attendances.filter((attendance) => attendance.memberId === memberId);
 }
 
 // IDで出欠登録を取得
-export function getAttendanceById(organizationId: string, id: string): Attendance | null {
-  const attendances = loadAttendances(organizationId);
+export async function getAttendanceById(organizationId: string, id: string): Promise<Attendance | null> {
+  const attendances = await loadAttendances(organizationId);
   return attendances.find((attendance) => attendance.id === id) || null;
 }
 
@@ -57,7 +57,7 @@ export async function updateAttendance(
   id: string,
   input: Partial<Omit<AttendanceInput, 'eventDateId' | 'memberId'>>
 ): Promise<Attendance> {
-  const attendances = loadAttendances(organizationId);
+  const attendances = await loadAttendances(organizationId);
   const index = attendances.findIndex((attendance) => attendance.id === id);
 
   if (index === -1) {
@@ -78,7 +78,7 @@ export async function updateAttendance(
 
   attendances[index] = updatedAttendance;
 
-  const success = saveAttendances(organizationId, attendances);
+  const success = await saveAttendances(organizationId, attendances);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -88,21 +88,21 @@ export async function updateAttendance(
 
 // 出欠登録を削除
 export async function deleteAttendance(organizationId: string, id: string): Promise<boolean> {
-  const attendances = loadAttendances(organizationId);
+  const attendances = await loadAttendances(organizationId);
   const filteredAttendances = attendances.filter((attendance) => attendance.id !== id);
 
   if (attendances.length === filteredAttendances.length) {
     return false;
   }
 
-  return saveAttendances(organizationId, filteredAttendances);
+  return await saveAttendances(organizationId, filteredAttendances);
 }
 
 // イベント日付の集計結果をグループ別に計算
 export async function calculateEventSummary(organizationId: string, eventDateId: string): Promise<GroupSummary[]> {
   const attendances = await getAttendancesByEventDateId(organizationId, eventDateId);
-  const groups = loadGroups(organizationId);
-  const members = loadMembers(organizationId);
+  const groups = await loadGroups(organizationId);
+  const members = await loadMembers(organizationId);
 
   // グループごとに集計
   return groups
@@ -161,7 +161,7 @@ export async function calculateEventTotalSummary(organizationId: string, eventDa
 // 出欠登録を作成または更新（upsert）
 export async function upsertAttendance(organizationId: string, input: AttendanceInput): Promise<Attendance> {
   const validated = CreateAttendanceInputSchema.parse(input);
-  const attendances = loadAttendances(organizationId);
+  const attendances = await loadAttendances(organizationId);
 
   // 既存レコードを検索（eventDateId + memberId の複合キーで一意性を保証）
   // 重複がある場合は最新のもの（createdAtが最も新しいもの）を使用
@@ -182,7 +182,7 @@ export async function upsertAttendance(organizationId: string, input: Attendance
 
     attendances.push(newAttendance);
 
-    const success = saveAttendances(organizationId, attendances);
+    const success = await saveAttendances(organizationId, attendances);
     if (!success) {
       throw new Error(ErrorMessages.STORAGE_FULL);
     }
@@ -208,7 +208,7 @@ export async function upsertAttendance(organizationId: string, input: Attendance
 
     filteredAttendances.push(updatedAttendance);
 
-    const success = saveAttendances(organizationId, filteredAttendances);
+    const success = await saveAttendances(organizationId, filteredAttendances);
     if (!success) {
       throw new Error(ErrorMessages.STORAGE_FULL);
     }
@@ -218,7 +218,7 @@ export async function upsertAttendance(organizationId: string, input: Attendance
 }
 
 // 複数の出欠登録を一括でupsert
-export function upsertBulkAttendances(organizationId: string, inputs: BulkAttendanceInput[]): BulkAttendanceResult {
+export async function upsertBulkAttendances(organizationId: string, inputs: BulkAttendanceInput[]): Promise<BulkAttendanceResult> {
   const result: BulkAttendanceResult = {
     success: [],
     updated: [],
@@ -227,12 +227,12 @@ export function upsertBulkAttendances(organizationId: string, inputs: BulkAttend
 
   // 空配列の場合は即座に返す
   if (inputs.length === 0) {
-    loadAttendances(organizationId); // 読み込みは実行（テストのためのモック呼び出し）
+    await loadAttendances(organizationId); // 読み込みは実行（テストのためのモック呼び出し）
     return result;
   }
 
   // バッチ処理: localStorage読み込みは1回のみ
-  const attendances = loadAttendances(organizationId);
+  const attendances = await loadAttendances(organizationId);
 
   // 各入力を処理
   for (const input of inputs) {
@@ -297,7 +297,7 @@ export function upsertBulkAttendances(organizationId: string, inputs: BulkAttend
   }
 
   // バッチ処理: localStorage書き込みは1回のみ
-  const success = saveAttendances(organizationId, attendances);
+  const success = await saveAttendances(organizationId, attendances);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -313,11 +313,13 @@ export async function getGroupMemberAttendances(
   groupId: string
 ): Promise<MemberAttendanceDetail[]> {
   // 1. グループを取得
-  const group = loadGroups(organizationId).find((g) => g.id === groupId);
+  const groups = await loadGroups(organizationId);
+  const group = groups.find((g) => g.id === groupId);
   if (!group) return [];
 
   // 2. グループの全メンバーを取得
-  const allMembers = loadMembers(organizationId).filter((m) => m.groupId === groupId);
+  const allMembers = await loadMembers(organizationId);
+  const groupMembers = allMembers.filter((m) => m.groupId === groupId);
 
   // 3. イベントの全出欠レコードを取得
   const attendances = await getAttendancesByEventDateId(organizationId, eventDateId);
@@ -329,7 +331,7 @@ export async function getGroupMemberAttendances(
   }
 
   // 5. メンバーと出欠レコードを結合
-  const details: MemberAttendanceDetail[] = allMembers.map((member) => {
+  const details: MemberAttendanceDetail[] = groupMembers.map((member) => {
     const attendance = attendanceMap.get(member.id);
     return {
       memberId: member.id,

@@ -10,11 +10,11 @@ import {
   upsertBulkAttendances,
   getGroupMemberAttendances,
 } from '@/lib/attendance-service';
-import { loadAttendances, saveAttendances, loadGroups, loadMembers } from '@/lib/storage';
+import { loadAttendances, saveAttendances, loadGroups, loadMembers } from '@/lib/unified-storage';
 import type { Attendance, Group, Member } from '@/types';
 
-// storage モジュールをモック
-jest.mock('@/lib/storage');
+// unified-storage モジュールをモック
+jest.mock('@/lib/unified-storage');
 
 describe('Attendance Service', () => {
   const mockLoadAttendances = loadAttendances as jest.MockedFunction<typeof loadAttendances>;
@@ -24,10 +24,10 @@ describe('Attendance Service', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockLoadAttendances.mockReturnValue([]);
-    mockSaveAttendances.mockReturnValue(true);
-    mockLoadGroups.mockReturnValue([]);
-    mockLoadMembers.mockReturnValue([]);
+    mockLoadAttendances.mockResolvedValue([]);
+    mockSaveAttendances.mockResolvedValue(true);
+    mockLoadGroups.mockResolvedValue([]);
+    mockLoadMembers.mockResolvedValue([]);
   });
 
   describe('createAttendance', () => {
@@ -61,7 +61,7 @@ describe('Attendance Service', () => {
     });
 
     it('ストレージが失敗した場合はエラーをスローする', async () => {
-      mockSaveAttendances.mockReturnValue(false);
+      mockSaveAttendances.mockResolvedValue(false);
 
       const input = {
         eventDateId: '00000000-0000-0000-0000-000000000001',
@@ -102,7 +102,7 @@ describe('Attendance Service', () => {
         },
       ];
 
-      mockLoadAttendances.mockReturnValue(mockAttendances);
+      mockLoadAttendances.mockResolvedValue(mockAttendances);
 
       const attendances = await getAttendancesByEventDateId('test-org-id', 'event1');
 
@@ -112,7 +112,7 @@ describe('Attendance Service', () => {
     });
 
     it('イベントに出欠情報が存在しない場合は空配列を返す', async () => {
-      mockLoadAttendances.mockReturnValue([]);
+      mockLoadAttendances.mockResolvedValue([]);
 
       const attendances = await getAttendancesByEventDateId('test-org-id', 'event1');
 
@@ -149,7 +149,7 @@ describe('Attendance Service', () => {
         },
       ];
 
-      mockLoadAttendances.mockReturnValue(mockAttendances);
+      mockLoadAttendances.mockResolvedValue(mockAttendances);
 
       const attendances = await getAttendancesByMemberId('test-org-id', 'member1');
 
@@ -170,7 +170,7 @@ describe('Attendance Service', () => {
         createdAt: '2025-01-01T00:00:00.000Z',
       };
 
-      mockLoadAttendances.mockReturnValue([existingAttendance]);
+      mockLoadAttendances.mockResolvedValue([existingAttendance]);
 
       const updated = await updateAttendance('test-org-id', '00000000-0000-0000-0000-000000000001', {
         status: '△',
@@ -187,7 +187,7 @@ describe('Attendance Service', () => {
     });
 
     it('出欠情報が見つからない場合はエラーをスローする', async () => {
-      mockLoadAttendances.mockReturnValue([]);
+      mockLoadAttendances.mockResolvedValue([]);
 
       await expect(
         updateAttendance('test-org-id', 'nonexistent', { status: '◯' })
@@ -204,7 +204,7 @@ describe('Attendance Service', () => {
         createdAt: '2025-01-01T00:00:00.000Z',
       };
 
-      mockLoadAttendances.mockReturnValue([existingAttendance]);
+      mockLoadAttendances.mockResolvedValue([existingAttendance]);
 
       await expect(
         updateAttendance('test-org-id', '00000000-0000-0000-0000-000000000001', { status: 'invalid' as any })
@@ -233,7 +233,7 @@ describe('Attendance Service', () => {
         },
       ];
 
-      mockLoadAttendances.mockReturnValue(attendances);
+      mockLoadAttendances.mockResolvedValue(attendances);
 
       const result = await deleteAttendance('test-org-id', '1');
 
@@ -242,7 +242,7 @@ describe('Attendance Service', () => {
     });
 
     it('出欠情報が見つからない場合はfalseを返す', async () => {
-      mockLoadAttendances.mockReturnValue([]);
+      mockLoadAttendances.mockResolvedValue([]);
 
       const result = await deleteAttendance('test-org-id', 'nonexistent');
 
@@ -321,9 +321,9 @@ describe('Attendance Service', () => {
         },
       ];
 
-      mockLoadGroups.mockReturnValue(mockGroups);
-      mockLoadMembers.mockReturnValue(mockMembers);
-      mockLoadAttendances.mockReturnValue(mockAttendances);
+      mockLoadGroups.mockResolvedValue(mockGroups);
+      mockLoadMembers.mockResolvedValue(mockMembers);
+      mockLoadAttendances.mockResolvedValue(mockAttendances);
 
       const summaries = await calculateEventSummary('test-org-id', 'event1');
 
@@ -351,9 +351,9 @@ describe('Attendance Service', () => {
     });
 
     it('出欠情報が存在しない場合は空配列を返す', async () => {
-      mockLoadGroups.mockReturnValue([]);
-      mockLoadMembers.mockReturnValue([]);
-      mockLoadAttendances.mockReturnValue([]);
+      mockLoadGroups.mockResolvedValue([]);
+      mockLoadMembers.mockResolvedValue([]);
+      mockLoadAttendances.mockResolvedValue([]);
 
       const summaries = await calculateEventSummary('test-org-id', 'event1');
 
@@ -399,9 +399,9 @@ describe('Attendance Service', () => {
         },
       ];
 
-      mockLoadGroups.mockReturnValue(mockGroups);
-      mockLoadMembers.mockReturnValue(mockMembers);
-      mockLoadAttendances.mockReturnValue(mockAttendances);
+      mockLoadGroups.mockResolvedValue(mockGroups);
+      mockLoadMembers.mockResolvedValue(mockMembers);
+      mockLoadAttendances.mockResolvedValue(mockAttendances);
 
       const summaries = await calculateEventSummary('test-org-id', 'event1');
 
@@ -457,7 +457,7 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadAttendances.mockReturnValue(mockAttendances);
+        mockLoadAttendances.mockResolvedValue(mockAttendances);
 
         const result = await calculateEventTotalSummary('test-org-id', 'event1');
 
@@ -472,7 +472,7 @@ describe('Attendance Service', () => {
 
     describe('出欠登録なしの場合', () => {
       it('出欠情報が存在しない場合はすべて0を返す', async () => {
-        mockLoadAttendances.mockReturnValue([]);
+        mockLoadAttendances.mockResolvedValue([]);
 
         const result = await calculateEventTotalSummary('test-org-id', 'event1');
 
@@ -515,7 +515,7 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadAttendances.mockReturnValue(mockAttendances);
+        mockLoadAttendances.mockResolvedValue(mockAttendances);
 
         const result = await calculateEventTotalSummary('test-org-id', 'event1');
 
@@ -543,8 +543,8 @@ describe('Attendance Service', () => {
           status: '◯' as const,
         };
 
-        mockLoadAttendances.mockReturnValue([]);
-        mockSaveAttendances.mockReturnValue(true);
+        mockLoadAttendances.mockResolvedValue([]);
+        mockSaveAttendances.mockResolvedValue(true);
 
         const result = await upsertAttendance('test-org-id', input);
 
@@ -580,8 +580,8 @@ describe('Attendance Service', () => {
           status: '✗' as const,
         };
 
-        mockLoadAttendances.mockReturnValue([existingAttendance]);
-        mockSaveAttendances.mockReturnValue(true);
+        mockLoadAttendances.mockResolvedValue([existingAttendance]);
+        mockSaveAttendances.mockResolvedValue(true);
 
         const result = await upsertAttendance('test-org-id', input);
 
@@ -626,8 +626,8 @@ describe('Attendance Service', () => {
           status: '✗' as const,
         };
 
-        mockLoadAttendances.mockReturnValue([olderDuplicate, newerDuplicate]);
-        mockSaveAttendances.mockReturnValue(true);
+        mockLoadAttendances.mockResolvedValue([olderDuplicate, newerDuplicate]);
+        mockSaveAttendances.mockResolvedValue(true);
 
         const result = await upsertAttendance('test-org-id', input);
 
@@ -657,7 +657,7 @@ describe('Attendance Service', () => {
   // 一括登録機能のテスト
   describe('upsertBulkAttendances', () => {
     describe('Test Case 1: すべて新規レコードを作成', () => {
-      it('すべての入力が新規レコードの場合、すべてsuccessに格納される', () => {
+      it('すべての入力が新規レコードの場合、すべてsuccessに格納される', async () => {
         const inputs = [
           {
             eventDateId: '550e8400-e29b-41d4-a716-446655440001',
@@ -676,10 +676,10 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadAttendances.mockReturnValue([]);
-        mockSaveAttendances.mockReturnValue(true);
+        mockLoadAttendances.mockResolvedValue([]);
+        mockSaveAttendances.mockResolvedValue(true);
 
-        const result = upsertBulkAttendances('test-org-id', inputs);
+        const result = await upsertBulkAttendances('test-org-id', inputs);
 
         expect(result.success).toHaveLength(3);
         expect(result.updated).toHaveLength(0);
@@ -708,7 +708,7 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 2: 新規と既存が混在', () => {
-      it('新規レコードはsuccessに、既存レコードはupdatedに格納される', () => {
+      it('新規レコードはsuccessに、既存レコードはupdatedに格納される', async () => {
         const existingAttendance: Attendance = {
           id: '550e8400-e29b-41d4-a716-446655440020',
           organizationId: 'test-org-id',
@@ -731,10 +731,10 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadAttendances.mockReturnValue([existingAttendance]);
-        mockSaveAttendances.mockReturnValue(true);
+        mockLoadAttendances.mockResolvedValue([existingAttendance]);
+        mockSaveAttendances.mockResolvedValue(true);
 
-        const result = upsertBulkAttendances('test-org-id', inputs);
+        const result = await upsertBulkAttendances('test-org-id', inputs);
 
         expect(result.success).toHaveLength(1);
         expect(result.updated).toHaveLength(1);
@@ -762,7 +762,7 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 3: バリデーションエラー時の部分的失敗', () => {
-      it('無効な入力があっても他の有効な入力は処理される', () => {
+      it('無効な入力があっても他の有効な入力は処理される', async () => {
         const inputs = [
           {
             eventDateId: '550e8400-e29b-41d4-a716-446655440001',
@@ -781,10 +781,10 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadAttendances.mockReturnValue([]);
-        mockSaveAttendances.mockReturnValue(true);
+        mockLoadAttendances.mockResolvedValue([]);
+        mockSaveAttendances.mockResolvedValue(true);
 
-        const result = upsertBulkAttendances('test-org-id', inputs);
+        const result = await upsertBulkAttendances('test-org-id', inputs);
 
         expect(result.success).toHaveLength(2);
         expect(result.updated).toHaveLength(0);
@@ -796,10 +796,10 @@ describe('Attendance Service', () => {
     });
 
     describe('Test Case 4: 空配列の処理', () => {
-      it('空配列の場合、すべて0件として処理される', () => {
-        mockLoadAttendances.mockReturnValue([]);
+      it('空配列の場合、すべて0件として処理される', async () => {
+        mockLoadAttendances.mockResolvedValue([]);
 
-        const result = upsertBulkAttendances('test-org-id', []);
+        const result = await upsertBulkAttendances('test-org-id', []);
 
         expect(result.success).toHaveLength(0);
         expect(result.updated).toHaveLength(0);
@@ -858,9 +858,9 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadGroups.mockReturnValue(mockGroups);
-        mockLoadMembers.mockReturnValue(mockMembers);
-        mockLoadAttendances.mockReturnValue(mockAttendances);
+        mockLoadGroups.mockResolvedValue(mockGroups);
+        mockLoadMembers.mockResolvedValue(mockMembers);
+        mockLoadAttendances.mockResolvedValue(mockAttendances);
 
         const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
@@ -926,9 +926,9 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadGroups.mockReturnValue(mockGroups);
-        mockLoadMembers.mockReturnValue(mockMembers);
-        mockLoadAttendances.mockReturnValue(mockAttendances);
+        mockLoadGroups.mockResolvedValue(mockGroups);
+        mockLoadMembers.mockResolvedValue(mockMembers);
+        mockLoadAttendances.mockResolvedValue(mockAttendances);
 
         const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
@@ -974,9 +974,9 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadGroups.mockReturnValue(mockGroups);
-        mockLoadMembers.mockReturnValue(mockMembers);
-        mockLoadAttendances.mockReturnValue([]);
+        mockLoadGroups.mockResolvedValue(mockGroups);
+        mockLoadMembers.mockResolvedValue(mockMembers);
+        mockLoadAttendances.mockResolvedValue([]);
 
         const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
@@ -1002,9 +1002,9 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadGroups.mockReturnValue(mockGroups);
-        mockLoadMembers.mockReturnValue([]);
-        mockLoadAttendances.mockReturnValue([]);
+        mockLoadGroups.mockResolvedValue(mockGroups);
+        mockLoadMembers.mockResolvedValue([]);
+        mockLoadAttendances.mockResolvedValue([]);
 
         const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
@@ -1018,9 +1018,9 @@ describe('Attendance Service', () => {
         const eventDateId = 'event-1';
         const groupId = 'nonexistent-group';
 
-        mockLoadGroups.mockReturnValue([]);
-        mockLoadMembers.mockReturnValue([]);
-        mockLoadAttendances.mockReturnValue([]);
+        mockLoadGroups.mockResolvedValue([]);
+        mockLoadMembers.mockResolvedValue([]);
+        mockLoadAttendances.mockResolvedValue([]);
 
         const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
@@ -1068,9 +1068,9 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadGroups.mockReturnValue(mockGroups);
-        mockLoadMembers.mockReturnValue(mockMembers);
-        mockLoadAttendances.mockReturnValue([]);
+        mockLoadGroups.mockResolvedValue(mockGroups);
+        mockLoadMembers.mockResolvedValue(mockMembers);
+        mockLoadAttendances.mockResolvedValue([]);
 
         const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
@@ -1122,9 +1122,9 @@ describe('Attendance Service', () => {
           },
         ];
 
-        mockLoadGroups.mockReturnValue(mockGroups);
-        mockLoadMembers.mockReturnValue(mockMembers);
-        mockLoadAttendances.mockReturnValue([]);
+        mockLoadGroups.mockResolvedValue(mockGroups);
+        mockLoadMembers.mockResolvedValue(mockMembers);
+        mockLoadAttendances.mockResolvedValue([]);
 
         const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);
 
@@ -1173,9 +1173,9 @@ describe('Attendance Service', () => {
           }
         }
 
-        mockLoadGroups.mockReturnValue(mockGroups);
-        mockLoadMembers.mockReturnValue(mockMembers);
-        mockLoadAttendances.mockReturnValue(mockAttendances);
+        mockLoadGroups.mockResolvedValue(mockGroups);
+        mockLoadMembers.mockResolvedValue(mockMembers);
+        mockLoadAttendances.mockResolvedValue(mockAttendances);
 
         const startTime = performance.now();
         const details = await getGroupMemberAttendances(orgId, eventDateId, groupId);

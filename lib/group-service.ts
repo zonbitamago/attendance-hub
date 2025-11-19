@@ -1,5 +1,5 @@
 import type { Group } from '@/types';
-import { loadGroups, saveGroups } from './storage';
+import { loadGroups, saveGroups } from './unified-storage';
 import { CreateGroupInputSchema, type GroupInput } from './validation';
 import { getCurrentTimestamp } from './date-utils';
 import { ErrorMessages } from './error-utils';
@@ -17,10 +17,10 @@ export async function createGroup(organizationId: string, input: GroupInput): Pr
     createdAt: getCurrentTimestamp(),
   };
 
-  const groups = loadGroups(organizationId);
+  const groups = await loadGroups(organizationId);
   groups.push(newGroup);
 
-  const success = saveGroups(organizationId, groups);
+  const success = await saveGroups(organizationId, groups);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -30,19 +30,19 @@ export async function createGroup(organizationId: string, input: GroupInput): Pr
 
 // すべてのグループを取得（order昇順）
 export async function getAllGroups(organizationId: string): Promise<Group[]> {
-  const groups = loadGroups(organizationId);
+  const groups = await loadGroups(organizationId);
   return groups.sort((a, b) => a.order - b.order);
 }
 
 // IDでグループを取得
 export async function getGroupById(organizationId: string, id: string): Promise<Group | null> {
-  const groups = loadGroups(organizationId);
+  const groups = await loadGroups(organizationId);
   return groups.find((group) => group.id === id) || null;
 }
 
 // グループを更新
 export async function updateGroup(organizationId: string, id: string, input: Partial<GroupInput>): Promise<Group> {
-  const groups = loadGroups(organizationId);
+  const groups = await loadGroups(organizationId);
   const index = groups.findIndex((group) => group.id === id);
 
   if (index === -1) {
@@ -65,7 +65,7 @@ export async function updateGroup(organizationId: string, id: string, input: Par
 
   groups[index] = updatedGroup;
 
-  const success = saveGroups(organizationId, groups);
+  const success = await saveGroups(organizationId, groups);
   if (!success) {
     throw new Error(ErrorMessages.STORAGE_FULL);
   }
@@ -75,12 +75,12 @@ export async function updateGroup(organizationId: string, id: string, input: Par
 
 // グループを削除
 export async function deleteGroup(organizationId: string, id: string): Promise<boolean> {
-  const groups = loadGroups(organizationId);
+  const groups = await loadGroups(organizationId);
   const filteredGroups = groups.filter((group) => group.id !== id);
 
   if (groups.length === filteredGroups.length) {
     return false;
   }
 
-  return saveGroups(organizationId, filteredGroups);
+  return await saveGroups(organizationId, filteredGroups);
 }
