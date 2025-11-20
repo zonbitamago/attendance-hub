@@ -18,7 +18,7 @@ const headingSizes = {
 } as const;
 
 export function Heading({ level, children, className = '' }: HeadingProps) {
-  const baseStyles = 'text-gray-900 dark:text-gray-100';
+  const baseStyles = 'text-gray-900';
 
   const classes = [
     baseStyles,

@@ -13,15 +13,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ id, name, error, ariaLabel, className = '', ...props }, ref) => {
     const baseStyles = 'w-full px-3 py-2 border rounded-md text-gray-900 placeholder:text-gray-400';
     const focusStyles = 'focus:outline-none focus:ring-2 focus:ring-blue-500';
-    const darkStyles = 'dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:placeholder:text-gray-500';
     const errorStyles = error
-      ? 'border-red-500 dark:border-red-400'
+      ? 'border-red-500'
       : 'border-gray-300';
 
     const classes = [
       baseStyles,
       focusStyles,
-      darkStyles,
       errorStyles,
       className,
     ].filter(Boolean).join(' ');
@@ -39,7 +37,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p id={`${id}-error`} className="mt-1 text-sm text-red-600 dark:text-red-400">
+          <p id={`${id}-error`} className="mt-1 text-sm text-red-600">
             {error}
           </p>
         )}

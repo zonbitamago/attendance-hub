@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>イベント詳細 - Sky系</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <main class="min-h-screen bg-gradient-to-br from-white via-sky-50 to-white relative">
+    <!-- テーマ切替 -->
+    <div class="absolute top-4 right-4">
+      <button class="p-2 rounded-lg bg-white border border-sky-200 hover:bg-sky-50 transition shadow-sm">
+        <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+      <!-- ナビゲーション -->
+      <div class="mb-8">
+        <a href="#" class="text-sky-600 hover:text-sky-700 text-sm font-medium flex items-center gap-1">
+          ← トップページに戻る
+        </a>
+      </div>
+
+      <!-- イベント情報 -->
+      <div class="bg-white border border-sky-100 rounded-xl p-6 shadow-lg mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">新春コンサート</h1>
+        <p class="text-gray-600 mb-1">2025年1月20日（土）14:00</p>
+        <p class="text-sm text-gray-500">場所: 市民ホール</p>
+      </div>
+
+      <!-- 出欠登録ボタン -->
+      <div class="mb-8">
+        <a href="#" class="inline-block w-full px-6 py-3 bg-gradient-to-r from-sky-500 to-sky-600 text-white rounded-lg font-medium hover:from-sky-600 hover:to-sky-700 transition shadow-md text-center">
+          + 出欠を登録する
+        </a>
+      </div>
+
+      <!-- イベント全体集計 -->
+      <div class="bg-white border border-sky-100 rounded-xl p-6 shadow-lg mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">全体出欠状況</h2>
+        <div class="flex flex-wrap gap-4 text-sm">
+          <div>
+            <span class="text-gray-600">参加: </span>
+            <span class="font-semibold text-green-600">25人</span>
+          </div>
+          <div>
+            <span class="text-gray-600">未定: </span>
+            <span class="font-semibold text-yellow-600">1人</span>
+          </div>
+          <div>
+            <span class="text-gray-600">欠席: </span>
+            <span class="font-semibold text-red-600">0人</span>
+          </div>
+          <div>
+            <span class="text-gray-600">（</span>
+            <span class="font-semibold text-gray-900">計26人</span>
+            <span class="text-gray-600">）</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- グループ別出欠状況 -->
+      <div class="bg-white border border-sky-100 rounded-xl p-6 shadow-lg">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">グループ別出欠状況</h2>
+
+        <!-- フィルタ・検索 -->
+        <div class="mb-4 space-y-3">
+          <input
+            type="text"
+            placeholder="メンバー名で検索..."
+            class="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 text-gray-900 placeholder:text-gray-400"
+          />
+          <div class="flex flex-wrap gap-2">
+            <button class="px-3 py-1 text-sm bg-sky-500 text-white rounded-md">すべて</button>
+            <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-md">参加</button>
+            <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-md">未定</button>
+            <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-md">欠席</button>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <!-- グループ1: 打楽器 -->
+          <div>
+            <div class="bg-sky-50 px-4 py-3 rounded-t-lg border border-sky-200 flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-gray-900">打楽器</h3>
+              <div class="flex items-center gap-4 text-sm">
+                <span class="text-green-600 font-semibold">◯ 8</span>
+                <span class="text-yellow-600 font-semibold">△ 0</span>
+                <span class="text-red-600 font-semibold">✗ 0</span>
+                <span class="text-gray-500">計 8人</span>
+              </div>
+            </div>
+            <!-- 展開されたメンバーリスト -->
+            <div class="border-x border-b border-sky-200 rounded-b-lg p-4 bg-white">
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center justify-between p-2 hover:bg-sky-50 rounded">
+                  <span class="text-gray-900">田中太郎</span>
+                  <span class="text-green-600 font-medium">◯ 参加</span>
+                </div>
+                <div class="flex items-center justify-between p-2 hover:bg-sky-50 rounded">
+                  <span class="text-gray-900">鈴木花子</span>
+                  <span class="text-green-600 font-medium">◯ 参加</span>
+                </div>
+                <div class="flex items-center justify-between p-2 hover:bg-sky-50 rounded">
+                  <span class="text-gray-900">佐藤次郎</span>
+                  <span class="text-green-600 font-medium">◯ 参加</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- グループ2: Clarinet -->
+          <div>
+            <div class="bg-sky-50 px-4 py-3 rounded-lg border border-sky-200 flex items-center justify-between cursor-pointer hover:bg-sky-100">
+              <h3 class="text-lg font-semibold text-gray-900">Clarinet</h3>
+              <div class="flex items-center gap-4 text-sm">
+                <span class="text-green-600 font-semibold">◯ 10</span>
+                <span class="text-yellow-600 font-semibold">△ 1</span>
+                <span class="text-red-600 font-semibold">✗ 0</span>
+                <span class="text-gray-500">計 11人</span>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- グループ3: Saxophone -->
+          <div>
+            <div class="bg-sky-50 px-4 py-3 rounded-lg border border-sky-200 flex items-center justify-between cursor-pointer hover:bg-sky-100">
+              <h3 class="text-lg font-semibold text-gray-900">Saxophone</h3>
+              <div class="flex items-center gap-4 text-sm">
+                <span class="text-green-600 font-semibold">◯ 7</span>
+                <span class="text-yellow-600 font-semibold">△ 0</span>
+                <span class="text-red-600 font-semibold">✗ 0</span>
+                <span class="text-gray-500">計 7人</span>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

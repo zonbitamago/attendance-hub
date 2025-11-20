@@ -92,15 +92,6 @@ describe('Heading', () => {
     });
   });
 
-  describe('Dark mode', () => {
-    it('has dark mode classes', () => {
-      render(<Heading level={1}>Title</Heading>);
-      const heading = screen.getByRole('heading', { level: 1 });
-      expect(heading).toHaveClass('text-gray-900');
-      expect(heading).toHaveClass('dark:text-gray-100');
-    });
-  });
-
   describe('Custom styling', () => {
     it('accepts className prop', () => {
       render(<Heading level={1} className="custom-class">Title</Heading>);

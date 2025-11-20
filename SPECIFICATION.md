@@ -1,8 +1,8 @@
 # attendance-hub 仕様書
 
-**バージョン:** 2.6.0
-**最終更新:** 2025-11-19
-**ステータス:** 本番（Supabase PostgreSQL版、マルチテナント対応、統合デザインシステム）
+**バージョン:** 2.7.0
+**最終更新:** 2025-11-20
+**ステータス:** 本番（Supabase PostgreSQL版、マルチテナント対応、統合デザインシステム、Glassmorphism Sky Theme）
 
 ---
 
@@ -1110,6 +1110,53 @@ const summary = calculateEventTotalSummary('event1');
 - **キーボード操作:** Tabキーでフォーカス、Enterで実行
 - **コントラスト比:** WCAG 2.1 AA準拠（4.5:1以上）
 - **フォーカス表示:** `focus:ring-2`で明確なフォーカスリング
+
+### 6.6 デザインシステム（New! v2.7）
+
+#### 6.6.1 Skyカラーパレット
+
+アプリケーション全体でSkyカラーパレットを使用したモダンで爽やかなデザインを採用しています。
+
+**主要カラー:**
+- `bg-sky-50`: ページ背景色（非常に薄い青）
+- `bg-sky-100`: カード背景、セカンダリ背景
+- `border-sky-200`: ボーダー、区切り線
+- `text-sky-600`: アイコン、強調テキスト
+- `text-sky-700`: ホバー時のテキスト
+- `bg-sky-50`: ホバー時の背景
+- `hover:border-sky-300`: ホバー時のボーダー
+
+**ボタンスタイルナビゲーション:**
+- 全ナビゲーションリンクをボタンスタイルで統一
+- アイコン付き（Heroicons SVG）
+- ホバーエフェクト（背景色・ボーダー色・テキスト色の変化）
+- `transition-all`による滑らかなアニメーション
+
+**標準パターン:**
+```tsx
+<Link
+  href="/path"
+  className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-sky-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-sky-50 hover:border-sky-300 hover:text-sky-700 transition-all shadow-sm"
+>
+  <svg className="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    {/* アイコンパス */}
+  </svg>
+  リンクテキスト
+</Link>
+```
+
+#### 6.6.2 ダークモード削除
+
+**v2.7で変更:**
+- ダークモード機能を完全削除
+- ThemeProviderコンポーネント削除
+- すべての`dark:`プレフィックスクラス削除
+- ライトモード専用のシンプルなUI
+
+**理由:**
+- コードの複雑性削減
+- メンテナンス効率向上
+- モダンでクリーンなライトモード体験の提供
 
 ---
 

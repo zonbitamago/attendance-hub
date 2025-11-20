@@ -18,7 +18,6 @@ import { Card } from '@/components/ui/card';
 import { Heading } from '@/components/ui/heading';
 import { Message } from '@/components/ui/message';
 import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import type {
   EventDate,
   GroupSummary,
@@ -157,7 +156,7 @@ export default function EventDetailPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <main className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center">
         <LoadingSpinner message="イベント情報を読み込み中..." />
       </main>
     );
@@ -165,7 +164,7 @@ export default function EventDetailPage() {
 
   if (loadError) {
     return (
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <main className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center">
         <div className="text-center">
           <Message type="error">エラーが発生しました: {loadError.message}</Message>
         </div>
@@ -178,28 +177,27 @@ export default function EventDetailPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
-      {/* テーマ切替 */}
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
+    <main className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ナビゲーション */}
         <div className="mb-6 sm:mb-8">
           <Link
             href={`/${params.org as string}`}
-            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium flex items-center gap-1"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-sky-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-sky-50 hover:border-sky-300 hover:text-sky-700 transition-all shadow-sm"
           >
-            ← トップページに戻る
+            <svg className="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            トップページに戻る
           </Link>
         </div>
 
         {/* イベント情報 */}
         <Card className="mb-6 sm:mb-8">
           <Heading level={1} className="mb-2">{event.title}</Heading>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-1">{formatLongDate(event.date)}</p>
+          <p className="text-sm sm:text-base text-gray-600 mb-1">{formatLongDate(event.date)}</p>
           {event.location && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">場所: {event.location}</p>
+            <p className="text-sm text-gray-600">場所: {event.location}</p>
           )}
         </Card>
 
@@ -207,7 +205,7 @@ export default function EventDetailPage() {
         <div className="mb-6 sm:mb-8">
           <Link
             href={`/${params.org as string}/events/${eventId}/register`}
-            className="inline-block w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors shadow-sm text-center"
+            className="inline-block w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-sky-500 to-sky-600 text-white rounded-lg font-medium hover:from-sky-600 hover:to-sky-700 transition shadow-md text-center"
           >
             + 出欠を登録する
           </Link>
@@ -219,21 +217,21 @@ export default function EventDetailPage() {
             <Heading level={2} className="mb-4">全体出欠状況</Heading>
             <div className="flex flex-wrap gap-4 text-sm">
               <div>
-                <span className="text-gray-600 dark:text-gray-400">参加: </span>
-                <span className="font-semibold text-green-600 dark:text-green-400">{totalSummary.totalAttending}人</span>
+                <span className="text-gray-600">参加: </span>
+                <span className="font-semibold text-green-600">{totalSummary.totalAttending}人</span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">未定: </span>
-                <span className="font-semibold text-yellow-600 dark:text-yellow-400">{totalSummary.totalMaybe}人</span>
+                <span className="text-gray-600">未定: </span>
+                <span className="font-semibold text-yellow-600">{totalSummary.totalMaybe}人</span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">欠席: </span>
-                <span className="font-semibold text-red-600 dark:text-red-400">{totalSummary.totalNotAttending}人</span>
+                <span className="text-gray-600">欠席: </span>
+                <span className="font-semibold text-red-600">{totalSummary.totalNotAttending}人</span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">（</span>
-                <span className="font-semibold text-gray-900 dark:text-gray-100">計{totalSummary.totalResponded}人</span>
-                <span className="text-gray-600 dark:text-gray-400">）</span>
+                <span className="text-gray-600">（</span>
+                <span className="font-semibold text-gray-900">計{totalSummary.totalResponded}人</span>
+                <span className="text-gray-600">）</span>
               </div>
             </div>
           </Card>
@@ -256,7 +254,7 @@ export default function EventDetailPage() {
           </div>
 
           {summaries.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400 text-sm">まだ出欠登録がありません</p>
+            <p className="text-gray-500 text-sm">まだ出欠登録がありません</p>
           ) : (
             <div className="space-y-2">
               {summaries.map((summary) => {
@@ -265,13 +263,13 @@ export default function EventDetailPage() {
                 return (
                   <div key={summary.groupId}>
                     {/* グループ集計ヘッダー */}
-                    <div className="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 rounded-t-lg border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <div className="bg-sky-50 px-4 py-3 rounded-t-lg border border-sky-200 flex items-center justify-between">
                       <Heading level={3}>{summary.groupName}</Heading>
                       <div className="flex items-center gap-4 text-sm">
-                        <span className="text-green-600 dark:text-green-400 font-semibold">◯ {summary.attending}</span>
-                        <span className="text-yellow-600 dark:text-yellow-400 font-semibold">△ {summary.maybe}</span>
-                        <span className="text-red-600 dark:text-red-400 font-semibold">✗ {summary.notAttending}</span>
-                        <span className="text-gray-500 dark:text-gray-400">計 {summary.total}人</span>
+                        <span className="text-green-600 font-semibold">◯ {summary.attending}</span>
+                        <span className="text-yellow-600 font-semibold">△ {summary.maybe}</span>
+                        <span className="text-red-600 font-semibold">✗ {summary.notAttending}</span>
+                        <span className="text-gray-600">計 {summary.total}人</span>
                       </div>
                     </div>
 

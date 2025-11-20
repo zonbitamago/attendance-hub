@@ -101,36 +101,6 @@ describe('Button', () => {
     });
   });
 
-  describe('Dark mode', () => {
-    it('has dark mode classes for primary variant', () => {
-      render(<Button variant="primary">Primary Dark</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveClass('dark:bg-blue-500');
-      expect(button).toHaveClass('dark:hover:bg-blue-600');
-    });
-
-    it('has dark mode classes for secondary variant', () => {
-      render(<Button variant="secondary">Secondary Dark</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveClass('dark:bg-gray-700');
-      expect(button).toHaveClass('dark:text-gray-200');
-    });
-
-    it('has dark mode classes for danger variant', () => {
-      render(<Button variant="danger">Danger Dark</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveClass('dark:bg-red-900/20');
-      expect(button).toHaveClass('dark:text-red-400');
-    });
-
-    it('has dark mode classes for ghost variant', () => {
-      render(<Button variant="ghost">Ghost Dark</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveClass('dark:text-blue-400');
-      expect(button).toHaveClass('dark:hover:bg-blue-900/20');
-    });
-  });
-
   describe('Accessibility', () => {
     it('has focus ring styles', () => {
       render(<Button>Focus</Button>);

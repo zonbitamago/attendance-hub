@@ -57,7 +57,7 @@ export function AttendanceFilters({
       {/* 検索ボックス */}
       {onSearchChange && (
         <div className="flex items-center gap-2">
-          <label htmlFor="search-member" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label htmlFor="search-member" className="text-sm font-medium text-gray-700">
             検索:
           </label>
           <input
@@ -66,21 +66,21 @@ export function AttendanceFilters({
             value={searchQuery}
             onChange={handleSearchChange}
             placeholder="メンバー名で検索"
-            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder:text-gray-400"
           />
         </div>
       )}
 
       {/* フィルタドロップダウン */}
       <div className="flex items-center gap-2">
-        <label htmlFor="filter-status" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label htmlFor="filter-status" className="text-sm font-medium text-gray-700">
           フィルタ:
         </label>
         <select
           id="filter-status"
           value={filterStatus}
           onChange={handleFilterChange}
-          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
+          className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder:text-gray-400"
         >
           <option value="all">すべて</option>
           <option value="attending">参加のみ</option>
@@ -95,7 +95,7 @@ export function AttendanceFilters({
         <button
           type="button"
           onClick={handleSortToggle}
-          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-gray-700"
           aria-label={`ソート: 現在は${sortLabel}`}
         >
           ソート: {sortLabel}
