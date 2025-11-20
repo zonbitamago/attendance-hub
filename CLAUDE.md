@@ -183,6 +183,31 @@ npx tsc --noEmit
 - **モバイルファースト**: 基本スタイルはモバイル、レスポンシブは`sm:`、`md:`、`lg:`で
 - **アクセシビリティ**: 適切なコントラスト比、フォーカス表示
 
+#### Skyカラーパレット（v2.7以降）
+
+アプリケーション全体でSkyカラーパレットを使用した、モダンで爽やかなデザインを採用しています。
+
+**主要カラー**:
+- `bg-sky-50`: 背景色（非常に薄い青）
+- `bg-sky-100`: カード背景、セカンダリ背景
+- `border-sky-200`: ボーダー、区切り線
+- `text-sky-600`: アイコン、強調テキスト
+- `text-sky-700`: ホバー時のテキスト
+- `bg-sky-50`: ホバー時の背景
+- `hover:border-sky-300`: ホバー時のボーダー
+
+**ボタンスタイルナビゲーションの標準パターン**:
+```tsx
+<Link href="/path" className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-sky-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-sky-50 hover:border-sky-300 hover:text-sky-700 transition-all shadow-sm">
+  <svg className="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    {/* アイコンパス */}
+  </svg>
+  リンクテキスト
+</Link>
+```
+
+**重要**: ダークモードは削除されました。`dark:`プレフィックスは使用しないでください。
+
 #### 入力欄の標準スタイル（必須）
 
 すべての入力欄（`<input>`、`<select>`、`<textarea>`）には、以下のクラスを**必ず含める**こと：
@@ -191,7 +216,7 @@ npx tsc --noEmit
 text-gray-900 placeholder:text-gray-400
 ```
 
-**理由**: Feature 002で視認性改善を実施。ライトモード・ダークモード両方で良好なコントラスト比（WCAG AA基準）を確保。
+**理由**: Feature 002で視認性改善を実施。ライトモードで良好なコントラスト比（WCAG AA基準）を確保。
 
 **完全な入力欄classNameの例**:
 ```tsx
@@ -228,7 +253,7 @@ import { Heading } from '@/components/ui/heading';
 - [ ] コンテンツグループに`<Card>`を使用しているか
 - [ ] メッセージ表示に`<Message>`を使用しているか
 - [ ] 見出しに`<Heading>`を使用しているか
-- [ ] ダークモード対応のクラス（`dark:`プレフィックス）が含まれているか
+- [ ] Skyカラーパレット（sky-50, sky-100, sky-200, sky-600等）を使用しているか
 
 ### テスト（TDD）
 
@@ -241,10 +266,16 @@ import { Heading } from '@/components/ui/heading';
 
 ## 最近の変更
 
+- **2025-11-20**: 012-glassmorphism-redesign フィーチャーを完了（v2.7 - Glassmorphism Redesign with Sky Theme）
+  - Skyカラーパレット（sky-50, sky-100, sky-200, sky-600等）を全ページに適用
+  - ボタンスタイルナビゲーション（アイコン付き、ホバーエフェクト）実装
+  - ダークモード機能完全削除（ThemeProvider削除、dark:クラス削除）
+  - ライトモード専用のモダンでクリーンなUI
+  - 全6ページ（app/page.tsx、app/[org]/page.tsx、管理画面3ページ、一括登録）にSkyテーマ適用
+  - 552テスト全てpass、ESLint警告0件、ビルド成功
 - **2025-11-19**: 011-design-system フィーチャーを完了（v2.6 - 統合デザインシステム）
   - 5つの共通UIコンポーネント実装（Button, Input, Card, Message, Heading）
   - 全11ページにコンポーネントを適用し、UI一貫性を確保
-  - ダークモード対応（prefers-color-schemeに基づく自動切り替え）
   - WCAG 2.1 AA準拠のアクセシビリティ
   - TDDで80テスト追加（コンポーネントテスト）
   - 565テスト全てpass、ビルド成功
@@ -349,6 +380,7 @@ import { Heading } from '@/components/ui/heading';
 - Supabase PostgreSQL（無料プラン: 500MB ストレージ、50,000 月間アクティブユーザー） (009-supabase-migration)
 - TypeScript 5.9（strict mode） + Next.js 16, React 19.2, Tailwind CSS 3.4, @supabase/supabase-js (010-unified-storage)
 - localStorage / Supabase PostgreSQL（環境により切り替え） (010-unified-storage)
+- N/A（UIのみの変更、データストレージは変更なし） (001-glassmorphism-redesign)
 
 ## Recent Changes
 - 004-bulk-attendance-register: Added `/my-register` page, MemberSelector, EventList components, upsertBulkAttendances function

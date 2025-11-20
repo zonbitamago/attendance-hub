@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理画面 - Sky系</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <main class="min-h-screen bg-gradient-to-br from-white via-sky-50 to-white relative">
+    <!-- テーマ切替 -->
+    <div class="absolute top-4 right-4">
+      <button class="p-2 rounded-lg bg-white border border-sky-200 hover:bg-sky-50 transition shadow-sm">
+        <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+      <!-- ナビゲーション -->
+      <div class="mb-8 space-y-2">
+        <a href="#" class="text-sky-600 hover:text-sky-700 text-sm font-medium flex items-center gap-1">
+          ← トップページに戻る
+        </a>
+        <a href="#" class="text-sky-600 hover:text-sky-700 text-sm font-medium block">
+          → 一括出欠登録
+        </a>
+        <a href="#" class="text-sky-600 hover:text-sky-700 text-sm font-medium block">
+          → 使い方ガイド
+        </a>
+      </div>
+
+      <!-- ヘッダー -->
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">管理画面</h1>
+        <p class="text-gray-600">グループとイベント日付を管理できます</p>
+      </div>
+
+      <!-- メニューカード -->
+      <div class="grid gap-6 md:grid-cols-2">
+        <!-- グループ管理 -->
+        <a href="#" class="block bg-white border border-sky-100 rounded-xl shadow-lg p-6 hover:shadow-xl hover:border-sky-200 transition-all">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-sky-400 to-sky-600 rounded-lg flex items-center justify-center shadow-md">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h2 class="text-xl font-bold text-gray-900 mb-1">グループ管理</h2>
+              <p class="text-sm text-gray-600">
+                グループの作成・編集・削除・並び替えを行います
+              </p>
+            </div>
+          </div>
+        </a>
+
+        <!-- イベント日付管理 -->
+        <a href="#" class="block bg-white border border-sky-100 rounded-xl shadow-lg p-6 hover:shadow-xl hover:border-sky-200 transition-all">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h2 class="text-xl font-bold text-gray-900 mb-1">イベント日付管理</h2>
+              <p class="text-sm text-gray-600">
+                イベント日付の作成・編集・削除を行います
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

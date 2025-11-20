@@ -111,23 +111,6 @@ describe('Input', () => {
     });
   });
 
-  describe('Dark mode', () => {
-    it('has dark mode classes', () => {
-      render(<Input id="test" name="test" />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveClass('dark:bg-gray-800');
-      expect(input).toHaveClass('dark:border-gray-600');
-      expect(input).toHaveClass('dark:text-gray-100');
-      expect(input).toHaveClass('dark:placeholder:text-gray-500');
-    });
-
-    it('has dark mode error styles', () => {
-      render(<Input id="test" name="test" error="Error" />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveClass('dark:border-red-400');
-    });
-  });
-
   describe('Custom styling', () => {
     it('accepts className prop', () => {
       render(<Input id="test" name="test" className="custom-class" />);

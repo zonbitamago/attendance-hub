@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>カード型ナビゲーション - Sky系</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <main class="min-h-screen bg-gradient-to-br from-white via-sky-50 to-white relative">
+    <!-- テーマ切替 -->
+    <div class="absolute top-4 right-4">
+      <button class="p-2 rounded-lg bg-white border border-sky-200 hover:bg-sky-50 transition shadow-sm">
+        <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+      <!-- ヘッダー -->
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">音楽サークル</h1>
+        <p class="text-gray-600">イベントの出欠確認を簡単に管理</p>
+      </div>
+
+      <!-- カード型ナビゲーション -->
+      <div class="mb-8">
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">クイックアクション</h2>
+        <div class="grid gap-3 sm:grid-cols-3">
+          <!-- 一括出欠登録 -->
+          <a href="#" class="block bg-white border border-sky-200 rounded-lg p-4 hover:shadow-md hover:border-sky-300 transition-all group">
+            <div class="flex items-center gap-3">
+              <div class="flex-shrink-0 w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center group-hover:bg-sky-200 transition">
+                <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-900 group-hover:text-sky-700 transition">一括出欠登録</p>
+              </div>
+              <svg class="w-4 h-4 text-gray-400 group-hover:text-sky-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+
+          <!-- 管理画面 -->
+          <a href="#" class="block bg-white border border-sky-200 rounded-lg p-4 hover:shadow-md hover:border-sky-300 transition-all group">
+            <div class="flex items-center gap-3">
+              <div class="flex-shrink-0 w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center group-hover:bg-sky-200 transition">
+                <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-900 group-hover:text-sky-700 transition">管理画面</p>
+              </div>
+              <svg class="w-4 h-4 text-gray-400 group-hover:text-sky-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+
+          <!-- 使い方ガイド -->
+          <a href="#" class="block bg-white border border-sky-200 rounded-lg p-4 hover:shadow-md hover:border-sky-300 transition-all group">
+            <div class="flex items-center gap-3">
+              <div class="flex-shrink-0 w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center group-hover:bg-sky-200 transition">
+                <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-900 group-hover:text-sky-700 transition">使い方ガイド</p>
+              </div>
+              <svg class="w-4 h-4 text-gray-400 group-hover:text-sky-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- イベント一覧 -->
+      <div class="bg-white border border-sky-100 rounded-xl p-6 shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl font-bold text-gray-900">イベント一覧</h2>
+          <span class="text-sm text-gray-500">3 件</span>
+        </div>
+        <p class="text-sm text-gray-500">（イベントリストは省略）</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

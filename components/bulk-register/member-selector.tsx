@@ -86,7 +86,7 @@ export function MemberSelector({ onSelect, organizationId }: MemberSelectorProps
     <div className="space-y-4">
       {/* グループ選択 */}
       <div>
-        <label htmlFor="group-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label htmlFor="group-select" className="block text-sm font-medium text-gray-700 mb-1">
           グループを選択
         </label>
         <select
@@ -94,7 +94,7 @@ export function MemberSelector({ onSelect, organizationId }: MemberSelectorProps
           aria-label="グループ"
           value={selectedGroupId}
           onChange={handleGroupChange}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder:text-gray-400"
         >
           <option value="">グループを選んでください</option>
           {groups.map((group) => (
@@ -108,7 +108,7 @@ export function MemberSelector({ onSelect, organizationId }: MemberSelectorProps
       {/* メンバー選択（グループが選択された後に表示） */}
       {selectedGroupId && (
         <div>
-          <label htmlFor="member-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="member-select" className="block text-sm font-medium text-gray-700 mb-1">
             メンバーを選択
           </label>
           <select
@@ -116,7 +116,7 @@ export function MemberSelector({ onSelect, organizationId }: MemberSelectorProps
             aria-label="メンバー"
             value={selectedMemberId}
             onChange={handleMemberChange}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder:text-gray-400"
           >
             <option value="">メンバーを選んでください</option>
             {filteredMembers.map((member) => (
@@ -132,7 +132,7 @@ export function MemberSelector({ onSelect, organizationId }: MemberSelectorProps
       {/* 新規メンバー名入力（「新しいメンバーを追加」が選択された後に表示） */}
       {isNewMember && (
         <div>
-          <label htmlFor="new-member-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="new-member-name" className="block text-sm font-medium text-gray-700 mb-1">
             名前を入力
           </label>
           <input
@@ -142,7 +142,7 @@ export function MemberSelector({ onSelect, organizationId }: MemberSelectorProps
             value={newMemberName}
             onChange={handleNewMemberNameChange}
             placeholder="例: 山田太郎"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 placeholder:text-gray-400"
           />
         </div>
       )}

@@ -87,41 +87,6 @@ describe('Message', () => {
     });
   });
 
-  describe('Dark mode', () => {
-    it('has dark mode classes for error', () => {
-      const { container } = render(<Message type="error">Dark error</Message>);
-      const message = container.firstChild as HTMLElement;
-      expect(message).toHaveClass('dark:bg-red-900/20');
-      expect(message).toHaveClass('dark:border-red-800');
-    });
-
-    it('has dark mode classes for success', () => {
-      const { container } = render(<Message type="success">Dark success</Message>);
-      const message = container.firstChild as HTMLElement;
-      expect(message).toHaveClass('dark:bg-green-900/20');
-      expect(message).toHaveClass('dark:border-green-800');
-    });
-
-    it('has dark mode classes for warning', () => {
-      const { container } = render(<Message type="warning">Dark warning</Message>);
-      const message = container.firstChild as HTMLElement;
-      expect(message).toHaveClass('dark:bg-yellow-900/20');
-      expect(message).toHaveClass('dark:border-yellow-800');
-    });
-
-    it('has dark mode classes for info', () => {
-      const { container } = render(<Message type="info">Dark info</Message>);
-      const message = container.firstChild as HTMLElement;
-      expect(message).toHaveClass('dark:bg-blue-900/20');
-      expect(message).toHaveClass('dark:border-blue-800');
-    });
-
-    it('has dark mode text colors', () => {
-      const { container } = render(<Message type="error">Dark text</Message>);
-      expect(container.querySelector('.dark\\:text-red-400')).toBeInTheDocument();
-    });
-  });
-
   describe('Custom styling', () => {
     it('accepts className prop', () => {
       const { container } = render(<Message type="info" className="custom-class">Custom</Message>);

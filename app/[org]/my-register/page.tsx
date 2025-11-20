@@ -12,7 +12,6 @@ import { Card } from '@/components/ui/card';
 import { Heading } from '@/components/ui/heading';
 import { Message } from '@/components/ui/message';
 import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import type { AttendanceStatus } from '@/types';
 
 export default function MyRegisterPage() {
@@ -130,18 +129,17 @@ export default function MyRegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 sm:py-8 relative">
-      {/* テーマ切替 */}
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-white py-4 sm:py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-6 sm:mb-8">
           <Link
             href={`/${org}`}
-            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium flex items-center gap-1"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-sky-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-sky-50 hover:border-sky-300 hover:text-sky-700 transition-all shadow-sm"
           >
-            ← トップページへ戻る
+            <svg className="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            トップページへ戻る
           </Link>
         </div>
 

@@ -18,7 +18,6 @@ import { useOrganization } from '@/contexts/organization-context';
 import * as eventService from '@/lib/event-service';
 import * as attendanceService from '@/lib/attendance-service';
 import { renderWithTheme, setupMatchMediaMock, clearDocumentClasses } from '../../../../utils/test-utils';
-import { ThemeProvider } from '@/components/ui/theme-provider';
 
 // モックの設定
 jest.mock('next/navigation', () => ({
@@ -346,11 +345,7 @@ describe('イベント詳細ページ', () => {
       });
 
       // eventIdが変わらずに再レンダリング
-      rerender(
-        <ThemeProvider defaultTheme="system">
-          <EventDetailPage />
-        </ThemeProvider>
-      );
+      rerender(<EventDetailPage />);
 
       await waitFor(() => {
         // メモ化されているため、再計算されない

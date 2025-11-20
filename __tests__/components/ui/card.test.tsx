@@ -60,15 +60,6 @@ describe('Card', () => {
     });
   });
 
-  describe('Dark mode', () => {
-    it('has dark mode classes', () => {
-      const { container } = render(<Card>Content</Card>);
-      const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('dark:bg-gray-800');
-      expect(card).toHaveClass('dark:border-gray-700');
-    });
-  });
-
   describe('Custom styling', () => {
     it('accepts className prop', () => {
       const { container } = render(<Card className="custom-class">Content</Card>);

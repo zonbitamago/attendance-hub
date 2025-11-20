@@ -18,13 +18,11 @@ const paddingSizes = {
 
 export function Card({ children, hover = true, padding = 'md', className = '' }: CardProps) {
   const baseStyles = 'bg-white rounded-lg shadow-sm border border-gray-200';
-  const darkStyles = 'dark:bg-gray-800 dark:border-gray-700';
   const hoverStyles = hover ? 'hover:shadow-md transition-shadow duration-200' : '';
   const paddingStyle = paddingSizes[padding];
 
   const classes = [
     baseStyles,
-    darkStyles,
     hoverStyles,
     paddingStyle,
     className,

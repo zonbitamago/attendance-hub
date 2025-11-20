@@ -1,17 +1,12 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ThemeProvider } from '@/components/ui/theme-provider';
 
-// ThemeProviderでラップするカスタムrender関数
+// カスタムrender関数（ThemeProvider不要、通常のrenderと同じ）
 export function renderWithTheme(ui: React.ReactElement) {
-  return render(
-    <ThemeProvider defaultTheme="system">
-      {ui}
-    </ThemeProvider>
-  );
+  return render(ui);
 }
 
-// matchMediaモックのセットアップ
+// matchMediaモックのセットアップ（ダークモード削除後も残す、一部のテストで使用）
 export function setupMatchMediaMock(prefersDark = false) {
   Object.defineProperty(window, 'matchMedia', {
     value: jest.fn().mockImplementation((query: string) => ({
@@ -28,7 +23,7 @@ export function setupMatchMediaMock(prefersDark = false) {
   });
 }
 
-// documentElementのクラスをクリア
+// documentElementのクラスをクリア（ダークモード削除後は何もしない）
 export function clearDocumentClasses() {
-  document.documentElement.classList.remove('light', 'dark');
+  // ダークモード削除後は何もしない（後方互換性のために残す）
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { ThemeProvider } from '@/components/ui/theme-provider';
 
 export const metadata: Metadata = {
   title: 'Attendance Hub - 出欠確認アプリ',
@@ -13,11 +12,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" suppressHydrationWarning>
+    <html lang="ja">
       <body className="antialiased">
-        <ThemeProvider defaultTheme="system" storageKey="attendance-hub-theme">
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );
